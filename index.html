@@ -437,9 +437,17 @@ const CONFIG = {
   pitchSeconds: 30,        // length of a live pitch
   rateSeconds: 75,         // how long rating stays open after a pitch
   approveIdeas: true,      // new ideas wait for desk approval before they go live
-  // Paste your Firebase web config to go live. Leave null for demo mode.
-  firebase: null
-  /* firebase: {
+  // Firebase project utasx-f7719 (live). Set to null to run in demo mode.
+  firebase: {
+    apiKey: "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8",
+    authDomain: "utasx-f7719.firebaseapp.com",
+    databaseURL: "https://utasx-f7719-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "utasx-f7719",
+    storageBucket: "utasx-f7719.firebasestorage.app",
+    messagingSenderId: "1026974496932",
+    appId: "1:1026974496932:web:0cde5f783b04ca1ead4e31"
+  }
+  /* example: {
        apiKey: "…",
        authDomain: "your-project.firebaseapp.com",
        databaseURL: "https://your-project-default-rtdb.firebaseio.com",
