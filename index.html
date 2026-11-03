@@ -863,12 +863,12 @@ function Screen(be) {
   }
   function renderTape() {
     const sig = D.ideas.map(i => i.id).join();
-    if (sig === tapeSig && Date.now() - tapeAt < 20000) return;
+    if (sig === tapeSig && Date.now() - tapeAt < 120000) return;
     tapeSig = sig; tapeAt = Date.now();
     const items = D.ideas.map(i => `<span><em>${esc(i.sym)}</em>${f2(i.price)}<b class="${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</b></span>`);
     items.push(`<span><em>STAFF</em>${f0(D.sT)} pts</span>`, `<span><em style="color:#9CB0E4">STUDENTS</em>${f0(D.uT)} pts</span>`, `<span><em>HOW</em>Price = 10 × (1 + points invested ÷ 2,000). Buy early, gain more.</span>`);
     let html = items.join(""); while (html.length < 1800) html += html;
-    $("#tape").innerHTML = html + html; $("#tape").style.setProperty("--dur", Math.max(35, items.length * 6) + "s");
+    const tp = $("#tape"); tp.innerHTML = html + html; requestAnimationFrame(() => tp.style.setProperty("--dur", Math.max(60, tp.scrollWidth / 2 / 45) + "s"));
   }
   function handleBell() {
     const b = D.market.bell;
