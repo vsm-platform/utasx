@@ -111,7 +111,7 @@ body.v-screen{font-size:clamp(10px,.7vw + .25vh,30px);padding-block:1.1em}
 .panel{padding:1.1em 1.3em;display:flex;flex-direction:column;min-height:0;min-width:0}
 .panel h2{margin:0 0 .8em;font-family:var(--display);font-weight:700;font-size:1.25em;letter-spacing:-.01em;display:flex;align-items:center;gap:.5em}
 .panel h2 small{font-family:var(--body);font-weight:600;font-size:.62em;color:var(--ink-3);margin-left:auto;letter-spacing:0}
-.race{position:relative;--rowh:4.25em;transition:height .6s}
+.race{position:relative;--rowh:5.2em;transition:height .6s}
 .row{position:absolute;left:0;right:0;top:0;height:var(--rowh);transform:translateY(calc(var(--y,0) * var(--rowh)));transition:transform .8s cubic-bezier(.2,.9,.2,1);display:grid;grid-template-columns:2.4em minmax(0,1fr) 7.2em;gap:.9em;align-items:center}
 .row.enter{animation:rowin .7s ease-out}
 @keyframes rowin{from{opacity:0}}
@@ -121,7 +121,8 @@ body.v-screen{font-size:clamp(10px,.7vw + .25vh,30px);padding-block:1.1em}
 .r-name{display:flex;align-items:center;gap:.55em;min-width:0}
 .r-name strong{font-weight:800;font-size:1.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .r-name .amt{margin-left:auto;font-family:var(--mono);font-size:.8em;font-weight:700;color:var(--ink-3);white-space:nowrap}
-.track{position:relative;height:1.05em;border-radius:99px;background:var(--bg);margin-top:.45em;overflow:hidden}
+.r-pitch{color:var(--ink-2);font-size:.92em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.15em}
+.track{position:relative;height:.9em;border-radius:99px;background:var(--bg);margin-top:.35em;overflow:hidden}
 .track .bar{position:absolute;inset:0 auto 0 0;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.9,.2,1)}
 .row.staff .bar{background:linear-gradient(90deg,#FBC58E,var(--orange))}
 .row.student .bar{background:linear-gradient(90deg,#9CB0E4,var(--blue))}
@@ -813,7 +814,7 @@ function Screen(be) {
       let r = rows[i.id];
       if (!r) {
         r = document.createElement("div");
-        r.innerHTML = `<span class="rank"></span><div class="r-mid"><div class="r-name"><span class="tick"></span><strong></strong><span class="chip oc"></span><span class="ace-s"></span><span class="amt"></span></div><div class="track"><div class="bar"></div></div></div><div class="r-px"><span class="num"></span><span class="delta"></span></div>`;
+        r.innerHTML = `<span class="rank"></span><div class="r-mid"><div class="r-name"><span class="tick"></span><strong></strong><span class="chip oc"></span><span class="ace-s"></span><span class="amt"></span></div><div class="r-pitch"></div><div class="track"><div class="bar"></div></div></div><div class="r-px"><span class="num"></span><span class="delta"></span></div>`;
         r.style.setProperty("--y", n); box.appendChild(r); rows[i.id] = r;
         if (!first) r.classList.add("enter");
       }
@@ -822,6 +823,7 @@ function Screen(be) {
       r.querySelector(".rank").textContent = n + 1;
       r.querySelector(".tick").textContent = i.sym;
       r.querySelector("strong").textContent = i.name;
+      r.querySelector(".r-pitch").textContent = i.pitch || "";
       const ch = r.querySelector(".chip.oc"); ch.className = "chip oc " + i.group; ch.textContent = i.ownerName;
       r.querySelector(".ace-s").innerHTML = aceChip(i);
       requestAnimationFrame(() => r.querySelector(".bar").style.width = Math.max(4, i.total / max * 100) + "%");
@@ -841,7 +843,7 @@ function Screen(be) {
     const {line} = sparkPath(L.series, 300, 90, 6);
     if (changed || !el.querySelector(".lp")) {
       el.innerHTML = `<h2>Leading idea <small>since listing</small></h2>
-        <div class="ln"><strong></strong><span class="tick" style="background:var(--orange)"></span></div>
+        <div class="ln"><strong></strong><span class="tick" style="background:var(--orange)"></span></div><div class="lpitch" style="color:#C2CAEB;font-size:.95em;margin-top:.2em;position:relative"></div>
         <div class="ln" style="margin-top:.35em"><div class="lp"><span class="num" id="lpv"></span><small>PTS / SHARE</small></div><span class="delta up" id="lpd"></span></div>
         <svg viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F68922" stop-opacity=".5"/><stop offset="1" stop-color="#F68922" stop-opacity="0"/></linearGradient></defs>
           <g stroke="#3A4699" stroke-width="1"><line x1="0" y1="30" x2="300" y2="30"/><line x1="0" y1="60" x2="300" y2="60"/></g>
@@ -849,6 +851,7 @@ function Screen(be) {
     }
     el.querySelector("strong").textContent = L.name;
     el.querySelector(".tick").textContent = L.sym;
+    el.querySelector(".lpitch").textContent = L.pitch || "";
     countTo($("#lpv"), L.price, f2);
     $("#lpd").textContent = `${arr(L.gain)} ${pct(L.gain)}`;
     $("#ll").setAttribute("d", line); $("#la").setAttribute("d", line + " L294 90 L6 90Z");
