@@ -96,14 +96,34 @@ body.v-screen{font-size:clamp(10px,.7vw + .25vh,30px);padding-block:1.1em}
 .panel{padding:1.1em 1.3em;display:flex;flex-direction:column;min-height:0;min-width:0}
 .panel h2{margin:0 0 .6em;font-family:var(--display);font-weight:700;font-size:1.25em;letter-spacing:-.01em;display:flex;align-items:center;gap:.5em}
 .panel h2 small{font-family:var(--body);font-weight:600;font-size:.62em;color:var(--ink-3);margin-left:auto;letter-spacing:0}
-.map{flex:1;min-height:0;display:grid;place-items:center}
+.map{flex:1;min-height:0;display:grid;place-items:center;position:relative}
 .map svg{width:100%;height:100%;max-height:100%;display:block;overflow:visible}
-.map .bub{transition:r 1s cubic-bezier(.3,1.3,.4,1)}
-.map .ico{transition:transform 1s cubic-bezier(.3,1.3,.4,1)}
-.map .ring{fill:none;stroke-width:4;opacity:0}
+.map .links line{stroke:#CDD4E8;stroke-width:2;stroke-dasharray:2 10;stroke-linecap:round;animation:flow 5s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-120}}
+.map .parts circle{transform-box:fill-box;animation:drift2 var(--d) ease-in-out infinite alternate}
+@keyframes drift2{to{transform:translate(var(--dx),var(--dy))}}
+.map .flt{cursor:pointer;animation:bob 5.5s ease-in-out infinite alternate;transition:opacity .5s;outline:none}
+@keyframes bob{to{transform:translateY(-9px)}}
+.map.focusing .flt{opacity:.74}
+.map .flt.on{opacity:1}
+.map .halo{fill:none;stroke-width:3;stroke-dasharray:5 9;stroke-linecap:round;opacity:0;transition:opacity .5s;transform-box:fill-box;transform-origin:center;animation:spin2 14s linear infinite}
+.map .flt.on .halo,.map .flt:focus-visible .halo{opacity:1}
+@keyframes spin2{to{transform:rotate(360deg)}}
+.map .ring{fill:none;stroke-width:4;opacity:0;transform-box:fill-box;transform-origin:center}
 .map .ring.go{animation:ring 1.4s ease-out}
-@keyframes ring{0%{opacity:.8;stroke-width:8}100%{opacity:0;stroke-width:1;transform:scale(1.5)}}
-.map .ring{transform-box:fill-box;transform-origin:center}
+@keyframes ring{0%{opacity:.8;stroke-width:8;transform:scale(1)}100%{opacity:0;stroke-width:1;transform:scale(1.7)}}
+.focus{display:flex;align-items:center;gap:.9em;background:var(--bg);border-radius:16px;padding:.6em .9em;min-height:4.2em}
+.focus.swap{animation:fswap .5s cubic-bezier(.2,.9,.2,1)}
+@keyframes fswap{from{opacity:0;transform:translateY(8px)}}
+.focus .fic{width:2.8em;height:2.8em;border-radius:12px;display:grid;place-items:center;flex:none}
+.focus .fic svg{width:1.6em;height:1.6em;color:#fff}
+.focus .ftx{min-width:0;flex:1}
+.focus .ftx b{display:block;font-family:var(--display);font-size:1.15em;letter-spacing:-.01em}
+.focus .ftx b small{font-family:var(--body);font-size:.68em;color:var(--ink-3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:.4em}
+.focus .ftx span{color:var(--ink-2);font-size:.95em}
+.focus .fst{text-align:right;flex:none;max-width:40%}
+.focus .fst b{display:block;font-family:var(--display);font-size:1.7em;line-height:1}
+.focus .fst span{color:var(--ink-2);font-size:.8em;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .side{display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:1.1em;min-height:0;min-width:0}
 .sotd{background:var(--night);color:#fff;position:relative;overflow:hidden}
 .sotd h2{color:#fff}.sotd h2 small{color:#9AA5D6}
@@ -633,14 +653,19 @@ function showCard(p) {
    ===================================================================== */
 function Screen(be) {
   document.body.classList.add("v-screen");
-  const POS = {T: [160, 125], V: [450, 110], C: [740, 125], S: [160, 390], D: [450, 405], A: [740, 390]};
-  const map = ORDER.map(k => { const [x, y] = POS[k], S = STYLES[k]; return `<g id="g-${k}">
-      <circle class="ring" id="rg-${k}" cx="${x}" cy="${y}" r="70" stroke="${S.color}"/>
+  const POS = {T: [160, 128], V: [450, 112], C: [740, 128], S: [160, 392], D: [450, 408], A: [740, 392]};
+  const LINKS = [["T", "V"], ["V", "C"], ["S", "D"], ["D", "A"], ["T", "S"], ["C", "A"], ["V", "D"], ["T", "D"], ["C", "D"]];
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const parts = Array.from({length: 22}, (_, i) => { const k = ORDER[i % 6]; return `<circle cx="${rnd(20, 880).toFixed(0)}" cy="${rnd(20, 550).toFixed(0)}" r="${rnd(2.5, 6).toFixed(1)}" fill="${STYLES[k].color}" opacity="${rnd(.12, .3).toFixed(2)}" style="--d:${rnd(6, 14).toFixed(1)}s;--dx:${rnd(-40, 40).toFixed(0)}px;--dy:${rnd(-40, 40).toFixed(0)}px"/>`; }).join("");
+  const map = ORDER.map((k, i) => { const [x, y] = POS[k], S = STYLES[k]; return `<g class="flt" data-k="${k}" style="animation-delay:-${(i * 1.1).toFixed(1)}s" tabindex="0" role="button" aria-label="${S.name}">
+      <circle class="halo" id="h-${k}" cx="${x}" cy="${y}" r="90" stroke="${S.color}"/>
+      <circle class="ring" id="rg-${k}" cx="${x}" cy="${y}" r="60" stroke="${S.color}"/>
       <circle class="bub" id="b-${k}" cx="${x}" cy="${y}" r="40" fill="${S.color}"/>
-      <g class="ico" id="i-${k}" style="transform:translate(${x - 20}px,${y - 20}px) scale(1.666)"><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${S.icon}</g></g>
-      <text id="pc-${k}" x="${x}" y="${y}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="800" font-size="22" fill="#fff"></text>
-      <text id="l1-${k}" x="${x}" y="${y + 70}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="700" font-size="22" fill="#1B2559">${S.name}</text>
-      <text id="l2-${k}" x="${x}" y="${y + 94}" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="600" font-size="16" fill="#5A6488"></text></g>`; }).join("");
+      <g id="o-${k}"></g>
+      <g id="i-${k}"><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${S.icon}</g></g>
+      <text id="pc-${k}" x="${x}" y="${y}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="800" font-size="20" fill="#fff"></text>
+      <text id="l1-${k}" x="${x}" y="${y + 90}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="700" font-size="21" fill="#1B2559">${S.name}</text>
+      <text id="l2-${k}" x="${x}" y="${y + 113}" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="600" font-size="15.5" fill="#5A6488"></text></g>`; }).join("");
   $("#app").innerHTML = `
   <div class="scr">
     <header class="s-head">
@@ -650,7 +675,11 @@ function Screen(be) {
       <div class="scan"><div><b>What's your leadership style?</b><span>Scan, answer <span class="hl">10 quick questions</span><br>and get your Leadership Card.</span></div><div class="qr" id="qr"></div></div>
     </header>
     <main class="s-main">
-      <section class="card panel"><h2>Leadership Map <small>every bubble grows as people join</small></h2><div class="map" id="map"><svg viewBox="0 0 900 570" role="img" aria-label="Leadership styles in the room">${map}</svg></div></section>
+      <section class="card panel"><h2>Leadership Map <small>each dot is a person · tap a bubble to explore</small></h2>
+        <div class="focus" id="focus"></div>
+        <div class="map" id="map"><svg viewBox="0 0 900 570" role="img" aria-label="Leadership styles in the room">
+          <g class="links">${LINKS.map(([p, q]) => `<line x1="${POS[p][0]}" y1="${POS[p][1]}" x2="${POS[q][0]}" y2="${POS[q][1]}"/>`).join("")}</g>
+          <g class="parts">${parts}</g>${map}<g id="fly"></g></svg></div></section>
       <div class="side">
         <section class="card panel sotd" id="sotd"></section>
         <section class="card panel"><h2>Staff vs Students <small>share of each group</small></h2><div class="cmp" id="cmp"></div></section>
@@ -664,25 +693,102 @@ function Screen(be) {
   catch { $("#qr").innerHTML = `<span class="num" style="color:#222B78;font-size:.55em;word-break:break-all;text-align:center">${esc(baseURL())}#quiz</span>`; }
   addEventListener("pointerdown", () => { unlockAudio(); try { navigator.wakeLock?.request("screen").catch(() => {}); } catch {} }, {once: true});
 
-  let D, seen = null, tapeSig = "", lastSpot = null, spotT;
+  const NS = "http://www.w3.org/2000/svg";
+  const cur = {}, tgt = {}, cnt = {}, orbit = {}, arriving = new Set();
+  ORDER.forEach(k => { cur[k] = tgt[k] = 40; cnt[k] = 0; orbit[k] = []; });
+  let D, seen = null, tapeSig = "", lastSpot = null, spotT, focusK = null, tourPause = 0, tourI = 0;
+
   function render(st) {
     D = derive(st);
     countTo($("#cnt"), D.n);
     const max = Math.max(1, ...ORDER.map(k => D.all[k]));
-    ORDER.map(k => {
-      const n = D.all[k], r = D.n ? 38 + 46 * Math.sqrt(n / max) : 46, [x, y] = POS[k], s = r * .62;
-      $("#b-" + k).style.r = r; $("#b-" + k).setAttribute("r", r);
-      $("#i-" + k).style.transform = `translate(${x - s / 2}px,${y - s / 2 - (n ? r * .18 : 0)}px) scale(${s / 24})`;
-      const pc = $("#pc-" + k); pc.textContent = n ? Math.round(n / D.n * 100) + "%" : ""; pc.setAttribute("y", y + r * .5);
-      $("#l1-" + k).setAttribute("y", y + r + 28); $("#l2-" + k).setAttribute("y", y + r + 51);
+    ORDER.forEach(k => {
+      const n = D.all[k]; cnt[k] = n;
+      tgt[k] = D.n ? 30 + 40 * Math.sqrt(n / max) : 40;
+      $("#b-" + k).setAttribute("fill-opacity", n || !D.n ? 1 : .35);
+      $("#pc-" + k).textContent = n ? Math.round(n / D.n * 100) + "%" : "";
       $("#l2-" + k).textContent = `${n} ${n === 1 ? "person" : "people"}`;
+      syncOrbit(k, D.people.filter(p => p.style === k).slice(0, 12));
     });
-    // pulse new arrivals
-    const ids = new Set(D.people.map(p => p.id));
-    if (seen) D.people.filter(p => !seen.has(p.id)).forEach(p => { const rg = $("#rg-" + p.style); rg.setAttribute("r", $("#b-" + p.style).getAttribute("r")); rg.classList.remove("go"); void rg.getBBox(); rg.classList.add("go"); chime(); });
+    if (seen) D.people.filter(p => !seen.has(p.id)).slice(0, 4).forEach(flyIn);
     renderSotd(); renderCmp(); renderFeed(seen); renderTape(); handleSpot();
-    seen = ids;
+    if (focusK) setFocus(focusK, true); else if (D.n) setFocus(D.top, true);
+    seen = new Set(D.people.map(p => p.id));
   }
+  function syncOrbit(k, list) {
+    const g = $("#o-" + k), keep = new Set(list.map(p => p.id));
+    orbit[k] = orbit[k].filter(o => { if (keep.has(o.id)) return true; o.el.remove(); return false; });
+    const have = new Set(orbit[k].map(o => o.id));
+    list.forEach(p => {
+      if (have.has(p.id)) return;
+      const el = document.createElementNS(NS, "g"); el.setAttribute("class", "od");
+      el.innerHTML = `<circle r="11" fill="#fff" stroke="${STYLES[k].color}" stroke-width="2.5"/><text text-anchor="middle" dy="3.4" font-family="Figtree,Arial,sans-serif" font-size="9" font-weight="800" fill="${p.group === "staff" ? "#E66926" : "#2A338E"}">${esc(initials(p.name))}</text>`;
+      g.appendChild(el); orbit[k].push({id: p.id, el});
+    });
+    const order = new Map(list.map((p, i) => [p.id, i]));
+    orbit[k].sort((a, b) => order.get(a.id) - order.get(b.id));
+  }
+  function flyIn(p) {
+    const k = p.style, [ex, ey] = POS[k];
+    if (reduce) { kick(k); return; }
+    arriving.add(p.id);
+    const g = document.createElementNS(NS, "g");
+    g.innerHTML = `<circle r="16" fill="${STYLES[k].color}" stroke="#fff" stroke-width="3"/><text text-anchor="middle" dy="4" font-family="Figtree,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff">${esc(initials(p.name))}</text>
+      <text text-anchor="middle" y="-26" font-family="Lexend,Arial,sans-serif" font-size="15" font-weight="700" fill="#1B2559" stroke="#fff" stroke-width="5" paint-order="stroke">${esc(p.name.split(" ").slice(0, 2).join(" "))}</text>`;
+    $("#fly").appendChild(g);
+    const sx = 920, sy = -30, cx = (sx + ex) / 2 + rnd(-80, 80), cy = Math.min(sy, ey) - 60, t0 = performance.now(), dur = 1700;
+    (function step(now) {
+      const u = Math.min(1, (now - t0) / dur), e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      const x = (1 - e) ** 2 * sx + 2 * (1 - e) * e * cx + e * e * ex, y = (1 - e) ** 2 * sy + 2 * (1 - e) * e * cy + e * e * ey;
+      g.setAttribute("transform", `translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${(1.2 - .6 * e).toFixed(3)})`);
+      g.setAttribute("opacity", u > .9 ? (1 - u) * 10 : 1);
+      if (u < 1) requestAnimationFrame(step); else { g.remove(); arriving.delete(p.id); kick(k); }
+    })(t0);
+  }
+  function kick(k) {
+    cur[k] += 14;
+    const rg = $("#rg-" + k); rg.setAttribute("r", cur[k]); rg.classList.remove("go"); void rg.getBBox(); rg.classList.add("go");
+    chime();
+  }
+  function setFocus(k, quiet) {
+    if (!D || !k) return; focusK = k;
+    document.querySelectorAll(".map .flt").forEach(g => g.classList.toggle("on", g.dataset.k === k));
+    $("#map").classList.add("focusing");
+    const S = STYLES[k], n = D.all[k], names = D.people.filter(p => p.style === k).slice(0, 3).map(p => p.name.split(" ")[0]);
+    const html = `<span class="fic" style="background:${S.color}">${icon(k)}</span><div class="ftx"><b>${S.name} <small>${S.nick}</small></b><span>${S.tagline}</span></div><div class="fst"><b style="color:${S.color}">${D.n ? Math.round(n / D.n * 100) : 0}%</b><span>${n} ${n === 1 ? "person" : "people"}${names.length ? " · " + esc(names.join(", ")) : ""}</span></div>`;
+    const el = $("#focus");
+    if (el.dataset.k !== k) { el.dataset.k = k; el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+    el.innerHTML = html;
+  }
+  document.querySelectorAll(".map .flt").forEach(g => {
+    const go = () => { tourPause = Date.now() + 25000; setFocus(g.dataset.k); };
+    g.addEventListener("click", go); g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+  setInterval(() => {
+    if (!D || !D.n || Date.now() < tourPause) return;
+    const live = ORDER.filter(k => D.all[k]); if (!live.length) return;
+    tourI = (live.indexOf(focusK) + 1) % live.length; setFocus(live[tourI]);
+  }, 6500);
+  (function loop(t) {
+    ORDER.forEach((k, idx) => {
+      cur[k] += (tgt[k] - cur[k]) * .07;
+      const r = cur[k], [x, y] = POS[k], s = r * .62, n = cnt[k];
+      $("#b-" + k).setAttribute("r", r.toFixed(2));
+      $("#h-" + k).setAttribute("r", (r + 34).toFixed(2));
+      $("#i-" + k).setAttribute("transform", `translate(${(x - s / 2).toFixed(1)},${(y - s / 2 - (n ? r * .18 : 0)).toFixed(1)}) scale(${(s / 24).toFixed(3)})`);
+      $("#pc-" + k).setAttribute("y", (y + r * .52).toFixed(1));
+      $("#l1-" + k).setAttribute("y", (y + r + 56).toFixed(1));
+      $("#l2-" + k).setAttribute("y", (y + r + 78).toFixed(1));
+      const list = orbit[k], m = list.length, R = r + 21, dirn = idx % 2 ? -1 : 1;
+      list.forEach((o, i) => {
+        if (arriving.has(o.id)) { o.el.setAttribute("opacity", 0); return; }
+        const a = (i / Math.max(m, 1)) * Math.PI * 2 + (reduce ? 0 : t * .00022 * dirn) - Math.PI / 2;
+        o.el.setAttribute("opacity", 1);
+        o.el.setAttribute("transform", `translate(${(x + Math.cos(a) * R).toFixed(1)},${(y + Math.sin(a) * R).toFixed(1)})`);
+      });
+    });
+    requestAnimationFrame(loop);
+  })(performance.now());
   function renderSotd() {
     const el = $("#sotd");
     if (!D.top) { el.innerHTML = `<h2>Style of the day</h2><div style="color:#9AA5D6">The most common style in the room will appear here.</div>`; return; }
