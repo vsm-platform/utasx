@@ -424,14 +424,17 @@ body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
 .c-text{color:var(--ink-2);max-width:44em}
 .c-idea{font-family:var(--display);font-weight:700;font-size:1.7em;color:var(--orange-2);margin:.2em 0 .05em;letter-spacing:-.02em;line-height:1.15}
 .c-pitch{font-style:italic;color:var(--ink-2);margin-bottom:.55em}
-.c-stats{display:flex;gap:2.2em;margin-top:.9em;flex-wrap:wrap;justify-content:center}
+.c-stats{display:flex;gap:2.2em;margin-top:.7em;flex-wrap:wrap;justify-content:center}
 .c-stats b{display:block;font-family:var(--mono);font-size:1.1em;color:var(--navy)}
 .c-stats span{font-size:.6em;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
-.c-foot{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:2em}
-.c-sig{border-top:.07em solid var(--ink);padding-top:.4em;font-size:.85em;font-weight:700;text-align:left}
+.c-foot{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:2.5em}
+.c-sig{border-top:.07em solid var(--ink);padding-top:.4em;font-size:.85em;font-weight:700;text-align:left;min-height:4.3em;line-height:1.3}
 .c-sig.r{text-align:right}
 .c-sig small{display:block;font-weight:500;color:var(--ink-2)}
-.c-seal{width:6em;height:6em;display:block}
+.c-seal{width:5.4em;height:5.4em;display:block}
+.c-mid{display:flex;flex-direction:column;align-items:center;gap:.25em}
+.c-date{font-size:.82em;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.c-thanks{color:var(--navy);font-weight:700;margin-top:.3em}
 @page cert{size:A4 landscape;margin:0}
 @media print{
   body.print-cert{padding:0!important;margin:0;background:#fff!important;height:auto!important;overflow:visible!important}
@@ -808,7 +811,8 @@ function showCert(i, D) {
         <div class="c-text">in recognition of contributing the idea</div>
         <div class="c-idea">“${esc(i.name)}”</div>
         <div class="c-pitch">${esc(i.pitch)}</div>
-        <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra. Thank you for sharing your creativity with our community.</div>
+        <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra.</div>
+        <div class="c-thanks">Thank you for sharing your creativity with our community.</div>
         <div class="c-stats">
           <div><b>${esc(i.sym)}</b><span>Ticker</span></div>
           ${rank ? `<div><b>#${rank} of ${D.ideas.length}</b><span>${closed ? "Final rank" : "Rank"}</span></div>` : ""}
@@ -816,7 +820,7 @@ function showCert(i, D) {
           <div><b>${f2(i.price)}</b><span>Share price</span></div>
           ${i.rCount ? `<div><b>${f1(i.ace)} / 3</b><span>ACE pitch score</span></div>` : ""}
         </div>
-        <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div>${CERT_SEAL}<div class="c-sig r">${day}<small>Date of issue</small></div></div>
+        <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${esc(CONFIG.department)}<small>UTAS Ibra</small></div></div>
       </div></div></div>
     <p class="cv-hint">Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.</p>`;
   document.body.appendChild(v);
