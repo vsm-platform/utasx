@@ -787,8 +787,8 @@ function confetti(ms = 5000, origin) {
 }
 
 /* ---------------- certificate of appreciation ---------------- */
-const CERT_OR = `<svg class="c-or" viewBox="0 60 140 180" aria-hidden="true"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/></svg>`;
-const CERT_BL = `<svg class="c-bl" viewBox="84 0 86 220" aria-hidden="true"><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></svg>`;
+const CERT_OR = `<img class="c-or" alt="" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 60 140 180" width="140" height="180"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/></svg>')}">`;
+const CERT_BL = `<img class="c-bl" alt="" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="84 0 86 220" width="86" height="220"><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></svg>')}">`;
 const CERT_SEAL = `<svg class="c-seal" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2l9 10 13-4 3 13 13 3-4 13 10 9-10 9 4 13-13 3-3 13-13-4-9 10-9-10-13 4-3-13-13-3 4-13-10-9 10-9-4-13 13-3 3-13 13 4z" fill="#F68922"/><circle cx="50" cy="50" r="31" fill="#fff"/><circle cx="50" cy="50" r="27" fill="none" stroke="#2A338E" stroke-width="1.6" stroke-dasharray="3 4"/><g transform="translate(42.4 30) scale(.09)"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></g><text x="50" y="63" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="800" font-size="5.8" letter-spacing=".8" fill="#2A338E">THANK YOU</text></svg>`;
 function showCert(i, D) {
   if (!i) return;
@@ -796,7 +796,7 @@ function showCert(i, D) {
   const rank = D.ideas.indexOf(i) + 1, closed = D.market.status === "closed";
   const day = new Date().toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric"});
   const v = document.createElement("div"); v.className = "cert-view"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "Certificate of appreciation");
-  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">Name on certificate</label><input id="cv-name" maxlength="40" value="${esc(i.ownerName)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">Save as PDF</button><button class="btn ghost" id="cv-x">Close</button></div></div>
+  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">Name on certificate</label><input id="cv-name" maxlength="40" value="${esc(i.ownerName)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">Download PDF</button><button class="btn ghost" id="cv-x">Close</button></div></div>
     <div class="sheet-wrap"><div class="sheet">
       <div class="c-frame"></div>${CERT_OR}${CERT_BL}
       <div class="c-in">
@@ -818,12 +818,35 @@ function showCert(i, D) {
         </div>
         <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div>${CERT_SEAL}<div class="c-sig r">${day}<small>Date of issue</small></div></div>
       </div></div></div>
-    <p class="cv-hint">Tap “Save as PDF”, then choose “Save as PDF” as the printer (on iPhone: Print, then Share, then Save to Files). It fits one A4 landscape page.</p>`;
+    <p class="cv-hint">Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.</p>`;
   document.body.appendChild(v);
   v.querySelector("#cv-name").oninput = e => v.querySelector("#cv-nm").textContent = e.target.value.trim() || i.ownerName;
   const done = () => document.body.classList.remove("print-cert");
   v.querySelector("#cv-x").onclick = () => { done(); v.remove(); };
-  v.querySelector("#cv-pdf").onclick = () => { document.body.classList.add("print-cert"); addEventListener("afterprint", done, {once: true}); try { window.print(); } catch {} };
+  v.querySelector("#cv-pdf").onclick = async e => {
+    const btn = e.currentTarget, label = btn.textContent;
+    btn.disabled = true; btn.textContent = "Preparing…";
+    try {
+      if (!window.html2canvas) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+      if (!window.jspdf) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      try { await document.fonts.ready; } catch {}
+      const holder = document.createElement("div");
+      holder.style.cssText = "position:absolute;left:-12000px;top:0;width:1123px;container-type:inline-size;background:#fff";
+      holder.appendChild(v.querySelector(".sheet").cloneNode(true));
+      document.body.appendChild(holder);
+      const canvas = await html2canvas(holder.firstChild, {scale: 2.5, backgroundColor: "#ffffff", logging: false, windowWidth: 1400});
+      holder.remove();
+      const pdf = new window.jspdf.jsPDF({orientation: "landscape", unit: "mm", format: "a4"});
+      pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 297, 210);
+      const who = (v.querySelector("#cv-nm").textContent || "certificate").trim().replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "certificate";
+      pdf.save(`UTAS-Idea-Exchange-Certificate-${who}.pdf`);
+      toast("Certificate saved as PDF");
+    } catch (err) {
+      console.warn(err); toast("Could not create the PDF. Opening print instead.", true);
+      document.body.classList.add("print-cert"); addEventListener("afterprint", done, {once: true}); try { window.print(); } catch {}
+    }
+    btn.disabled = false; btn.textContent = label;
+  };
   v.querySelector("#cv-name").focus({preventScroll: true});
 }
 
