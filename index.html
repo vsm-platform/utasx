@@ -400,6 +400,39 @@ table.t tr:last-child td{border-bottom:0}
   table.t{min-width:0}
 }
 
+/* market map (big screen) */
+.vtabs{display:inline-flex;background:var(--bg);border-radius:99px;padding:3px;gap:2px;font-family:var(--body);font-size:.62em;margin-left:.6em}
+.vtabs button{border:0;background:none;padding:.45em 1em;border-radius:99px;font-weight:700;color:var(--ink-2)}
+.vtabs button.on{background:var(--night);color:#fff}
+.focus{display:flex;align-items:center;gap:.9em;background:var(--bg);border-radius:16px;padding:.6em .9em;min-height:4.2em;margin-bottom:.4em}
+.focus.swap{animation:fswap .5s cubic-bezier(.2,.9,.2,1)}
+@keyframes fswap{from{opacity:0;transform:translateY(8px)}}
+.focus .fic{width:2.8em;height:2.8em;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;font-family:var(--mono);font-weight:700;font-size:.85em}
+.focus .ftx{min-width:0;flex:1}
+.focus .ftx b{display:block;font-family:var(--display);font-size:1.15em;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus .ftx span{color:var(--ink-2);font-size:.95em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus .fst{text-align:right;flex:none}
+.focus .fst b{display:block;font-family:var(--mono);font-size:1.6em;line-height:1}
+.focus .fst span{color:var(--ink-2);font-size:.8em;font-weight:600;white-space:nowrap}
+.mmap{flex:1;min-height:0;position:relative}
+.mmap svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+.mmap .ib{cursor:pointer;transition:opacity .5s;outline:none}
+.mmap.focusing .ib{opacity:.8}
+.mmap .ib.on{opacity:1}
+.mmap .bob{animation:bob 5.5s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-8px)}}
+.mmap .halo{fill:none;stroke-width:3;stroke-dasharray:5 9;stroke-linecap:round;opacity:0;transition:opacity .5s;transform-box:fill-box;transform-origin:center;animation:spin2 14s linear infinite}
+.mmap .ib.on .halo,.mmap .ib:focus-visible .halo{opacity:1}
+@keyframes spin2{to{transform:rotate(360deg)}}
+.mmap .pulse{fill:none;stroke-width:4;opacity:0;transform-box:fill-box;transform-origin:center}
+.mmap .pulse.go{animation:pulseout 1.4s ease-out}
+@keyframes pulseout{0%{opacity:.85;stroke-width:8;transform:scale(1)}100%{opacity:0;stroke-width:1;transform:scale(1.7)}}
+.mmap .parts circle{transform-box:fill-box;animation:drift2 var(--d) ease-in-out infinite alternate}
+@keyframes drift2{to{transform:translate(var(--dx),var(--dy))}}
+.mmap .grid line{stroke:#E6EAF4;stroke-width:1.5;stroke-dasharray:2 8;stroke-linecap:round;animation:flow 6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-100}}
+.rview{flex:1;min-height:0;display:flex;flex-direction:column}
+
 /* certificate of appreciation */
 .cert-view{position:fixed;inset:0;z-index:91;background:var(--bg);overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .3s}
 body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
@@ -414,19 +447,27 @@ body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
 .sheet .c-frame::after{content:"";position:absolute;inset:.45em;border:.06em solid var(--orange);border-radius:.4em}
 .sheet .c-or{position:absolute;left:-2.5%;bottom:-5%;width:13%;height:auto}
 .sheet .c-bl{position:absolute;right:-2.5%;top:-7%;width:13%;height:auto}
-.sheet .c-in{position:absolute;inset:8% 14% 7.5%;display:flex;flex-direction:column;align-items:center;text-align:center}
-.c-logo{height:4.4em;width:auto}
-.c-k{font-family:var(--display);font-weight:800;font-size:2.7em;letter-spacing:-.035em;color:var(--navy);margin-top:.35em;line-height:1}
+.sheet .c-in{position:absolute;inset:8% 11% 7.5%;display:flex;flex-direction:column}
+.c-head{display:flex;flex-direction:column;align-items:center;text-align:center}
+.c-logo{height:3.9em;width:auto}
+.c-k{font-family:var(--display);font-weight:800;font-size:2.4em;letter-spacing:-.035em;color:var(--navy);margin-top:.3em;line-height:1}
 .c-k span{color:var(--orange)}
-.c-rule{width:5em;height:.2em;background:var(--orange);border-radius:9em;margin:.75em 0 .8em}
-.c-lead{color:var(--ink-2);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.78em}
-.c-name{font-family:var(--display);font-weight:700;font-size:2.5em;letter-spacing:-.03em;margin:.15em 0 .25em;line-height:1.1;border-bottom:.035em solid var(--line);padding:0 .8em .18em;max-width:100%;overflow-wrap:anywhere}
-.c-text{color:var(--ink-2);max-width:44em}
-.c-idea{font-family:var(--display);font-weight:700;font-size:1.7em;color:var(--orange-2);margin:.2em 0 .05em;letter-spacing:-.02em;line-height:1.15}
-.c-pitch{font-style:italic;color:var(--ink-2);margin-bottom:.55em}
-.c-stats{display:flex;gap:2.2em;margin-top:.7em;flex-wrap:wrap;justify-content:center}
-.c-stats b{display:block;font-family:var(--mono);font-size:1.1em;color:var(--navy)}
-.c-stats span{font-size:.6em;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.c-body{display:grid;grid-template-columns:minmax(0,1fr) 19em;gap:2em;align-items:center;flex:1;min-height:0}
+.c-lead{color:var(--ink-2);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.72em}
+.c-name{font-family:var(--display);font-weight:700;font-size:2.2em;letter-spacing:-.03em;margin:.1em 0 .35em;line-height:1.1;overflow-wrap:anywhere}
+.c-ideabox{display:flex;align-items:center;gap:.6em;margin:.2em 0 .1em}
+.c-ideabox i{width:2.6em;height:2.6em;border-radius:.7em;display:grid;place-items:center;flex:none;background:var(--orange)}
+.c-ideabox i img{width:1.6em;height:1.6em}
+.c-idea{font-family:var(--display);font-weight:800;font-size:1.65em;color:var(--orange-2);letter-spacing:-.02em;line-height:1.1}
+.c-pitch{font-style:italic;color:var(--ink-2);margin:.35em 0 .6em}
+.c-text{color:var(--ink-2);font-size:.92em}
+.c-thanks{color:var(--navy);font-weight:700;margin-top:.45em}
+.c-perf{background:#F4F6FB;border-radius:.9em;padding:.9em 1em}
+.c-perf h4{margin:0 0 .4em;font-size:.68em;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:800}
+.c-perf img{width:100%;display:block}
+.c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5em .6em;margin-top:.6em}
+.c-grid b{display:block;font-family:var(--mono);font-size:.98em;color:var(--navy);white-space:nowrap}
+.c-grid span{font-size:.56em;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
 .c-foot{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:2.5em}
 .c-sig{border-top:.07em solid var(--ink);padding-top:.4em;font-size:.85em;font-weight:700;text-align:left;min-height:4.3em;line-height:1.3}
 .c-sig.r{text-align:right}
@@ -434,7 +475,6 @@ body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
 .c-seal{width:5.4em;height:5.4em;display:block}
 .c-mid{display:flex;flex-direction:column;align-items:center;gap:.25em}
 .c-date{font-size:.82em;font-weight:700;color:var(--ink-2);white-space:nowrap}
-.c-thanks{color:var(--navy);font-weight:700;margin-top:.3em}
 @page cert{size:A4 landscape;margin:0}
 @media print{
   body.print-cert{padding:0!important;margin:0;background:#fff!important;height:auto!important;overflow:visible!important}
@@ -793,6 +833,24 @@ function confetti(ms = 5000, origin) {
 const CERT_OR = `<img class="c-or" alt="" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 60 140 180" width="140" height="180"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/></svg>')}">`;
 const CERT_BL = `<img class="c-bl" alt="" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="84 0 86 220" width="86" height="220"><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></svg>')}">`;
 const CERT_SEAL = `<svg class="c-seal" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2l9 10 13-4 3 13 13 3-4 13 10 9-10 9 4 13-13 3-3 13-13-4-9 10-9-10-13 4-3-13-13-3 4-13-10-9 10-9-4-13 13-3 3-13 13 4z" fill="#F68922"/><circle cx="50" cy="50" r="31" fill="#fff"/><circle cx="50" cy="50" r="27" fill="none" stroke="#2A338E" stroke-width="1.6" stroke-dasharray="3 4"/><g transform="translate(42.4 30) scale(.09)"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></g><text x="50" y="63" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="800" font-size="5.8" letter-spacing=".8" fill="#2A338E">THANK YOU</text></svg>`;
+function chartSrc(series, color = "#F68922") {
+  const pts = series.length > 1 ? series : [{p: BASE}, ...series, {p: BASE}];
+  const ps = pts.map(p => p.p), mn = Math.min(BASE, ...ps), mx = Math.max(...ps) * 1.04 || BASE + 1, W = 300, H = 140, L = 34, Rt = 10, T = 12, Bm = 22;
+  const X = k => L + k / (ps.length - 1) * (W - L - Rt), Y = v => T + (1 - (v - mn) / (mx - mn || 1)) * (H - T - Bm);
+  const line = ps.map((v, k) => `${k ? "L" : "M"}${X(k).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
+  const last = ps[ps.length - 1];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W * 2}" height="${H * 2}"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".45"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+    <line x1="${L}" y1="${Y(BASE).toFixed(1)}" x2="${W - Rt}" y2="${Y(BASE).toFixed(1)}" stroke="#C9CFE0" stroke-width="1" stroke-dasharray="3 4"/>
+    <text x="${L - 5}" y="${(Y(BASE) + 4).toFixed(1)}" text-anchor="end" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#8E96B3">10.00</text>
+    <text x="${L - 5}" y="${(Y(last) + 4).toFixed(1)}" text-anchor="end" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="${color}">${last.toFixed(2)}</text>
+    <path d="${line} L${X(ps.length - 1).toFixed(1)} ${H - Bm} L${L} ${H - Bm}Z" fill="url(#a)"/>
+    <path d="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(ps.length - 1).toFixed(1)}" cy="${Y(last).toFixed(1)}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>
+    <text x="${L}" y="${H - 6}" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#8E96B3">Listing</text>
+    <text x="${W - Rt}" y="${H - 6}" text-anchor="end" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#8E96B3">Now</text></svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+const BULB_IMG = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>');
 function showCert(i, D) {
   if (!i) return;
   document.querySelector(".cert-view")?.remove();
@@ -803,22 +861,26 @@ function showCert(i, D) {
     <div class="sheet-wrap"><div class="sheet">
       <div class="c-frame"></div>${CERT_OR}${CERT_BL}
       <div class="c-in">
-        <img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra">
-        <div class="c-k">Certificate of <span>Appreciation</span></div>
-        <div class="c-rule"></div>
-        <div class="c-lead">Proudly presented to</div>
-        <div class="c-name" id="cv-nm">${esc(i.ownerName)}</div>
-        <div class="c-text">in recognition of contributing the idea</div>
-        <div class="c-idea">“${esc(i.name)}”</div>
-        <div class="c-pitch">${esc(i.pitch)}</div>
-        <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra.</div>
-        <div class="c-thanks">Thank you for sharing your creativity with our community.</div>
-        <div class="c-stats">
-          <div><b>${esc(i.sym)}</b><span>Ticker</span></div>
-          ${rank ? `<div><b>#${rank} of ${D.ideas.length}</b><span>${closed ? "Final rank" : "Rank"}</span></div>` : ""}
-          <div><b>${i.investors}</b><span>Backers</span></div>
-          <div><b>${f2(i.price)}</b><span>Share price</span></div>
-          ${i.rCount ? `<div><b>${f1(i.ace)} / 3</b><span>ACE pitch score</span></div>` : ""}
+        <div class="c-head"><img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"><div class="c-k">Certificate of <span>Appreciation</span></div></div>
+        <div class="c-body">
+          <div>
+            <div class="c-lead">Idea Exchange · proudly presented to</div>
+            <div class="c-name" id="cv-nm">${esc(i.ownerName)}</div>
+            <div class="c-lead">in recognition of contributing the idea</div>
+            <div class="c-ideabox"><i><img src="${BULB_IMG}" alt=""></i><div class="c-idea">“${esc(i.name)}”</div></div>
+            <div class="c-pitch">${esc(i.pitch)}</div>
+            <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra.</div>
+            <div class="c-thanks">Thank you for sharing your creativity with our community.</div>
+          </div>
+          <div class="c-perf"><h4>Market performance</h4><img src="${chartSrc(i.series, i.group === "staff" ? "#F68922" : "#3B56A8")}" alt="Share price since listing">
+            <div class="c-grid">
+              <div><b>${esc(i.sym)}</b><span>Ticker</span></div>
+              <div><b>${rank ? `#${rank}/${D.ideas.length}` : "—"}</b><span>${closed ? "Final rank" : "Rank"}</span></div>
+              <div><b>${i.investors}</b><span>Backers</span></div>
+              <div><b>${f2(i.price)}</b><span>Share price</span></div>
+              <div><b>${pct(i.gain)}</b><span>Since listing</span></div>
+              <div><b>${i.rCount ? f1(i.ace) + "/3" : "—"}</b><span>ACE pitch</span></div>
+            </div></div>
         </div>
         <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${esc(CONFIG.department)}<small>UTAS Ibra</small></div></div>
       </div></div></div>
@@ -877,7 +939,14 @@ function Screen(be) {
       <div class="duel-msg" id="dmsg"></div>
     </section>
     <main class="s-main">
-      <section class="card panel"><h2>Top ideas <small id="rcount"></small></h2><div class="race" id="race"></div><div class="more" id="more"></div></section>
+      <section class="card panel"><h2>Top ideas <span class="vtabs" role="tablist"><button data-v="map" class="on" role="tab">Market map</button><button data-v="rank" role="tab">Ranking</button></span><small id="rcount"></small></h2>
+        <div class="focus" id="focus"></div>
+        <div class="mmap" id="mmap"><svg viewBox="0 0 1100 455" role="img" aria-label="Live market map of ideas"><defs>
+          <radialGradient id="gS" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC27D"/><stop offset=".55" stop-color="#F68922"/><stop offset="1" stop-color="#E66926"/></radialGradient>
+          <radialGradient id="gU" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#8FA6EA"/><stop offset=".55" stop-color="#3B56A8"/><stop offset="1" stop-color="#2A338E"/></radialGradient></defs>
+          <g class="grid" id="mgrid"></g><g class="parts" id="mparts"></g><g id="mideas"></g><g id="mfly"></g>
+          <text id="mempty" x="550" y="228" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-size="24" font-weight="700" fill="#8E96B3">No ideas yet. Scan the code and list the first one.</text></svg></div>
+        <div class="rview" id="rview" hidden><div class="race" id="race"></div><div class="more" id="more"></div></div></section>
       <div class="aside">
         <section class="card panel leader" id="leader"></section>
         <section class="card panel"><h2>Live trades <small>updates instantly</small></h2><ul class="feed" id="feed"></ul></section>
@@ -900,9 +969,130 @@ function Screen(be) {
   function render(st) {
     D = derive(st);
     $("#status").innerHTML = statusPill(D.market);
-    renderDuel(); renderRace(); renderLeader(); renderFeed(); renderTape(); handleBell(); renderSpot();
+    renderDuel(); renderRace(); renderMap(); renderLeader(); renderFeed(); renderTape(); handleBell(); renderSpot();
     first = false;
   }
+  /* ---------- Market Map: living view of the ideas ---------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  $("#mparts").innerHTML = Array.from({length: 20}, (_, i) => `<circle cx="${rnd(20, 1080).toFixed(0)}" cy="${rnd(15, 440).toFixed(0)}" r="${rnd(2.5, 6).toFixed(1)}" fill="${i % 2 ? "#F68922" : "#3B56A8"}" opacity="${rnd(.1, .25).toFixed(2)}" style="--d:${rnd(6, 14).toFixed(1)}s;--dx:${rnd(-40, 40).toFixed(0)}px;--dy:${rnd(-40, 40).toFixed(0)}px"/>`).join("");
+  let gridN = -1;
+  const layout = n => { const rows = n <= 5 ? 1 : 2, cols = rows === 1 ? n : Math.ceil(n / 2); return Array.from({length: n}, (_, k) => { const row = rows === 1 ? 0 : Math.floor(k / cols), c = k - row * cols, inRow = rows === 1 ? n : (row ? n - cols : cols); return [1100 * (c + .5) / inRow, rows === 1 ? 205 : (row ? 330 : 122)]; }); };
+  const B = {}; // id -> bubble state
+  let tradeSeen = null, focusId = null, tourPause = 0, view = "map", viewPause = 0;
+  function bubble(i) {
+    const g = document.createElementNS(NS, "g"); g.setAttribute("class", "ib"); g.setAttribute("tabindex", "0"); g.setAttribute("role", "button"); g.dataset.id = i.id;
+    const fill = i.group === "staff" ? "url(#gS)" : "url(#gU)", col = i.group === "staff" ? "#F68922" : "#3B56A8";
+    g.innerHTML = `<g class="bob" style="animation-delay:-${rnd(0, 5).toFixed(1)}s"><circle class="halo" r="90" stroke="${col}"/><circle class="pulse" r="60" stroke="${col}"/>
+      <circle class="bb" r="40" fill="${fill}" stroke="#fff" stroke-width="3"/><g class="orb"></g>
+      <text class="tk" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="18" fill="#fff"></text>
+      <text class="pr" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="14" fill="#fff" opacity=".92"></text>
+      <text class="nm" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="700" font-size="15" fill="#1B2559"></text>
+      <text class="gn" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="700" font-size="13.5"></text></g>`;
+    const go = () => { tourPause = Date.now() + 25000; setFocus(i.id); };
+    g.addEventListener("click", go); g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    $("#mideas").appendChild(g);
+    const st = {el: g, x: 550, y: 228, r: 0, tr: 40, tx: 550, ty: 228, dots: [], idea: i, col};
+    return st;
+  }
+  function renderMap() {
+    const list = D.ideas.slice(0, 10), max = Math.max(1, ...list.map(i => i.total)), keep = new Set(list.map(i => i.id));
+    $("#mempty").style.display = list.length ? "none" : "";
+    const P = layout(list.length);
+    if (gridN !== list.length) { gridN = list.length; const L = []; P.forEach((p, k) => P.forEach((q, j) => { if (j > k && ((Math.abs(p[1] - q[1]) < 1 && Math.abs(p[0] - q[0]) < 1100 / Math.max(1, Math.ceil(list.length / (list.length <= 5 ? 1 : 2))) + 2) || (Math.abs(p[0] - q[0]) < 120 && p[1] !== q[1]))) L.push(`<line x1="${p[0].toFixed(0)}" y1="${p[1]}" x2="${q[0].toFixed(0)}" y2="${q[1]}"/>`); })); $("#mgrid").innerHTML = L.join(""); }
+    for (const id in B) if (!keep.has(id)) { B[id].el.remove(); delete B[id]; }
+    list.forEach((i, n) => {
+      const b = B[i.id] || (B[i.id] = bubble(i));
+      if (!b.placed) { b.x = P[n][0]; b.y = P[n][1]; b.placed = true; }
+      b.idea = i; b.tx = P[n][0]; b.ty = P[n][1]; b.tr = 34 + 28 * Math.sqrt(i.total / max);
+      const el = b.el;
+      el.querySelector(".tk").textContent = i.sym;
+      el.querySelector(".pr").textContent = f2(i.price);
+      const perRow = list.length <= 5 ? list.length : Math.ceil(list.length / 2), mc = perRow <= 3 ? 30 : perRow === 4 ? 24 : 19;
+      el.querySelector(".nm").textContent = i.name.length > mc ? i.name.slice(0, mc - 1).trim() + "…" : i.name;
+      const gn = el.querySelector(".gn"); gn.textContent = `${pct(i.gain)} · ${i.investors} backer${i.investors === 1 ? "" : "s"}`; gn.setAttribute("fill", i.gain > 0 ? "#12A36B" : "#8E96B3");
+      // orbiting backers
+      const backers = []; const seenU = new Set();
+      for (let k = D.trades.length - 1; k >= 0 && backers.length < 12; k--) { const t = D.trades[k]; if (t.ideaId === i.id && !seenU.has(t.uid)) { seenU.add(t.uid); backers.push(t.group); } }
+      const orb = el.querySelector(".orb");
+      if (orb.childElementCount !== backers.length || b.sig !== backers.join()) {
+        orb.innerHTML = backers.map(gp => `<circle r="6.5" fill="${gp === "staff" ? "#F68922" : "#3B56A8"}" stroke="#fff" stroke-width="2"/>`).join("");
+        b.sig = backers.join();
+      }
+    });
+    // flying coins for new trades
+    const ids = new Set(D.trades.map(t => t.id));
+    if (tradeSeen) D.trades.filter(t => !tradeSeen.has(t.id)).slice(-6).forEach(t => coin(t));
+    tradeSeen = ids;
+    if (!focusId || !B[focusId]) { if (list.length) setFocus(list[0].id, true); else { $("#focus").innerHTML = `<div class="ftx"><b>Market map</b><span>Each bubble is an idea. It grows as points come in and moves up as it overtakes others.</span></div>`; } }
+    else setFocus(focusId, true);
+  }
+  function coin(t) {
+    const b = B[t.ideaId]; if (!b || view !== "map") return;
+    if (reduce) { kick(b, t.amount); return; }
+    const g = document.createElementNS(NS, "g");
+    g.innerHTML = `<circle r="13" fill="#F68922" stroke="#fff" stroke-width="2.5"/><text text-anchor="middle" dy="4.5" font-family="Lexend,Arial,sans-serif" font-size="12" font-weight="800" fill="#fff">U</text>`;
+    $("#mfly").appendChild(g);
+    const sx = 905, sy = -40, t0 = performance.now(), dur = 1300, cx0 = rnd(500, 850), cy0 = rnd(-80, 40);
+    (function step(now) {
+      const u = Math.min(1, (now - t0) / dur), e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, ex = b.x, ey = b.y;
+      const x = (1 - e) ** 2 * sx + 2 * (1 - e) * e * cx0 + e * e * ex, y = (1 - e) ** 2 * sy + 2 * (1 - e) * e * cy0 + e * e * ey;
+      g.setAttribute("transform", `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(u * 540).toFixed(0)})`);
+      if (u < 1) requestAnimationFrame(step); else { g.remove(); kick(b, t.amount); }
+    })(t0);
+  }
+  function kick(b, amt) {
+    b.r += 10;
+    const p = b.el.querySelector(".pulse"); p.setAttribute("r", b.r); p.classList.remove("go"); void p.getBBox(); p.classList.add("go");
+    const tx = document.createElementNS(NS, "text");
+    tx.setAttribute("text-anchor", "middle"); tx.setAttribute("font-family", "JetBrains Mono,monospace"); tx.setAttribute("font-weight", "700"); tx.setAttribute("font-size", "20"); tx.setAttribute("fill", "#12A36B");
+    tx.setAttribute("stroke", "#fff"); tx.setAttribute("stroke-width", "4"); tx.setAttribute("paint-order", "stroke"); tx.textContent = "+" + f0(amt);
+    $("#mfly").appendChild(tx);
+    const t0 = performance.now(), x0 = b.x, y0 = b.y - b.r - 8;
+    (function step(now) { const u = Math.min(1, (now - t0) / 1300); tx.setAttribute("x", x0); tx.setAttribute("y", (y0 - 40 * u).toFixed(1)); tx.setAttribute("opacity", (1 - u * u).toFixed(2)); if (u < 1) requestAnimationFrame(step); else tx.remove(); })(t0);
+    beep(880, .07);
+  }
+  function setFocus(id, quiet) {
+    const b = B[id]; if (!b) return; focusId = id; const i = b.idea;
+    document.querySelectorAll("#mideas .ib").forEach(g => g.classList.toggle("on", g.dataset.id === id));
+    $("#mmap").classList.add("focusing");
+    const el = $("#focus");
+    const html = `<span class="fic" style="background:${b.col}">${esc(i.sym)}</span><div class="ftx"><b>${esc(i.name)} <span class="chip ${i.group}" style="display:inline-flex;vertical-align:middle;font-size:.55em">${esc(i.ownerName)}</span></b><span>${esc(i.pitch)}</span></div>
+      <div class="fst"><b>${f2(i.price)}</b><span class="${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</span><span> · ${i.investors} backers${i.rCount ? ` · ACE ${f1(i.ace)}` : ""}</span></div>`;
+    if (el.dataset.id !== id) { el.dataset.id = id; el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+    el.innerHTML = html;
+  }
+  setInterval(() => {
+    if (view !== "map" || !D || Date.now() < tourPause) return;
+    const ids = D.ideas.slice(0, 10).map(i => i.id); if (!ids.length) return;
+    setFocus(ids[(ids.indexOf(focusId) + 1) % ids.length]);
+  }, 7000);
+  function setView(v, manual) {
+    view = v; if (manual) viewPause = Date.now() + 60000;
+    document.querySelectorAll(".vtabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+    $("#mmap").hidden = v !== "map"; $("#focus").hidden = v !== "map"; $("#rview").hidden = v !== "rank";
+    if (v === "rank" && D) { rows = {}; $("#race").innerHTML = ""; renderRace(); }
+  }
+  document.querySelectorAll(".vtabs button").forEach(b => b.onclick = () => setView(b.dataset.v, true));
+  setInterval(() => { if (Date.now() < viewPause) return; setView(view === "map" ? "rank" : "map"); }, 30000);
+  (function loop(t) {
+    for (const id in B) {
+      const b = B[id];
+      b.x += (b.tx - b.x) * .05; b.y += (b.ty - b.y) * .05; b.r += (b.tr - b.r) * .08;
+      const el = b.el, r = b.r;
+      el.setAttribute("transform", `translate(${b.x.toFixed(1)},${b.y.toFixed(1)})`);
+      el.querySelector(".bb").setAttribute("r", r.toFixed(2));
+      el.querySelector(".halo").setAttribute("r", (r + 26).toFixed(2));
+      el.querySelector(".tk").setAttribute("y", (-2).toFixed(1));
+      el.querySelector(".pr").setAttribute("y", (17).toFixed(1));
+      el.querySelector(".nm").setAttribute("y", (r + 33).toFixed(1));
+      el.querySelector(".gn").setAttribute("y", (r + 51).toFixed(1));
+      const dots = el.querySelector(".orb").children, m = dots.length, R = r + 14, dirn = id.charCodeAt(id.length - 1) % 2 ? 1 : -1;
+      for (let k = 0; k < m; k++) { const a = k / m * Math.PI * 2 + (reduce ? 0 : t * .00025 * dirn); dots[k].setAttribute("cx", (Math.cos(a) * R).toFixed(1)); dots[k].setAttribute("cy", (Math.sin(a) * R).toFixed(1)); }
+    }
+    requestAnimationFrame(loop);
+  })(performance.now());
+
   function renderDuel() {
     const s = D.sT, u = D.uT, tot = s + u, share = tot ? s / tot : .5;
     countTo($("#sv"), s); countTo($("#uv"), u);
