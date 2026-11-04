@@ -400,6 +400,46 @@ table.t tr:last-child td{border-bottom:0}
   table.t{min-width:0}
 }
 
+/* certificate of appreciation */
+.cert-view{position:fixed;inset:0;z-index:91;background:var(--bg);overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .3s}
+body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
+.cv-bar{max-width:980px;margin:0 auto 1em;display:flex;gap:.8em;align-items:end;flex-wrap:wrap;justify-content:space-between}
+.cv-bar .field{flex:1 1 14em}
+.cv-bar .field input{background:#fff}
+.cv-bar .acts{display:flex;gap:.5em;flex:0 0 auto}
+.cv-hint{max-width:980px;margin:.9em auto 0;color:var(--ink-2);font-size:.88em;text-align:center}
+.sheet-wrap{max-width:980px;margin:0 auto;container-type:inline-size;box-shadow:0 20px 60px rgba(27,37,89,.18);border-radius:6px;overflow:hidden;page:cert;break-inside:avoid}
+.sheet{position:relative;width:100%;aspect-ratio:297/210;background:#fff;color:var(--ink);font-size:1.55cqw;line-height:1.4;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet .c-frame{position:absolute;inset:4.5%;border:.13em solid var(--navy);border-radius:.6em}
+.sheet .c-frame::after{content:"";position:absolute;inset:.45em;border:.06em solid var(--orange);border-radius:.4em}
+.sheet .c-or{position:absolute;left:-2.5%;bottom:-5%;width:13%;height:auto}
+.sheet .c-bl{position:absolute;right:-2.5%;top:-7%;width:13%;height:auto}
+.sheet .c-in{position:absolute;inset:8% 14% 7.5%;display:flex;flex-direction:column;align-items:center;text-align:center}
+.c-logo{height:4.4em;width:auto}
+.c-k{font-family:var(--display);font-weight:800;font-size:2.7em;letter-spacing:-.035em;color:var(--navy);margin-top:.35em;line-height:1}
+.c-k span{color:var(--orange)}
+.c-rule{width:5em;height:.2em;background:var(--orange);border-radius:9em;margin:.75em 0 .8em}
+.c-lead{color:var(--ink-2);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.78em}
+.c-name{font-family:var(--display);font-weight:700;font-size:2.5em;letter-spacing:-.03em;margin:.15em 0 .25em;line-height:1.1;border-bottom:.035em solid var(--line);padding:0 .8em .18em;max-width:100%;overflow-wrap:anywhere}
+.c-text{color:var(--ink-2);max-width:44em}
+.c-idea{font-family:var(--display);font-weight:700;font-size:1.7em;color:var(--orange-2);margin:.2em 0 .05em;letter-spacing:-.02em;line-height:1.15}
+.c-pitch{font-style:italic;color:var(--ink-2);margin-bottom:.55em}
+.c-stats{display:flex;gap:2.2em;margin-top:.9em;flex-wrap:wrap;justify-content:center}
+.c-stats b{display:block;font-family:var(--mono);font-size:1.1em;color:var(--navy)}
+.c-stats span{font-size:.6em;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.c-foot{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:2em}
+.c-sig{border-top:.07em solid var(--ink);padding-top:.4em;font-size:.85em;font-weight:700;text-align:left}
+.c-sig.r{text-align:right}
+.c-sig small{display:block;font-weight:500;color:var(--ink-2)}
+.c-seal{width:6em;height:6em;display:block}
+@page cert{size:A4 landscape;margin:0}
+@media print{
+  body.print-cert{padding:0!important;margin:0;background:#fff!important;height:auto!important;overflow:visible!important}
+  body.print-cert #app,body.print-cert .demo,body.print-cert .deco,body.print-cert .tabbar,body.print-cert .toast,body.print-cert #confetti,body.print-cert .cv-bar,body.print-cert .cv-hint{display:none!important}
+  body.print-cert .cert-view{position:static;overflow:visible;padding:0!important;background:#fff;animation:none}
+  body.print-cert .sheet-wrap{width:99.6vw;max-width:none;margin:0;box-shadow:none;border-radius:0}
+}
+
 @media (max-width:820px){
   body.v-screen{font-size:12px}
   .s-main{grid-template-columns:1fr}
@@ -431,7 +471,8 @@ table.t tr:last-child td{border-bottom:0}
    SETTINGS — edit before the Open Day
    ===================================================================== */
 const CONFIG = {
-  eventLine: "Open Day · College of Commerce & Finance",
+  department: "Department of Economics and Business Administration",
+  eventLine: "Open Day · Department of Economics and Business Administration",
   currency: "UTAS Points",
   startBalance: 1000,      // points each visitor receives
   adminPin: "2026",        // PIN for the control desk (#admin) and report (#report)
@@ -499,6 +540,7 @@ const ICON = {
   s3: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="14" fill="#E8EDFA"/><circle cx="20" cy="26" r="9" fill="#3B56A8"/><circle cx="29" cy="22" r="9" fill="#F68922" stroke="#E8EDFA" stroke-width="2.5"/></svg>`,
   s4: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="14" fill="#E2F6EC"/><path d="M12 32l8-8 6 5 10-12" stroke="#12A36B" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 17h6v6" stroke="#12A36B" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   hour: `<svg class="hour" viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h20M14 42h20" stroke="#2A338E" stroke-width="3" stroke-linecap="round"/><path d="M16 6c0 10 16 12 16 18S16 32 16 42h16c0-10-16-12-16-18S32 16 32 6Z" fill="none" stroke="#2A338E" stroke-width="2.6" stroke-linejoin="round"/><path d="M19 38h10l-5-6z" fill="#F68922"/></svg>`,
+  award: `<svg viewBox="0 0 24 24" width="1.3em" height="1.3em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>`,
   glow: `<svg class="glow" viewBox="0 0 170 240" aria-hidden="true" opacity=".22"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#fff"/></svg>`
 };
 
@@ -742,6 +784,47 @@ function confetti(ms = 5000, origin) {
     P.forEach(p => { p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += .1; if (!burst && p.y > cv.height && Date.now() < end) p.y = -10; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); });
     if (Date.now() < end + (burst ? 0 : 3000)) requestAnimationFrame(f); else { ctx.clearRect(0, 0, cv.width, cv.height); cv.hidden = true; }
   })();
+}
+
+/* ---------------- certificate of appreciation ---------------- */
+const CERT_OR = `<svg class="c-or" viewBox="0 60 140 180" aria-hidden="true"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/></svg>`;
+const CERT_BL = `<svg class="c-bl" viewBox="84 0 86 220" aria-hidden="true"><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></svg>`;
+const CERT_SEAL = `<svg class="c-seal" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2l9 10 13-4 3 13 13 3-4 13 10 9-10 9 4 13-13 3-3 13-13-4-9 10-9-10-13 4-3-13-13-3 4-13-10-9 10-9-4-13 13-3 3-13 13 4z" fill="#F68922"/><circle cx="50" cy="50" r="31" fill="#fff"/><circle cx="50" cy="50" r="27" fill="none" stroke="#2A338E" stroke-width="1.6" stroke-dasharray="3 4"/><g transform="translate(42.4 30) scale(.09)"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M22 214L76 162L132 220Q112 240 86 240Q48 240 22 214Z" fill="#E66926"/><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#3B56A8"/><path d="M84 140L168 76Q170 80 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 140Z" fill="#2A338E"/></g><text x="50" y="63" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="800" font-size="5.8" letter-spacing=".8" fill="#2A338E">THANK YOU</text></svg>`;
+function showCert(i, D) {
+  if (!i) return;
+  document.querySelector(".cert-view")?.remove();
+  const rank = D.ideas.indexOf(i) + 1, closed = D.market.status === "closed";
+  const day = new Date().toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric"});
+  const v = document.createElement("div"); v.className = "cert-view"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "Certificate of appreciation");
+  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">Name on certificate</label><input id="cv-name" maxlength="40" value="${esc(i.ownerName)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">Save as PDF</button><button class="btn ghost" id="cv-x">Close</button></div></div>
+    <div class="sheet-wrap"><div class="sheet">
+      <div class="c-frame"></div>${CERT_OR}${CERT_BL}
+      <div class="c-in">
+        <img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra">
+        <div class="c-k">Certificate of <span>Appreciation</span></div>
+        <div class="c-rule"></div>
+        <div class="c-lead">Proudly presented to</div>
+        <div class="c-name" id="cv-nm">${esc(i.ownerName)}</div>
+        <div class="c-text">in recognition of contributing the idea</div>
+        <div class="c-idea">“${esc(i.name)}”</div>
+        <div class="c-pitch">${esc(i.pitch)}</div>
+        <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra. Thank you for sharing your creativity with our community.</div>
+        <div class="c-stats">
+          <div><b>${esc(i.sym)}</b><span>Ticker</span></div>
+          ${rank ? `<div><b>#${rank} of ${D.ideas.length}</b><span>${closed ? "Final rank" : "Rank"}</span></div>` : ""}
+          <div><b>${i.investors}</b><span>Backers</span></div>
+          <div><b>${f2(i.price)}</b><span>Share price</span></div>
+          ${i.rCount ? `<div><b>${f1(i.ace)} / 3</b><span>ACE pitch score</span></div>` : ""}
+        </div>
+        <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div>${CERT_SEAL}<div class="c-sig r">${day}<small>Date of issue</small></div></div>
+      </div></div></div>
+    <p class="cv-hint">Tap “Save as PDF”, then choose “Save as PDF” as the printer (on iPhone: Print, then Share, then Save to Files). It fits one A4 landscape page.</p>`;
+  document.body.appendChild(v);
+  v.querySelector("#cv-name").oninput = e => v.querySelector("#cv-nm").textContent = e.target.value.trim() || i.ownerName;
+  const done = () => document.body.classList.remove("print-cert");
+  v.querySelector("#cv-x").onclick = () => { done(); v.remove(); };
+  v.querySelector("#cv-pdf").onclick = () => { document.body.classList.add("print-cert"); addEventListener("afterprint", done, {once: true}); try { window.print(); } catch {} };
+  v.querySelector("#cv-name").focus({preventScroll: true});
 }
 
 /* =====================================================================
@@ -1013,7 +1096,7 @@ function Phone(be) {
         <h1>Back the <em>best idea</em> at Open Day</h1>
         <p>Claim your free points, invest in the ideas you believe in and watch the big screen move.</p></div>
       <form class="card form" id="join" novalidate>
-        <div class="field"><label for="jn">Your name</label><input id="jn" maxlength="24" autocomplete="given-name" placeholder="e.g. Maryam"></div>
+        <div class="field"><label for="jn">Your full name</label><input id="jn" maxlength="32" autocomplete="name" placeholder="e.g. Maryam Al Habsi"><small style="color:var(--ink-3);font-size:.8em">It appears on your certificate if you list an idea.</small></div>
         <div class="field"><label>I am…</label><div class="seg">
           <button type="button" class="staff" data-g="staff" aria-pressed="false">${ICON.staff}Staff</button>
           <button type="button" class="student" data-g="student" aria-pressed="false">${ICON.student}Student</button></div></div>
@@ -1130,7 +1213,9 @@ function Phone(be) {
         body.innerHTML = `<div class="section-t"><h3>My idea</h3><span>live</span></div>
           <div class="mine-hero"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1em"><div style="min-width:0"><span class="tick" style="background:var(--orange)">${esc(mine.sym)}</span><h4 style="margin:.6em 0 .2em;font-size:1.25em">${esc(mine.name)}</h4><div style="color:#C2CAEB;font-size:.92em">${esc(mine.pitch)}</div></div><div style="text-align:right"><div class="rk">#${rank}</div><div style="color:#A9B3E0;font-size:.8em;font-weight:700">of ${D.ideas.length}</div></div></div>
           <div class="kv"><div><span>Price</span><b>${f2(mine.price)}</b></div><div><span>Raised</span><b>${f0(mine.total)}</b></div><div><span>Backers</span><b>${mine.investors}</b></div><div><span>ACE</span><b>${mine.rCount ? f1(mine.ace) : "—"}</b></div></div></div>
+          <button class="btn orange" id="mycert" style="width:100%;margin-top:.9em">${ICON.award}Get my certificate of appreciation</button>
           <div class="card tip" style="margin-top:.9em">${ICON.s2}<div><b>Now pitch it: 30 seconds</b><p>Ask the desk team to start your Live Pitch. Tell people why your idea is right, why it fits them and what they gain. The audience then rates you on Appropriate, Consistent and Effective.</p></div></div>`;
+        $("#mycert").onclick = () => showCert(mine, D);
       } else if (body.dataset.tab !== "form") {
         body.dataset.tab = "form";
         body.innerHTML = `<div class="section-t"><h3>List your idea</h3><span>one per person</span></div>
@@ -1232,8 +1317,8 @@ function Admin(be) {
         <ul class="ilist">${D.pending.map(i => `<li><span class="tick">${esc(i.sym)}</span><span class="nm"><b>${esc(i.name)}</b><small>${esc(i.pitch)} · ${esc(i.ownerName)} (${i.group})</small></span><button class="ok" data-ok="${i.id}">Approve</button><button class="x" data-rej="${i.id}">Reject</button></li>`).join("") || `<li style="color:var(--ink-3)">Nothing waiting.</li>`}</ul></div>
       <div class="card"><h3>Live pitch</h3>
         ${P ? `<div class="livebox"><div><b>${P.phase === "pitch" ? "Pitching now" : "Audience is rating"}: ${esc(P.idea.name)}</b><span id="plt">${P.left}s left · ${P.idea.rCount} ratings</span></div><button class="btn ghost sm" id="p-end">End</button></div>` : ""}
-        <p>Tap “Pitch” next to an idea when its owner steps up. The big screen shows a ${CONFIG.pitchSeconds}-second countdown, then opens ACE rating on every phone for ${CONFIG.rateSeconds} seconds.</p>
-        <ul class="ilist">${D.ideas.map(i => `<li><span class="tick">${esc(i.sym)}</span><span class="nm"><b>${esc(i.name)}</b><small>${esc(i.ownerName)} · ${i.rCount ? `ACE ${f1(i.ace)} from ${i.rCount}` : "not pitched yet"}</small></span><button class="pt" data-pitch="${i.id}" ${P || closed ? "disabled" : ""}>Pitch</button><button class="x" data-del="${i.id}">Remove</button></li>`).join("") || `<li style="color:var(--ink-3)">No live ideas yet.</li>`}</ul></div>
+        <p>Tap “Certificate” to open and print a thank-you certificate for that idea’s owner. Tap “Pitch” next to an idea when its owner steps up. The big screen shows a ${CONFIG.pitchSeconds}-second countdown, then opens ACE rating on every phone for ${CONFIG.rateSeconds} seconds.</p>
+        <ul class="ilist">${D.ideas.map(i => `<li><span class="tick">${esc(i.sym)}</span><span class="nm"><b>${esc(i.name)}</b><small>${esc(i.ownerName)} · ${i.rCount ? `ACE ${f1(i.ace)} from ${i.rCount}` : "not pitched yet"}</small></span><button class="pt" data-pitch="${i.id}" ${P || closed ? "disabled" : ""}>Pitch</button><button class="ok" data-cert="${i.id}">Certificate</button><button class="x" data-del="${i.id}">Remove</button></li>`).join("") || `<li style="color:var(--ink-3)">No live ideas yet.</li>`}</ul></div>
       <div class="card"><h3>Ring the bell</h3><p>Shows the top 3 on the big screen and buzzes every phone. Ring it every 30–45 minutes.</p><div class="row-b"><button class="btn orange" id="b-up" ${closed ? "disabled" : ""}>Ring market update</button></div></div>
       <div class="card"><h3>Trading</h3><p>${closed ? "The market is closed. Reopen it to continue trading." : "The closing bell ends trading and crowns the winners with confetti."}</p><div class="row-b">${closed ? `<button class="btn" id="b-open">Reopen market</button>` : `<button class="btn red" id="b-close">Ring closing bell</button>`}</div><div id="cf"></div></div>
       <div class="card"><h3>End-of-day report</h3><p>Participants, the staff and student split, every idea with its price and ACE score, and the winners. Print it or save it as PDF and CSV.</p><div class="row-b"><a class="btn blue" href="#report" style="text-decoration:none">Open report</a></div></div>
@@ -1247,6 +1332,7 @@ function Admin(be) {
     $("#b-reset").onclick = () => ask("#cf2", "Delete all ideas, players, ratings and trades? This cannot be undone.", "Yes, reset", () => be.reset(false));
     $("#b-seed") && ($("#b-seed").onclick = () => be.reset(true));
     $("#p-end") && ($("#p-end").onclick = () => be.setMarket({pitch: null}).then(() => toast("Pitch ended.")));
+    b.querySelectorAll("[data-cert]").forEach(x => x.onclick = () => showCert(D.byId[x.dataset.cert], D));
     b.querySelectorAll("[data-ok]").forEach(x => x.onclick = () => be.approve(x.dataset.ok).then(() => toast("Approved. It is live now.")));
     b.querySelectorAll("[data-rej]").forEach(x => x.onclick = () => be.deleteIdea(x.dataset.rej, []).then(() => toast("Idea rejected.")));
     b.querySelectorAll("[data-pitch]").forEach(x => x.onclick = () => be.setMarket({pitch: {ideaId: x.dataset.pitch, startAt: be.now() + 1500, dur: CONFIG.pitchSeconds, rate: CONFIG.rateSeconds, id: rid()}}).then(() => toast("Pitch spotlight is on the big screen.")));
