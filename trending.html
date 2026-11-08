@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>#TRENDING — The Crisis Feed</title>
+<title>#TRENDING — Salary Day Blackout</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,56 +17,54 @@
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:"Figtree",system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
-.disp{font-family:"Bricolage Grotesque",sans-serif}
 svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.av{width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.85em;flex:none}
+@keyframes popin{from{transform:scale(0);opacity:0}}
+@keyframes rise{from{transform:translateY(1em);opacity:0}}
+@keyframes fadeUp{from{transform:translateY(1em);opacity:0}to{transform:none;opacity:1}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes ping{to{transform:scale(2.6);opacity:0}}
+.live{width:.7em;height:.7em;border-radius:50%;background:var(--coral);position:relative;flex:none}
+.live::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--coral);animation:ping 1.4s infinite}
 
 /* ============ HOST ============ */
-.host{min-height:100vh;height:100vh;padding:2vh 2.2vw 1.6vh;display:flex;flex-direction:column;gap:1.6vh;font-size:clamp(14px,1.18vw,30px);background:
+.host{height:100vh;padding:2vh 2.2vw 1.6vh;display:flex;flex-direction:column;gap:1.5vh;font-size:clamp(14px,1.18vw,30px);background:
   radial-gradient(60em 30em at 100% 0%,#ffe9e2 0%,transparent 60%),radial-gradient(50em 30em at 0% 100%,#e6edff 0%,transparent 60%),var(--bg)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:1em}
-.mark{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.9em;letter-spacing:-.02em;display:flex;align-items:center;gap:.25em}
+.mark{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.9em;letter-spacing:-.02em;display:flex;align-items:center;gap:.25em;color:var(--ink)}
 .mark .h{color:var(--coral)}
-.mark small{font-family:"Figtree";font-weight:600;font-size:.4em;color:var(--mute);letter-spacing:.14em;text-transform:uppercase;margin-left:.8em}
+.mark small{font-family:"Figtree";font-weight:700;font-size:.4em;color:var(--mute);letter-spacing:.14em;text-transform:uppercase;margin-left:.8em}
 .chips{display:flex;gap:.5em;align-items:center}
 .chip{background:var(--card);border:2px solid var(--line);border-radius:99px;padding:.35em .9em;font-weight:700;font-size:.85em;display:flex;align-items:center;gap:.4em}
 .chip.demo{border-color:var(--amber);color:var(--amber)}
 .chip b{font-family:"Bricolage Grotesque";font-weight:800}
-.snd{cursor:pointer}
 .snd.off{opacity:.45}
-.foot{display:flex;justify-content:space-between;color:var(--mute);font-size:.72em;font-weight:600;letter-spacing:.06em}
-.btn{display:inline-flex;align-items:center;gap:.5em;background:var(--ink);color:#fff;font-weight:800;padding:.8em 1.5em;border-radius:.8em;font-size:1em;box-shadow:0 .25em 0 #00000033;transition:transform .15s}
+.foot{display:flex;justify-content:space-between;color:var(--mute);font-size:.72em;font-weight:600;letter-spacing:.05em}
+.btn{display:inline-flex;align-items:center;gap:.5em;background:var(--ink);color:#fff;font-weight:800;padding:.75em 1.4em;border-radius:.8em;box-shadow:0 .25em 0 #00000033;transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}
 .btn.coral{background:var(--coral)}
-.btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--line2);box-shadow:none}
 
 /* lobby */
 .lobby{flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:2.4vw;min-height:0}
 .lb-l{display:flex;flex-direction:column;justify-content:center;gap:2.2vh}
-.eyebrow{display:inline-flex;align-items:center;gap:.5em;color:var(--coral);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:.85em}
-.live{width:.7em;height:.7em;border-radius:50%;background:var(--coral);position:relative}
-.live::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--coral);animation:ping 1.4s infinite}
-@keyframes ping{to{transform:scale(2.6);opacity:0}}
-.lb-l h1{font-family:"Bricolage Grotesque";font-weight:800;font-size:4.6em;line-height:.95;letter-spacing:-.03em}
+.eyebrow{display:inline-flex;align-items:center;gap:.6em;color:var(--coral);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:.85em}
+.lb-l h1{font-family:"Bricolage Grotesque";font-weight:800;font-size:4.4em;line-height:.95;letter-spacing:-.03em}
 .lb-l h1 .hl{color:var(--coral);position:relative;white-space:nowrap}
 .lb-l h1 .hl svg{position:absolute;left:0;bottom:-.12em;width:100%;height:.25em;overflow:visible}
 .lb-l h1 .hl path{fill:none;stroke:var(--coral);stroke-width:5;stroke-linecap:round;stroke-dasharray:400;stroke-dashoffset:400;animation:draw 1.2s .4s ease forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.lb-l h1 .soft{color:var(--mute);font-size:.55em;display:block;margin-top:.25em;letter-spacing:-.01em}
-.lead{font-size:1.25em;color:var(--ink2);max-width:30em;line-height:1.45}
+.lb-l h1 .soft{color:var(--mute);font-size:.55em;display:block;margin-top:.25em}
+.lead{font-size:1.2em;color:var(--ink2);max-width:31em;line-height:1.45}
 .lead b{color:var(--ink)}
-.picker{display:grid;grid-template-columns:1fr 1fr;gap:1em}
-.scen{background:var(--card);border:3px solid var(--line);border-radius:1.1em;padding:1.1em 1.2em;text-align:left;display:flex;gap:1em;align-items:flex-start;box-shadow:var(--sh);transition:border-color .25s,transform .25s}
-.scen:hover{transform:translateY(-3px)}
-.scen .ic{width:3em;height:3em;border-radius:.8em;display:grid;place-items:center;font-size:1.1em;flex:none}
-.scen .ic svg{width:1.6em;height:1.6em}
-.scen h3{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.35em;line-height:1.05}
-.scen p{color:var(--mute);font-size:.88em;margin-top:.3em;line-height:1.35}
-.scen .key{display:inline-block;margin-top:.5em;font-size:.7em;font-weight:800;letter-spacing:.12em;color:var(--mute);border:2px solid var(--line);border-radius:.4em;padding:.1em .45em}
-.scen.on{border-color:var(--coral);transform:translateY(-3px)}
-.scen.on .key{background:var(--coral);border-color:var(--coral);color:#fff}
+.types4{display:grid;grid-template-columns:repeat(4,1fr);gap:.7em}
+.tcard{background:var(--card);border:2px solid var(--line);border-radius:1em;padding:.8em .9em;box-shadow:var(--sh);animation:rise .6s both}
+.tcard:nth-child(2){animation-delay:.1s}.tcard:nth-child(3){animation-delay:.2s}.tcard:nth-child(4){animation-delay:.3s}
+.tcard .ti{width:2.3em;height:2.3em;border-radius:.65em;display:grid;place-items:center;margin-bottom:.5em}
+.tcard .ti svg{width:1.4em;height:1.4em}
+.tcard b{display:block;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.05em;line-height:1.1}
+.tcard span{display:block;color:var(--mute);font-size:.75em;font-weight:700;margin-top:.2em}
 .lb-r{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 .join{background:var(--card);border-radius:1.2em;padding:1.2em;display:flex;gap:1.3em;align-items:center;box-shadow:var(--sh);border:2px solid var(--line)}
-#qr{line-height:0;padding:.4em;border:2px solid var(--line);border-radius:.7em;background:#fff}
+#qr{line-height:0;padding:.4em;border:2px solid var(--line);border-radius:.7em;background:#fff;min-width:2em;min-height:2em}
 #qr img,#qr canvas{width:9.5em!important;height:9.5em!important}
 .join .lbl{font-size:.75em;font-weight:800;letter-spacing:.16em;color:var(--mute);text-transform:uppercase}
 .code{font-family:"Bricolage Grotesque";font-weight:800;font-size:4em;letter-spacing:.06em;line-height:1;margin:.1em 0}
@@ -75,50 +73,67 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 @keyframes bob{50%{transform:translateY(-.08em)}}
 .url{font-size:.72em;color:var(--mute);word-break:break-all;font-weight:600}
 .crowd{flex:1;background:var(--card);border-radius:1.2em;border:2px solid var(--line);box-shadow:var(--sh);padding:1em 1.2em;display:flex;flex-direction:column;min-height:0}
-.crowd-h{display:flex;justify-content:space-between;align-items:baseline}
-.crowd-h b{font-family:"Bricolage Grotesque";font-size:2.6em;font-weight:800;line-height:1}
-.crowd-h span{color:var(--mute);font-weight:700;font-size:.85em}
+.crowd-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:var(--mute)}
+.crowd-h b{font-family:"Bricolage Grotesque";font-size:2.6em;font-weight:800;line-height:1;color:var(--ink)}
 .bubbles{flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:.55em;margin-top:.8em;overflow:hidden}
-.bub{display:flex;align-items:center;gap:.4em;background:var(--bg);border-radius:99px;padding:.22em .8em .22em .22em;font-weight:700;font-size:.9em;animation:popin .5s cubic-bezier(.3,1.6,.5,1) both}
-.av{width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.85em;flex:none}
-@keyframes popin{from{transform:scale(0);opacity:0}}
-.crowd .empty{color:var(--mute);margin:auto;text-align:center;font-weight:600}
+.bub{display:inline-flex;align-items:center;gap:.4em;background:var(--bg);border-radius:99px;padding:.22em .8em .22em .22em;font-weight:700;font-size:.9em;animation:popin .5s cubic-bezier(.3,1.6,.5,1) both}
+.empty{color:var(--mute);margin:auto;text-align:center;font-weight:600}
 .lb-go{display:flex;justify-content:flex-end}
 
 /* stage */
 .stage{flex:1;display:grid;grid-template-columns:1fr 24em;gap:1.8vw;min-height:0}
-.main{display:flex;flex-direction:column;gap:1.5vh;min-height:0}
-.alertc{display:flex;gap:1em;align-items:center;background:var(--card);border:2px solid var(--coral);border-radius:1em;padding:.9em 1.2em;box-shadow:0 0 0 .35em var(--coral-l);animation:slideD .6s cubic-bezier(.2,.9,.3,1)}
-@keyframes slideD{from{transform:translateY(-1em);opacity:0}}
+.main{display:flex;flex-direction:column;gap:1.4vh;min-height:0}
+.alertc{display:flex;gap:1em;align-items:center;background:var(--card);border:2px solid var(--coral);border-radius:1em;padding:.85em 1.2em;box-shadow:0 0 0 .35em var(--coral-l);animation:fadeUp .6s cubic-bezier(.2,.9,.3,1) both}
 .bell{width:2.6em;height:2.6em;border-radius:.7em;background:var(--coral);color:#fff;display:grid;place-items:center;flex:none}
 .bell svg{width:1.5em;height:1.5em;animation:ring 1.6s ease-in-out infinite;transform-origin:50% 10%}
 @keyframes ring{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(16deg)}20%{transform:rotate(-14deg)}30%{transform:rotate(10deg)}40%{transform:rotate(-6deg)}}
 .alertc .clk{font-weight:800;color:var(--coral);letter-spacing:.1em;font-size:.8em;text-transform:uppercase}
-.alertc p{font-size:1.18em;line-height:1.35;font-weight:600;margin-top:.15em}
+.alertc p{font-size:1.15em;line-height:1.35;font-weight:600;margin-top:.15em}
+.branch{display:inline-block;background:var(--ink);color:#fff;border-radius:.5em;padding:.15em .6em;font-size:.75em;font-weight:800;letter-spacing:.06em;margin-bottom:.3em}
 .qrow{display:flex;align-items:center;gap:1em}
-.q{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.7em;line-height:1;letter-spacing:-.02em;flex:1}
-.timer{position:relative;width:5.4em;height:5.4em;flex:none}
+.q{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.6em;line-height:1;letter-spacing:-.02em}
+.qsub{color:var(--ink2);font-weight:600;font-size:1.05em;margin-top:.35em;line-height:1.35}
+.timer{position:relative;width:5.2em;height:5.2em;flex:none;margin-left:auto}
 .timer svg{width:100%;height:100%}
 .t-bg{fill:#fff;stroke:var(--line);stroke-width:8}
 .t-fg{fill:none;stroke:var(--ink);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .15s linear,stroke .3s}
 .timer.low .t-fg{stroke:var(--coral)}
-.timer b{position:absolute;inset:0;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:2.1em}
+.timer b{position:absolute;inset:0;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:2em}
 .timer.low b{color:var(--coral);animation:thump .5s infinite}
 @keyframes thump{50%{transform:scale(1.12)}}
+
+/* R1 drip + live timeline */
+.drip{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:.8em;align-content:start;min-height:0}
+.fact{display:flex;gap:.8em;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:1em;padding:.8em 1em;box-shadow:var(--sh);animation:factIn .7s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes factIn{from{transform:translateY(-.8em) scale(.9);opacity:0}}
+.fact .fi{width:2.3em;height:2.3em;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;font-weight:800}
+.fact.V .fi{background:var(--green)} .fact.R .fi,.fact.P .fi{background:var(--amber)} .fact.E .fi,.fact.U .fi{background:var(--blue)}
+.fact .fi svg{width:1.3em;height:1.3em}
+.fact small{display:block;font-weight:800;letter-spacing:.1em;font-size:.68em;text-transform:uppercase}
+.fact.V small{color:var(--green)} .fact.R small,.fact.P small{color:var(--amber)} .fact.E small,.fact.U small{color:var(--blue)}
+.fact p{font-weight:700;font-size:1.02em;line-height:1.3}
+.fact.wait{border-style:dashed;box-shadow:none;background:transparent;animation:none;color:var(--mute)}
+.fact.wait .fi{background:var(--line);color:var(--mute)}
+.ltl{background:var(--card);border:2px solid var(--line);border-radius:1em;padding:.8em 1.1em;box-shadow:var(--sh)}
+.ltl-h{display:flex;justify-content:space-between;font-weight:800;font-size:.9em;margin-bottom:.4em}
+.ltl-h b{font-family:"Bricolage Grotesque";font-size:1.3em}
+.ltl svg{width:100%;height:auto;display:block;overflow:visible}
+.tl-dot{animation:popin .45s cubic-bezier(.3,1.6,.5,1) both;transform-box:fill-box;transform-origin:center}
+
+/* MC options */
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:1.1vw;flex:1;min-height:0}
-.opt{position:relative;background:var(--card);border:2px solid var(--line);border-radius:1em;padding:1em 1.1em 1.3em;display:flex;flex-direction:column;gap:.55em;overflow:hidden;box-shadow:var(--sh);animation:rise .55s cubic-bezier(.2,.9,.3,1) both;transition:opacity .5s,transform .5s,border-color .5s,box-shadow .5s}
+.opt{position:relative;background:var(--card);border:2px solid var(--line);border-radius:1em;padding:.95em 1.1em 1.3em;display:flex;flex-direction:column;gap:.5em;overflow:hidden;box-shadow:var(--sh);animation:rise .55s cubic-bezier(.2,.9,.3,1) both;transition:opacity .5s,transform .5s,border-color .5s,box-shadow .5s}
 .opt:nth-child(2){animation-delay:.08s}.opt:nth-child(3){animation-delay:.16s}.opt:nth-child(4){animation-delay:.24s}
-@keyframes rise{from{transform:translateY(1em);opacity:0}}
 .opt::before{content:"";position:absolute;left:0;top:0;bottom:0;width:.4em;background:var(--rc)}
 .ohead{display:flex;align-items:center;gap:.6em}
 .olet{width:1.9em;height:1.9em;border-radius:.5em;background:var(--ink);color:#fff;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.1em;flex:none}
 .role{display:flex;align-items:center;gap:.4em;color:var(--rc);font-weight:800;font-size:.85em;letter-spacing:.04em;text-transform:uppercase}
 .role svg{width:1.3em;height:1.3em}
-.say{font-size:1.15em;line-height:1.38;font-weight:600;color:var(--ink)}
-.vote{position:absolute;left:0;right:0;bottom:0;height:.55em;background:#0000}
+.say{font-size:1.13em;line-height:1.36;font-weight:600}
+.vote{position:absolute;left:0;right:0;bottom:0;height:.55em}
 .vote i{display:block;height:100%;width:0;background:var(--rc);transition:width 1.2s cubic-bezier(.2,.9,.3,1)}
-.pct{position:absolute;right:.7em;top:.6em;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5em;opacity:0;transition:opacity .5s .3s}
-.stamp{position:absolute;right:.6em;bottom:.8em;width:3em;height:3em;opacity:0}
+.pct{position:absolute;right:.7em;top:.55em;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5em;opacity:0;transition:opacity .5s .3s}
+.stamp{position:absolute;right:.6em;bottom:.8em;width:2.8em;height:2.8em;opacity:0}
 .stamp circle{fill:var(--green)}
 .stamp path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40}
 .revealed .opt{opacity:.42;animation:none}
@@ -128,81 +143,97 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .revealed .opt.best .stamp{opacity:1;animation:stampIn .5s .5s cubic-bezier(.3,1.7,.5,1) both}
 .revealed .opt.best .stamp path{animation:draw .5s .9s ease forwards}
 @keyframes stampIn{from{transform:scale(2.5) rotate(-20deg);opacity:0}}
-.note{display:flex;gap:1em;align-items:center;background:var(--amber-l);border:2px solid #f5d27a;border-radius:1em;padding:.8em 1.1em;animation:slideU .6s .7s cubic-bezier(.2,.9,.3,1) both}
-@keyframes slideU{from{transform:translateY(1em);opacity:0}}
-.note .bulb{width:2.4em;height:2.4em;border-radius:50%;background:var(--amber);color:#fff;display:grid;place-items:center;flex:none}
-.note .bulb svg{width:1.4em;height:1.4em}
-.note p{font-weight:700;font-size:1.05em;line-height:1.35}
-.note small{display:block;color:#92400e;font-weight:600;font-size:.78em;margin-top:.2em}
+.headline{display:flex;gap:.8em;align-items:center;background:var(--ink);color:#fff;border-radius:.9em;padding:.7em 1em;font-weight:700;font-size:1.05em;animation:fadeUp .6s .5s both}
+.headline .tg{background:var(--coral);border-radius:.4em;padding:.15em .5em;font-size:.72em;font-weight:800;letter-spacing:.1em;flex:none}
+.headline.good .tg{background:var(--green)}
+.note{display:flex;gap:1em;align-items:center;background:var(--amber-l);border:2px solid #f5d27a;border-radius:1em;padding:.7em 1.1em;animation:fadeUp .6s .9s both}
+.note .bulb{width:2.3em;height:2.3em;border-radius:50%;background:var(--amber);color:#fff;display:grid;place-items:center;flex:none}
+.note .bulb svg{width:1.3em;height:1.3em}
+.note p{font-weight:700;font-size:1em;line-height:1.35}
+.note small{display:block;color:#92400e;font-weight:600;font-size:.78em;margin-top:.15em}
+.top5{display:flex;gap:.5em;flex-wrap:wrap}
+.top5 .bub{background:var(--card);border:2px solid var(--line);font-size:.82em}
+.top5 .bub b{font-family:"Bricolage Grotesque";margin-left:.35em}
+.rk{color:var(--mute);font-weight:800}
 
-/* feed panel */
-.feed{background:var(--card);border:2px solid var(--line);border-radius:1.2em;box-shadow:var(--sh);display:flex;flex-direction:column;min-height:0;overflow:hidden}
-.feed-h{display:flex;align-items:center;gap:.55em;padding:.8em 1em;border-bottom:2px solid var(--line);font-weight:800}
-.feed-h .tag{margin-left:auto;background:var(--coral-l);color:var(--coral);border-radius:99px;padding:.2em .7em;font-size:.82em}
-.feed-h .tag.good{background:var(--green-l);color:var(--green)}
-.posts{flex:1;overflow:hidden;padding:.4em .8em;display:flex;flex-direction:column;gap:.45em;min-height:0}
-.post{display:flex;gap:.6em;padding:.6em .5em;border-bottom:1px solid var(--line);animation:postin .55s cubic-bezier(.2,.9,.3,1)}
-@keyframes postin{from{transform:translateX(1.2em);opacity:0;max-height:0}to{max-height:10em}}
-.post .av{width:2.1em;height:2.1em}
-.post .h{font-weight:800;font-size:.8em;color:var(--mute)}
-.post p{font-size:.98em;line-height:1.32;font-weight:600}
-.post .m{display:flex;gap:1em;color:var(--mute);font-size:.72em;font-weight:700;margin-top:.25em}
+/* R1 reveal */
+.r1stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8em}
+.stt{background:var(--card);border:2px solid var(--line);border-radius:1em;padding:.7em 1em;box-shadow:var(--sh);display:flex;align-items:center;gap:.8em;animation:rise .5s both}
+.stt b{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.2em;line-height:1}
+.stt span{font-weight:700;font-size:.9em;color:var(--ink2);line-height:1.25}
+.stt i{width:1em;height:1em;border-radius:50%;flex:none}
+.bestpost{background:var(--card);border:2px solid var(--green);border-radius:1em;padding:.9em 1.1em;box-shadow:0 0 0 .3em var(--green-l);animation:fadeUp .6s .4s both}
+.bestpost .bh{display:flex;align-items:center;gap:.6em;font-weight:800;font-size:.85em;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4em}
+.bestpost p{font-size:1.2em;font-weight:700;line-height:1.4}
+.next-scene{display:flex;align-items:center;gap:.8em;background:var(--ink);color:#fff;border-radius:1em;padding:.8em 1.1em;font-weight:700;animation:fadeUp .6s 1s both}
+.next-scene b{color:#ffb4a6}
+
+/* side panel */
+.side{background:var(--card);border:2px solid var(--line);border-radius:1.2em;box-shadow:var(--sh);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.side-h{display:flex;align-items:center;gap:.55em;padding:.75em 1em;border-bottom:2px solid var(--line);font-weight:800}
+.side-h .tag{margin-left:auto;background:var(--coral-l);color:var(--coral);border-radius:99px;padding:.2em .7em;font-size:.82em}
+.posts{flex:1;overflow:hidden;padding:.3em .8em;display:flex;flex-direction:column;min-height:0}
+.post{display:flex;gap:.6em;padding:.55em .4em;border-bottom:1px solid var(--line);animation:postin .55s cubic-bezier(.2,.9,.3,1)}
+@keyframes postin{from{transform:translateX(1.2em);opacity:0}}
+.post .av{width:2em;height:2em}
+.post .h{font-weight:800;font-size:.78em;color:var(--mute)}
+.post p{font-size:.95em;line-height:1.3;font-weight:600;color:#7f1d1d}
+.post .m{display:flex;gap:1em;color:var(--mute);font-size:.7em;font-weight:700;margin-top:.2em}
 .post .m svg{width:1.1em;height:1.1em;vertical-align:-.2em;margin-right:.2em}
-.post.bad p{color:#7f1d1d}
-.post.good p{color:#14532d}
-.gauges{display:grid;grid-template-columns:1fr 1fr;gap:.4em;padding:.6em .8em .4em;border-top:2px solid var(--line);background:#fbfaf6}
+.gauges{display:grid;grid-template-columns:1fr 1fr;gap:.4em;padding:.5em .8em .4em;border-top:2px solid var(--line);background:#fbfaf6}
 .gauge{text-align:center}
-.gauge svg{width:100%;max-width:9em;display:block;margin:0 auto}
+.gauge svg{width:100%;max-width:8.5em;display:block;margin:0 auto}
 .g-bg{fill:none;stroke:#ebe8de;stroke-width:12;stroke-linecap:round}
 .g-arc{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1.3s cubic-bezier(.2,.9,.3,1)}
 .g-ndl{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round}
 .g-hub{fill:var(--ink)}
 .gauge g{transform-box:view-box;transition:transform 1.3s cubic-bezier(.3,1.4,.5,1)}
-.g-val{margin-top:-.2em}
-.g-val b{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.6em;line-height:1}
-.g-val span{display:block;font-size:.72em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.g-val b{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5em;line-height:1}
+.g-val span{display:block;font-size:.7em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
 .g-val i{font-style:normal;font-weight:800;font-size:.8em;margin-left:.3em}
 .up{color:var(--green)} .dn{color:var(--coral)}
-.fstat{display:flex;justify-content:space-between;align-items:center;padding:.6em 1em;border-top:2px solid var(--line);font-weight:700;font-size:.85em;color:var(--mute)}
+.fstat{display:flex;justify-content:space-between;align-items:center;padding:.55em 1em;border-top:2px solid var(--line);font-weight:700;font-size:.85em;color:var(--mute)}
 .fstat b{font-family:"Bricolage Grotesque";font-size:1.5em;color:var(--ink)}
-.drift{font-size:.75em;color:var(--coral);font-weight:800;text-align:center;padding:0 .8em .5em;background:#fbfaf6}
-.top5{display:flex;gap:.5em;flex-wrap:wrap}
-.top5 .bub{background:var(--card);border:2px solid var(--line);font-size:.85em}
-.top5 .bub b{font-family:"Bricolage Grotesque";margin-left:.4em}
-.top5 .rk{color:var(--mute);font-weight:800;margin-right:.1em}
-.ctrl{display:flex;gap:.6em;justify-content:flex-end}
+.mapwrap{flex:1;min-height:0;padding:.6em .8em 0;display:flex;flex-direction:column}
+.mapwrap h4{font-size:.75em;font-weight:800;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin-bottom:.3em}
+.mapwrap svg{flex:1;min-height:0;width:100%}
+.ctrl{padding:.6em .8em;display:flex;justify-content:flex-end;border-top:2px solid var(--line)}
+
+/* DNA map */
+.dna text{font-family:"Figtree";font-weight:800}
+.dna .ql{font-family:"Bricolage Grotesque";font-weight:800;font-size:17px}
+.dna .ax{font-size:11px;letter-spacing:.14em;fill:#64748b}
+.dna .dot{transition:transform 1.5s cubic-bezier(.3,1.2,.4,1)}
+.dna .dot text{font-size:11px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.dna .avg{transition:transform 1.5s cubic-bezier(.3,1.2,.4,1)}
 
 /* final */
-.final{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2.4vw;min-height:0}
-.panel{background:var(--card);border:2px solid var(--line);border-radius:1.2em;box-shadow:var(--sh);padding:1.2em 1.4em;display:flex;flex-direction:column;min-height:0}
-.panel h2{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.2em;letter-spacing:-.02em;display:flex;align-items:baseline;gap:.5em}
-.panel h2 small{font-family:"Figtree";font-size:.36em;color:var(--mute);letter-spacing:.14em;text-transform:uppercase}
-.podium{flex:1;display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:.8em;margin-top:.6em;min-height:0}
-.pod{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
-.pod .av{width:2.8em;height:2.8em;font-size:1.1em;margin-bottom:.4em;animation:popin .6s both}
-.pod .nm{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5em;line-height:1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pod .pts{color:var(--mute);font-weight:700;font-size:.85em;margin:.2em 0 .5em}
-.pod .ttl{color:var(--coral);font-weight:800;font-size:.75em;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3em}
-.pod .blk{width:100%;border-radius:.8em .8em 0 0;display:grid;place-items:start center;padding-top:.3em;font-family:"Bricolage Grotesque";font-weight:800;font-size:2.6em;color:#fff;transform-origin:bottom;animation:grow 1s cubic-bezier(.2,.9,.3,1) both}
-.pod.p1 .blk{height:22vh;background:linear-gradient(180deg,#f59e0b,#d97706);animation-delay:.6s}
-.pod.p2 .blk{height:15vh;background:linear-gradient(180deg,#94a3b8,#64748b);animation-delay:.3s}
-.pod.p3 .blk{height:10vh;background:linear-gradient(180deg,#d6a07a,#a0683f)}
-.pod.p1 .av,.pod.p1 .nm,.pod.p1 .pts,.pod.p1 .ttl{animation:popin .6s 1.3s both}
-@keyframes grow{from{transform:scaleY(0)}}
-.rest{display:flex;flex-wrap:wrap;gap:.45em;margin-top:.8em}
-.rest .bub{background:var(--bg);font-size:.8em}
-.srow{position:relative;border:2px solid var(--line);border-radius:.9em;padding:.75em 1em;margin-top:.8em;overflow:hidden}
-.srow .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--blue-l);transition:width 1.4s cubic-bezier(.2,.9,.3,1)}
-.srow.win{border-color:var(--green)} .srow.win .fill{background:var(--green-l)}
-.srow .t{position:relative;display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:1.15em}
-.srow .t b{font-family:"Bricolage Grotesque";font-size:1.25em}
-.srow .s{position:relative;color:var(--mute);font-weight:600;font-size:.8em;margin-top:.15em}
-.win-b{background:var(--green);color:#fff;font-size:.6em;padding:.2em .55em;border-radius:.35em;margin-left:.5em;letter-spacing:.1em;vertical-align:middle}
-.lesson{display:flex;justify-content:center;gap:1.2em;align-items:center;background:var(--ink);color:#fff;border-radius:1em;padding:.9em 1.2em;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.6em;letter-spacing:-.01em}
+.final{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:2vw;min-height:0}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:1.2em;box-shadow:var(--sh);padding:1em 1.3em;display:flex;flex-direction:column;min-height:0}
+.panel h2{font-family:"Bricolage Grotesque";font-weight:800;font-size:2em;letter-spacing:-.02em;display:flex;align-items:baseline;gap:.5em}
+.panel h2 small{font-family:"Figtree";font-size:.38em;color:var(--mute);letter-spacing:.14em;text-transform:uppercase}
+.panel .bigmap{flex:1;min-height:0;display:flex;gap:1em;margin-top:.4em}
+.panel .bigmap svg{flex:1;min-height:0;height:100%}
+.tcount{display:flex;flex-direction:column;gap:.5em;justify-content:center;width:10.5em}
+.tc{border-radius:.8em;padding:.5em .7em;animation:rise .5s both}
+.tc b{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.6em;line-height:1}
+.tc span{display:block;font-weight:800;font-size:.8em}
+.leaders{display:flex;flex-direction:column;gap:.55em;margin-top:.6em}
+.ldr{display:flex;align-items:center;gap:.8em;border:2px solid var(--line);border-radius:.9em;padding:.55em .8em;animation:rise .5s both}
+.ldr .pos{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.6em;width:1.2em;text-align:center}
+.ldr .av{width:2.4em;height:2.4em;font-size:1em}
+.ldr .nm{font-weight:800;font-size:1.1em}
+.ldr .ty{font-size:.78em;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.ldr .sc{margin-left:auto;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.3em}
+.ldr.first{border-color:#f59e0b;background:#fffbeb}
+.verdict{margin-top:auto;background:var(--green-l);border:2px solid #86efac;border-radius:1em;padding:.8em 1em;font-weight:700;line-height:1.4;animation:fadeUp .6s 1.4s both}
+.verdict b{font-family:"Bricolage Grotesque";font-size:1.2em}
+.cardcall{display:flex;align-items:center;gap:.7em;margin-top:.7em;color:var(--ink2);font-weight:700;font-size:.9em}
+.cardcall svg{width:1.6em;height:1.6em;color:var(--coral)}
+.lesson{display:flex;justify-content:center;gap:1.2em;align-items:center;background:var(--ink);color:#fff;border-radius:1em;padding:.8em 1.2em;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5em}
 .lesson span{animation:fadeUp .6s both}
-@keyframes fadeUp{from{transform:translateY(1em);opacity:0}to{transform:none;opacity:1}}
-.lesson span:nth-child(1){animation-delay:1.8s}.lesson span:nth-child(3){animation-delay:2.3s}.lesson span:nth-child(5){animation-delay:2.8s}
-.lesson .dot{width:.35em;height:.35em;border-radius:50%;background:var(--coral);opacity:1;animation:none}
+.lesson span:nth-child(1){animation-delay:1.6s}.lesson span:nth-child(3){animation-delay:2.1s}.lesson span:nth-child(5){animation-delay:2.6s}
+.lesson .dot{width:.35em;height:.35em;border-radius:50%;background:var(--coral)}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
 .confetti i{position:absolute;top:-4vh;width:.9vw;height:1.6vw;border-radius:2px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(112vh) rotate(720deg)}}
@@ -210,56 +241,82 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 @keyframes flash{from{opacity:.85}to{opacity:0}}
 
 /* ============ PLAYER ============ */
-.play{min-height:100vh;padding:max(16px,env(safe-area-inset-top)) 16px 28px;display:flex;flex-direction:column;gap:14px;max-width:520px;margin:0 auto}
+.play{min-height:100vh;padding:max(14px,env(safe-area-inset-top)) 16px 28px;display:flex;flex-direction:column;gap:13px;max-width:520px;margin:0 auto}
 .ptop{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;color:var(--mute)}
-.ptop .mark{font-size:22px;color:var(--ink)}
+.ptop .mark{font-size:22px}
 .pcard{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--sh)}
-.pbig{font-family:"Bricolage Grotesque";font-weight:800;font-size:38px;line-height:1;letter-spacing:-.02em}
+.pbig{font-family:"Bricolage Grotesque";font-weight:800;font-size:36px;line-height:1;letter-spacing:-.02em}
 .pmute{color:var(--mute);font-size:15px;line-height:1.5;font-weight:500}
 .fld{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin:16px 0 6px}
 .inp{width:100%;border:2px solid var(--line2);border-radius:14px;padding:14px;font-size:20px;font-weight:700;background:#fff;color:var(--ink);outline:none;font-family:inherit}
 .inp:focus{border-color:var(--coral)}
-.pbtn{width:100%;margin-top:18px;background:var(--coral);color:#fff;font-weight:800;font-size:18px;padding:16px;border-radius:14px;box-shadow:0 4px 0 #a52a18}
+.pbtn{width:100%;margin-top:16px;background:var(--coral);color:#fff;font-weight:800;font-size:18px;padding:16px;border-radius:14px;box-shadow:0 4px 0 #a52a18;display:flex;align-items:center;justify-content:center;gap:8px}
 .pbtn:active{transform:translateY(2px);box-shadow:0 2px 0 #a52a18}
-.pbtn:disabled{opacity:.5}
+.pbtn:disabled{opacity:.4}
+#pub{position:sticky;bottom:12px;z-index:5}
+.pbtn.ink{background:var(--ink);box-shadow:0 4px 0 #000}
 .err{color:var(--coral);font-weight:700;font-size:14px;min-height:20px;margin-top:8px}
-.palert{background:var(--card);border:2px solid var(--coral);border-radius:14px;padding:12px 14px;font-weight:600;font-size:15px;line-height:1.4}
-.palert b{display:block;color:var(--coral);font-size:12px;letter-spacing:.12em;margin-bottom:3px}
-.pq{font-family:"Bricolage Grotesque";font-weight:800;font-size:28px;line-height:1.05}
+.palert{background:var(--card);border:2px solid var(--coral);border-radius:14px;padding:11px 13px;font-weight:600;font-size:14.5px;line-height:1.4}
+.palert b{display:block;color:var(--coral);font-size:11.5px;letter-spacing:.12em;margin-bottom:3px}
+.pq{font-family:"Bricolage Grotesque";font-weight:800;font-size:26px;line-height:1.05}
 .pclock{display:flex;justify-content:space-between;align-items:center}
-.pclock .s{font-family:"Bricolage Grotesque";font-weight:800;font-size:30px;width:56px;height:56px;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center}
+.pclock .s{font-family:"Bricolage Grotesque";font-weight:800;font-size:26px;width:52px;height:52px;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center}
 .pclock .s.low{border-color:var(--coral);color:var(--coral)}
+.badge{display:inline-block;background:var(--coral-l);color:var(--coral);font-weight:800;border-radius:99px;padding:4px 12px;font-size:13px}
 .popts{display:flex;flex-direction:column;gap:10px}
-.popt{position:relative;display:flex;gap:12px;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 14px 14px 18px;align-items:flex-start;overflow:hidden;box-shadow:var(--sh)}
+.popt{position:relative;display:flex;gap:12px;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:13px 13px 13px 17px;align-items:flex-start;overflow:hidden;box-shadow:var(--sh)}
 .popt::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--rc)}
 .popt:active{transform:scale(.98)}
-.popt .olet{width:34px;height:34px;font-size:17px;border-radius:9px}
+.popt .olet{width:32px;height:32px;font-size:16px;border-radius:9px}
 .popt .role{font-size:11px}
-.popt p{font-size:15px;line-height:1.4;font-weight:600;margin-top:3px}
-.lockc{text-align:center;padding:34px 16px}
-.lockc svg{width:120px;height:120px}
+.popt p{font-size:15px;line-height:1.38;font-weight:600;margin-top:3px}
+/* statement builder */
+.pchips{display:flex;flex-direction:column;gap:8px}
+.pchip{display:flex;gap:10px;align-items:center;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:11px 12px;box-shadow:var(--sh);animation:factIn .6s cubic-bezier(.2,1.4,.4,1) both}
+.pchip .ck{width:26px;height:26px;border-radius:8px;border:2px solid var(--line2);display:grid;place-items:center;flex:none;color:#fff}
+.pchip .ck svg{width:16px;height:16px;opacity:0}
+.pchip p{font-size:15px;font-weight:700;line-height:1.3}
+.pchip small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.pchip.V small{color:var(--green)} .pchip.R small,.pchip.P small{color:var(--amber)} .pchip.E small,.pchip.U small{color:var(--blue)}
+.pchip.on{border-color:var(--ink);background:#f8fafc}
+.pchip.on .ck{background:var(--ink);border-color:var(--ink)}
+.pchip.on .ck svg{opacity:1}
+.pchip.soon{border-style:dashed;box-shadow:none;background:transparent;color:var(--mute);animation:none}
+.preview{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.preview .ph{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px}
+.preview .ph .av{width:28px;height:28px;background:var(--blue)}
+.preview p{font-size:15px;line-height:1.45;margin-top:6px;font-weight:600;min-height:22px}
+.preview p.empty{color:var(--mute);font-weight:500;font-style:italic}
+.lockc{text-align:center;padding:28px 16px}
+.lockc svg.ring{width:110px;height:110px}
 .lk-ring{fill:none;stroke:var(--coral);stroke-width:6;stroke-dasharray:300;stroke-dashoffset:300;animation:draw .8s ease forwards;transform-origin:center;transform:rotate(-90deg)}
-.lk-l{font-family:"Bricolage Grotesque";font-weight:800;font-size:44px;fill:var(--ink)}
+.lk-l{font-family:"Bricolage Grotesque";font-weight:800;font-size:40px;fill:var(--ink)}
 .res{text-align:center}
-.res .ok{color:var(--green)} .res .no{color:var(--coral)}
+.ok{color:var(--green)} .no{color:var(--coral)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
 .stat{background:var(--bg);border-radius:14px;padding:10px 6px;text-align:center}
-.stat b{display:block;font-family:"Bricolage Grotesque";font-size:26px;font-weight:800}
-.stat span{font-size:11px;color:var(--mute);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.stat b{display:block;font-family:"Bricolage Grotesque";font-size:24px;font-weight:800}
+.stat span{font-size:10.5px;color:var(--mute);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 .wait-ill{display:block;width:150px;margin:6px auto 12px}
 .wait-ill .n1{animation:popin .5s 1s both}.wait-ill .n2{animation:popin .5s 1.6s both}.wait-ill .n3{animation:popin .5s 2.2s both}
-.badge{display:inline-block;background:var(--coral-l);color:var(--coral);font-weight:800;border-radius:99px;padding:4px 12px;font-size:13px}
+.ptype{border-radius:18px;padding:18px;color:#fff}
+.ptype small{font-weight:800;letter-spacing:.14em;font-size:11px;opacity:.85}
+.ptype h2{font-family:"Bricolage Grotesque";font-weight:800;font-size:34px;line-height:1;margin:4px 0 6px}
+.ptype p{font-size:14.5px;line-height:1.45;font-weight:600;opacity:.95}
+.pmap svg{width:100%;height:auto;display:block}
+.ptrait{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.ptrait div{font-size:14.5px;line-height:1.45;font-weight:600}
+.ptrait b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
 
-/* small screens (host preview on a phone) */
 @media (max-width:820px){
-  .host{height:auto;font-size:14px;padding:14px}
+  .host{height:auto;min-height:100vh;font-size:14px;padding:14px}
   .top,.foot{flex-wrap:wrap}
-  .lobby,.stage,.final,.picker,.opts{grid-template-columns:1fr}
+  .lobby,.stage,.final,.opts,.drip,.r1stats,.types4{grid-template-columns:1fr}
   .lb-l h1{font-size:2.8em}
   .q{font-size:1.8em}
   .join{flex-wrap:wrap}
-  .feed{min-height:420px}
-  .podium{min-height:300px}
+  .side{min-height:480px}
+  .panel .bigmap{min-height:360px}
   .lesson{font-size:1em;flex-wrap:wrap}
 }
 </style>
@@ -269,11 +326,9 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module">
 /* =========================================================
-   1) PASTE YOUR FIREBASE WEB CONFIG HERE
-   Leave it as-is to run the big screen in DEMO MODE (simulated class).
+   1) FIREBASE — Realtime Database, data kept under "tr"
+   Add ?demo to the link to rehearse with a simulated class.
    ========================================================= */
-// Same Firebase project as the other activities (Realtime Database, data kept under "tr").
-// Set apiKey to "PASTE_YOUR_API_KEY" to force demo mode.
 const firebaseConfig = {
   apiKey: "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8",
   authDomain: "utasx-f7719.firebaseapp.com",
@@ -284,139 +339,125 @@ const firebaseConfig = {
   appId: "1:1026974496932:web:0cde5f783b04ca1ead4e31"
 };
 const DB_ROOT = "tr";
-const ROUND_SECONDS = 30;
+const SECS = [40, 30, 30];     // round 1 (statement builder), round 2, round 3
 const DEMO_PLAYERS = 24;
 
 /* =========================================================
-   2) ROLES, APPROACHES, SCENARIOS (fictional companies)
+   2) STORY — Salary Day Blackout (fictional bank)
+   Each choice has a hidden position: sp = speed (+1 acts fast … −1 waits)
+                                      op = openness (+1 shares openly … −1 controls)
    ========================================================= */
 const ROLES = {
-  legal:    {name:"Head of Legal",       color:"#7c3aed", icon:'<path d="M12 3v18M7 21h10M4 7h16M4 7l-2.5 6a2.5 2.5 0 0 0 5 0zM20 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/>'},
+  legal:    {name:"Head of Legal",        color:"#7c3aed", icon:'<path d="M12 3v18M7 21h10M4 7h16M4 7l-2.5 6a2.5 2.5 0 0 0 5 0zM20 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/>'},
   comms:    {name:"Head of Communication",color:"#2453d6", icon:'<path d="M3 10v4h3l6 4V6L6 10zM15.5 9a4 4 0 0 1 0 6M18.5 6a8 8 0 0 1 0 12"/>'},
-  ceo:      {name:"CEO",                 color:"#c2410c", icon:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/>'},
-  it:       {name:"Head of IT",          color:"#475569", icon:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'},
-  security: {name:"Head of Security",    color:"#57534e", icon:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'},
-  finance:  {name:"Finance Director",    color:"#0d9488", icon:'<circle cx="12" cy="12" r="9"/><path d="M12 6.5v11M15 9.3c0-1.1-1.3-1.8-3-1.8s-3 .7-3 1.9 1.3 1.7 3 2.1 3 .9 3 2.2-1.3 1.9-3 1.9-3-.7-3-1.9"/>'},
-  marketing:{name:"Marketing Director",  color:"#db2777", icon:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="7.5" r="1.4"/>'},
-  quality:  {name:"Quality Manager",     color:"#0891b2", icon:'<path d="M9 3h6v3H9z"/><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 13l2 2 4-4"/>'}
+  ceo:      {name:"CEO",                  color:"#c2410c", icon:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/>'},
+  it:       {name:"Head of IT",           color:"#475569", icon:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'},
+  security: {name:"Head of Security",     color:"#57534e", icon:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'},
+  finance:  {name:"Finance Director",     color:"#0d9488", icon:'<circle cx="12" cy="12" r="9"/><path d="M12 6.5v11M15 9.3c0-1.1-1.3-1.8-3-1.8s-3 .7-3 1.9 1.3 1.7 3 2.1 3 .9 3 2.2-1.3 1.9-3 1.9-3-.7-3-1.9"/>'}
 };
-const APPROACH = {
-  OPEN:    {name:"Open & Fast",    title:"The Trusted Voice",     desc:"Early facts, honest unknowns, next update"},
-  WAIT:    {name:"Wait & Protect", title:"The Careful Guardian",  desc:"Say little until everything is certain"},
-  PROMISE: {name:"Calm & Promise", title:"The Optimist",          desc:"Reassure with promises or big gestures"},
-  DEFLECT: {name:"Deflect & Spin", title:"The Shield",            desc:"Blame, threaten or distract"}
+const TYPES = {
+  LIGHTHOUSE: {name:"The Lighthouse", short:"Lighthouses",  axes:"Acts fast · Shares openly",  color:"#15803d", tint:"#dcfce7",
+    desc:"You speak early and honestly, guiding people through uncertainty.",
+    strength:"People trust you because you show up first, with facts.",
+    blind:"Under pressure, make sure “fast” never turns into “guessing”.",
+    theory:"CDC crisis principles: be first, be right, be credible.",
+    icon:'<path d="M9 21l1-12h4l1 12M8 9h8M12 9V5M10 5h4M4 6l4 2M20 6l-4 2M6 21h12"/>'},
+  FIREFIGHTER:{name:"The Firefighter", short:"Firefighters", axes:"Acts fast · Controls the message", color:"#c2410c", tint:"#ffedd5",
+    desc:"You act fast and take charge of the message.",
+    strength:"Decisive under pressure. You don't freeze.",
+    blind:"Speed without verified facts can become spin, and spin backfires.",
+    theory:"Coombs' SCCT: credibility depends on honest responsibility.",
+    icon:'<path d="M12 22c4 0 7-2.7 7-6.5 0-3-2-5.5-3.5-7-.3 2-1.3 3-2.5 3.5.5-3-1-6.5-4-9 0 3.5-4 6-4 11.5C5 19.3 8 22 12 22z"/>'},
+  SCHOLAR:    {name:"The Scholar", short:"Scholars",     axes:"Waits · Shares openly", color:"#2453d6", tint:"#e3ebff",
+    desc:"You value accuracy and honesty, but you wait for certainty.",
+    strength:"What you say is reliable and well checked.",
+    blind:"In a crisis, silence is also a message. Rumours fill the gap.",
+    theory:"Cynefin (Snowden & Boone): in chaos, act first, then sense and respond.",
+    icon:'<path d="M2 7l10-4 10 4-10 4zM6 9v5c0 1.7 2.7 3 6 3s6-1.3 6-3V9M22 7v6"/>'},
+  FORTRESS:   {name:"The Fortress", short:"Fortresses",    axes:"Waits · Controls the message", color:"#6d28d9", tint:"#ede9fe",
+    desc:"You protect the organisation and say as little as possible.",
+    strength:"Careful with legal and reputational risk.",
+    blind:"The public reads silence as hiding. Trust drains away quietly.",
+    theory:"Inoculation theory: address concerns early, before others frame them.",
+    icon:'<path d="M4 21V8l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2v13zM10 21v-5h4v5"/>'}
 };
+const typeOf = (sp, op) => sp >= 0 ? (op >= 0 ? "LIGHTHOUSE" : "FIREFIGHTER") : (op >= 0 ? "SCHOLAR" : "FORTRESS");
+
+const STORY = {
+  company:"Falaj Bank", name:"Salary Day Blackout", tag:"#FalajBankDown", goodTag:"#FalajBankUpdate",
+  r1:{ clock:"9:15 AM · SALARY DAY",
+    inject:"Falaj Bank's app and ATMs stop working across Oman. It's salary day. Thousands of people can't pay rent or buy groceries.",
+    q:"Build your first public statement",
+    sub:"New facts arrive one by one. On your phone, tap the lines you want, then press PUBLISH. Earlier is better, but only with what is true.",
+    chips:[
+      {id:"c1", at:0,  kind:"V", t:"Our app and ATMs are down across Oman.",        src:"IT confirms: the outage is nationwide"},
+      {id:"c2", at:9,  kind:"V", t:"Your balances are safe.",                         src:"IT confirms: customer balances are safe"},
+      {id:"c3", at:16, kind:"R", t:"We may be under a cyberattack.",                  src:"An engineer guesses: maybe a cyberattack?"},
+      {id:"c4", at:23, kind:"P", t:"Everything will be fixed within 1 hour.",          src:"IT hopes: fixed in about 1 hour?"},
+      {id:"c5", at:0,  kind:"E", t:"We are sorry. We know it is salary day.",         src:null},
+      {id:"c6", at:0,  kind:"U", t:"Next update at 10:00.",                            src:null}
+    ],
+    storm:["salim_om|Salary day and the app won't open. Rent is due TODAY 😩","noor.m|The ATM at City Centre just kept my card??","ahmed_k|Is Falaj Bank down everywhere or only for me?","maha_99|No tweet. No SMS. Should I be worried?","fixer_om|My cousin says the bank got hacked. Anyone confirm?","laila.s|Shop refused my card. So embarrassing.","khalid_r|20 minutes on hold. Nobody answers.","amal_d|Why do banks never tell us anything??"],
+    fact:"“Be first”: the first source people hear from often becomes the source they trust.", src:"CDC — Crisis & Emergency Risk Communication (CERC)" },
+  r2:{
+    clean:{ title:"The Journalist", lead:"Most of you went public early with confirmed facts, so…",
+      clock:"10:05 AM · T+50 MIN",
+      inject:"Your early statement calmed many customers. Now a journalist calls: “Insiders say it was a cyberattack. Confirm or deny?” IT still doesn't know the cause.",
+      q:"What do you tell the journalist?",
+      storm:["press_watch|Reporters are calling the bank right now 📞","noor.m|At least they told us our money is safe.","fixer_om|Still think it's hackers 🤔","biz_om|Will the bank confirm or deny?"],
+      opts:[
+        {k:"A",role:"legal", sp:-.3,op:-1, base:250, trust:-8, rumour:+14, t:"Say “No comment” and end the call.", head:"News site: “Falaj Bank refuses to deny cyberattack.”"},
+        {k:"B",role:"comms", sp:1,  op:1,  base:1000,trust:+16,rumour:-18, t:"“We have no evidence of a cyberattack. The cause is still under investigation. We will share it at 11:00.”", head:"Report: “Bank: no evidence of attack, update at 11:00.” The calm holds.", best:true},
+        {k:"C",role:"ceo",   sp:1,  op:-.4,base:300, trust:+2, rumour:+8,  t:"“It is definitely NOT a cyberattack. Our systems are 100% secure.”", head:"By noon IT still can't confirm. “100% secure” is quoted everywhere."},
+        {k:"D",role:"it",    sp:-1, op:.2, base:300, trust:-6, rumour:+12, t:"Ask the journalist to wait until IT finishes the investigation tomorrow.", head:"The story runs tonight anyway, with only the insider's version."}
+      ],
+      fact:"Saying clearly what you don't know yet barely reduces trust in the source.", src:"van der Bles et al. (2020), PNAS" },
+    messy:{ title:"The Voice Note", lead:"Most of you stayed silent or guessed, so…",
+      clock:"10:00 AM · T+45 MIN",
+      inject:"With no clear facts from the bank, a fake WhatsApp voice note spreads: “Falaj Bank is bankrupt. Withdraw your money now!” Queues form at branches.",
+      q:"How do you stop the rumour?",
+      storm:["um_faisal|Voice note says the bank is BANKRUPT!! Is it true?? 😰","hamed.b|The queue at the Ruwi branch is 50 people long.","news_fast|UNCONFIRMED: Is Falaj Bank about to collapse?","reem_a|Forwarded many times… everyone in my group is scared"],
+      opts:[
+        {k:"A",role:"legal",   sp:-1, op:-1, base:300, trust:-10,rumour:+18, t:"Ignore it. Answering a rumour only makes it bigger.", head:"No denial. TV news runs the “bankrupt” story."},
+        {k:"B",role:"ceo",     sp:.5, op:-.2,base:400, trust:+4, rumour:+6,  t:"Open all branches until midnight so people can withdraw cash.", head:"Midnight queues look like a bank run. Panic grows."},
+        {k:"C",role:"comms",   sp:1,  op:1,  base:1000,trust:+18,rumour:-26, t:"Correct it fast on every channel (SMS, WhatsApp, X) with clear facts and a short video from the CEO.", head:"Fact-check pages share the bank's denial. Queues shrink.", best:true},
+        {k:"D",role:"security",sp:1,  op:-1, base:200, trust:-8, rumour:+10, t:"Post: “Spreading rumours is a crime. We will report anyone who shares it.”", head:"#FalajBankThreatens trends. Anger adds to fear."}
+      ],
+      fact:"Not fighting rumours in real time is one of the most common crisis communication mistakes.", src:"CDC — CERC Best Practices" }
+  },
+  r3:{ title:"Closing the Crisis",
+    clock:"1:30 PM · T+4 HRS",
+    inject:"Cause confirmed: a failed system update. The app is back, but 3,000 salary transfers failed and some customers paid late fees.",
+    q:"How do you close the crisis?",
+    storm:["salim_om|App works again!! But my transfer never arrived 🤨","noor.m|Who pays my late fee? Not me.","biz_watch|Analysts: how the bank ends this decides if customers stay.","laila.s|Thinking of moving my salary to another bank."],
+    opts:[
+      {k:"A",role:"finance",sp:-.5,op:-1, base:250, trust:-8, rumour:+10, t:"Fix the failed transfers quietly. Don't admit fault in public.", head:"People keep finding missing transfers. “Why didn't they tell us?”"},
+      {k:"B",role:"legal",  sp:.5, op:-1, base:150, trust:-12,rumour:+12, t:"Say the software vendor's update caused it. Protect the bank from blame.", head:"The vendor says the bank approved the update. Now there are two stories."},
+      {k:"C",role:"it",     sp:.5, op:-.3,base:400, trust:+3, rumour:+4,  t:"Post: “All services are restored. Thank you for your patience.”", head:"“Restored?” Customers post screenshots of missing money."},
+      {k:"D",role:"ceo",    sp:1,  op:1,  base:1000,trust:+22,rumour:-20, t:"Apologise, explain the cause simply, refund all late fees, and give a timeline for the failed transfers.", head:"“They said sorry AND refunded the fees.” Trust returns.", best:true}
+    ],
+    fact:"When a company causes the crisis, people expect it to take responsibility, apologise and compensate.", src:"Coombs (2007), Situational Crisis Communication Theory" }
+};
+const CH = Object.fromEntries(STORY.r1.chips.map(c => [c.id, c]));
+const ORDER = ["c1","c2","c3","c4","c5","c6"];
+const KIND = {V:"Confirmed", R:"Not confirmed", P:"Not confirmed", E:"Empathy", U:"Commitment"};
+const stmt = ids => ORDER.filter(id => ids.includes(id)).map(id => CH[id].t).join(" ");
+const roundData = (r, branch) => r === 0 ? STORY.r1 : r === 1 ? STORY.r2[branch || "messy"] : STORY.r3;
+
 const ICONS = {
-  bank:'<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
-  food:'<path d="M5 8h14l-1.6 12.2a1 1 0 0 1-1 .8H7.6a1 1 0 0 1-1-.8zM4 8h16M8.5 4h7l1 4h-9z"/>',
   bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>',
   bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
   heart:'<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/>',
   share:'<path d="M17 3l4 4-4 4M21 7H9a5 5 0 0 0 0 10h2"/>',
-  sound:'<path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>'
+  sound:'<path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>',
+  check:'<path d="M5 12l5 5L20 7"/>', q:'<path d="M9 9a3 3 0 1 1 4 2.8c-.6.3-1 .9-1 1.6V15M12 19h.01"/>',
+  heartS:'<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  pdf:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M12 12v6M9 15l3 3 3-3"/>',
+  people:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a5.5 5.5 0 0 1 3.5 6"/>'
 };
+const KICON = {V:ICONS.check, R:ICONS.q, P:ICONS.q, E:ICONS.heartS, U:ICONS.clock};
 const svgI = (p, cls="i") => `<svg class="${cls}" viewBox="0 0 24 24">${p}</svg>`;
-
-const SCEN = {
-bank:{ id:"bank", name:"Salary Day Blackout", company:"Falaj Bank", tag:"#FalajBankDown", goodTag:"#FalajBankUpdate", icon:"bank", tint:"#e3ebff", ink:"#2453d6",
-  tagline:"A bank's app and ATMs fail on salary day.",
-  rounds:[
-  { clock:"9:15 AM · T+15 MIN",
-    inject:"Salary day. Falaj Bank's app and ATMs are down across the country. IT confirms balances are safe, but the cause is unknown.",
-    q:"What do you post first?",
-    storm:["salim_om|Salary day and the app won't open. Rent is due TODAY 😩","noor.m|The ATM at City Centre just kept my card??","ahmed_k|Is Falaj Bank down everywhere or only for me?","maha_99|No tweet. No SMS. Should I be worried?","fixer_om|My cousin says the bank got hacked. Anyone confirm?","laila.s|Shop refused my card. So embarrassing.","khalid_r|20 minutes on hold with customer service. Nothing.","amal_d|Why do banks never tell us anything??"],
-    opts:[
-      {k:"A",role:"legal",ap:"WAIT",   base:300, trust:-12,rumour:+18, t:"Say nothing until IT finds the cause. One wrong word could mean lawsuits.",
-        react:["bad|2 hours of silence. They're hiding something.","bad|Screenshots of 'empty' accounts going viral 😳","bad|#FalajBankDown is now #1 trending"]},
-      {k:"B",role:"comms",ap:"OPEN",   base:1000,trust:+16,rumour:-18, t:"Post now: “App and ATMs are down. Your balances are safe. We are fixing it. Next update at 10:00.”",
-        react:["good|OK, at least our money is safe. Waiting for 10:00.","good|Respect for the quick update 👍","good|Shared the bank's post in my family group."]},
-      {k:"C",role:"ceo",  ap:"PROMISE",base:350, trust:+4, rumour:+8,  t:"Post: “Small technical issue. Everything will be back within 1 hour.”",
-        react:["bad|1 hour passed. Still down. 'Small issue' 🙄","bad|The countdown has started… ⏱️","bad|Why promise if you don't know?"]},
-      {k:"D",role:"it",   ap:"DEFLECT",base:100, trust:-10,rumour:+28, t:"Post: “We may be under a cyberattack. We are investigating.”",
-        react:["bad|CYBERATTACK?! Taking all my money out.","bad|Hackers have our data?? 😱","bad|Queues forming outside branches."]}
-    ],
-    fact:"“Be first”: the first source people hear from often becomes the source they trust.", src:"CDC — Crisis & Emergency Risk Communication (CERC)" },
-  { clock:"10:00 AM · T+1 HR",
-    inject:"A fake WhatsApp voice note goes viral: “Falaj Bank is bankrupt. Withdraw your money now!” Queues are forming at branches. The app is still down.",
-    q:"How do you deal with the rumour?",
-    storm:["um_faisal|Voice note says the bank is BANKRUPT!! Is it true?? 😰","hamed.b|The queue at the Ruwi branch is 50 people long.","news_fast|UNCONFIRMED: Is Falaj Bank about to collapse?","reem_a|Forwarded many times… everyone in my group is worried","yusuf_h|Still can't pay rent. Landlord keeps calling.","sara_t|They promised an update at 10. Waiting… 👀"],
-    opts:[
-      {k:"A",role:"legal",   ap:"WAIT",   base:300, trust:-10,rumour:+18, t:"Ignore it. Answering a rumour only makes it bigger.",
-        react:["bad|No denial = it must be true.","bad|Queues now outside 12 branches.","bad|TV news picks up the 'bankrupt' story 📺"]},
-      {k:"B",role:"ceo",     ap:"PROMISE",base:400, trust:+4, rumour:+6,  t:"Open all branches until midnight so people can withdraw cash.",
-        react:["bad|Why open late if everything is fine? Sounds serious.","bad|Midnight queues. More panic.","bad|Staff exhausted, still no explanation."]},
-      {k:"C",role:"comms",   ap:"OPEN",   base:1000,trust:+18,rumour:-26, t:"Correct it fast on every channel (SMS, WhatsApp, X) with clear facts and a 30-second video from the CEO.",
-        react:["good|CEO video: calm, clear, honest. Feeling better.","good|Fact-check pages share the bank's denial ✅","good|Queues are getting shorter."]},
-      {k:"D",role:"security",ap:"DEFLECT",base:200, trust:-8, rumour:+10, t:"Post: “Spreading rumours is a crime. We will report anyone who shares it.”",
-        react:["bad|Threatening customers?? Wow.","bad|#FalajBankThreatens is trending","bad|Rumour + anger = even worse."]}
-    ],
-    fact:"Not fighting rumours in real time is one of the most common crisis communication mistakes.", src:"CDC — CERC Best Practices" },
-  { clock:"1:30 PM · T+4 HRS",
-    inject:"Cause found: a failed system update. The app is back, but 3,000 salary transfers failed and some customers paid late fees.",
-    q:"What is your final statement?",
-    storm:["salim_om|App works again!! But my transfer never arrived 🤨","noor.m|Who pays my late fee? Not me.","biz_watch|Analysts: how the bank ends this decides if customers stay.","khalid_r|Will they even say sorry?","laila.s|Thinking of moving my salary to another bank."],
-    opts:[
-      {k:"A",role:"finance",ap:"WAIT",   base:250, trust:-8, rumour:+10, t:"Fix the failed transfers quietly. Don't admit fault in public.",
-        react:["bad|They fixed it and said nothing. Feels sneaky.","bad|People keep finding missing transfers.","bad|Trust is leaving… quietly."]},
-      {k:"B",role:"legal",  ap:"DEFLECT",base:150, trust:-12,rumour:+12, t:"Say the software vendor's update caused it. Protect the bank from blame.",
-        react:["bad|Vendor says the bank approved the update. Two stories now.","bad|The blame game 🙄","bad|The regulator starts asking questions."]},
-      {k:"C",role:"it",     ap:"PROMISE",base:400, trust:+3, rumour:+4,  t:"Post: “All services are restored. Thank you for your patience.”",
-        react:["bad|'Restored'? My money is still missing!","bad|Screenshots prove it's not over.","bad|Thank you for what exactly?"]},
-      {k:"D",role:"ceo",    ap:"OPEN",   base:1000,trust:+22,rumour:-20, t:"Apologise, explain the cause simply, refund all late fees, and give a timeline for the failed transfers.",
-        react:["good|They apologised AND refunded the fees. Respect.","good|This is how a bank should act 👏","good|I'm staying with Falaj Bank."]}
-    ],
-    fact:"When a company causes the crisis, people expect it to take responsibility, apologise and compensate.", src:"Coombs (2007), Situational Crisis Communication Theory" }
-  ]},
-food:{ id:"food", name:"The Yoghurt Alarm", company:"Ghaf Dairy", tag:"#BoycottGhaf", goodTag:"#GhafUpdate", icon:"food", tint:"#fde7e2", ink:"#e5402a",
-  tagline:"A child is in hospital. Lab results need 48 hours.",
-  rounds:[
-  { clock:"8:00 PM · T+1 HR",
-    inject:"A mother posts: “My son is in hospital after eating Ghaf strawberry yoghurt.” 200k views. One batch (B-214) is suspected. Lab results need 48 hours.",
-    q:"What do you do first?",
-    storm:["mama_huda|Praying for that little boy 🙏 Throwing all our yoghurt away.","fit_omar|Which batch?? Nobody is saying anything.","zainab.k|Ghaf yoghurt is in every school lunchbox…","gulf_daily|Parents ask: is Ghaf Dairy safe?","badr_s|Heard 10 kids are sick. Maybe more.","shop_owner|Customers keep asking me. What do I tell them?"],
-    opts:[
-      {k:"A",role:"legal",  ap:"WAIT",   base:250, trust:-12,rumour:+18, t:"No comment until the lab results. We can't admit anything.",
-        react:["bad|'No comment' while a child is in hospital?! 😡","bad|Rumour: 10 children sick. Nobody denies it.","bad|#BoycottGhaf starts trending"]},
-      {k:"B",role:"quality",ap:"WAIT",   base:400, trust:-4, rumour:+10, t:"Quietly remove batch B-214 from shops. No announcement.",
-        react:["bad|Shop worker shares a photo of staff removing yoghurt at night 📸","bad|So they KNEW and hid it?","bad|Trust collapses."]},
-      {k:"C",role:"comms",  ap:"OPEN",   base:1000,trust:+16,rumour:-18, t:"Post: “We know about the report and are working with health authorities. As a precaution, don't eat batch B-214.”",
-        react:["good|Clear and honest. Checked my fridge: no B-214.","good|Parents share the batch number everywhere ✅","good|The rumours are slowing down."]},
-      {k:"D",role:"ceo",    ap:"PROMISE",base:200, trust:-6, rumour:+14, t:"Post: “Our products are 100% safe. We follow the highest standards.”",
-        react:["bad|'100% safe'?? Tell that to the mother.","bad|Feels like they don't care.","bad|Doctors ask: how can they know already?"]}
-    ],
-    fact:"Companies that share bad news themselves (“stealing thunder”) are seen as more credible.", src:"Arpan & Roskos-Ewoldsen (2005), Public Relations Review" },
-  { clock:"NEXT DAY · T+18 HRS",
-    inject:"Two more families report illness. Supermarkets ask if you will recall. Recalling batch B-214 costs OMR 120,000. Lab results are still 30 hours away.",
-    q:"Recall now, or wait?",
-    storm:["mama_huda|Now 3 families? Why is it still on the shelves??","dr_salma|Doctor here: don't panic, but follow official advice.","hyper_mgr|Supermarket managers are waiting for a decision.","talal_n|My kids ate yoghurt yesterday. Should we go to hospital?","oman_parents|40,000 parents in our group want answers."],
-    opts:[
-      {k:"A",role:"finance",  ap:"WAIT",   base:300, trust:-10,rumour:+14, t:"Wait for the lab. A recall without proof could waste OMR 120,000.",
-        react:["bad|Another family reports symptoms. Still on shelves.","bad|The regulator steps in and forces a recall.","bad|Now it looks like you were forced."]},
-      {k:"B",role:"quality",  ap:"OPEN",   base:1000,trust:+18,rumour:-20, t:"Recall batch B-214 now. Explain how to return it for a full refund. Update every day.",
-        react:["good|Returned my B-214 cups and got a refund 👍","good|Health authority thanks Ghaf for acting fast.","good|Parents feel protected."]},
-      {k:"C",role:"ceo",      ap:"PROMISE",base:450, trust:+6, rumour:+2,  t:"Recall ALL our products from every shop to show we care.",
-        react:["bad|Shelves empty! Even milk and cheese are gone?","bad|People now ask: is EVERYTHING bad?","bad|Panic spreads to other products."]},
-      {k:"D",role:"marketing",ap:"DEFLECT",base:100, trust:-14,rumour:+10, t:"Launch a 50% discount campaign to keep sales up.",
-        react:["bad|A DISCOUNT? During a health scare?? 🤯","bad|#BoycottGhaf trends again","bad|Marketing fail of the year."]}
-    ],
-    fact:"Classic case: in 1982 Johnson & Johnson recalled Tylenol nationwide before the full cause was known. It became the model of crisis leadership.", src:"Tylenol case, crisis management literature" },
-  { clock:"DAY 3 · T+48 HRS",
-    inject:"Lab confirms: bacteria in batch B-214 from one faulty cooler. All other products are safe. The children are recovering. Some people still call for a boycott.",
-    q:"How do you close the crisis?",
-    storm:["mama_huda|My son is home now. I want to know what really happened.","fit_omar|Will they be honest now?","biz_watch|Brand experts: the next statement decides if Ghaf survives.","zainab.k|I'll buy again only if they explain everything."],
-    opts:[
-      {k:"A",role:"ceo",      ap:"OPEN",   base:1000,trust:+22,rumour:-22, t:"Share the lab results, apologise, explain the fix, invite media to see the factory, and keep updating.",
-        react:["good|Watched the factory video. They fixed it and said sorry. I'll buy again.","good|The boy's mother: “Thank you for being honest.”","good|#GhafComeback is trending"]},
-      {k:"B",role:"legal",    ap:"WAIT",   base:200, trust:-8, rumour:+8,  t:"Share the results only with the regulator, not with the public.",
-        react:["bad|Why hide the lab report from us?","bad|The boycott continues.","bad|Silence after the results = guilt."]},
-      {k:"C",role:"marketing",ap:"DEFLECT",base:250, trust:-6, rumour:+6,  t:"Pay influencers to post that they still trust Ghaf.",
-        react:["bad|Influencers exposed as paid #ad 😬","bad|Feels fake.","bad|Trust drops again."]},
-      {k:"D",role:"comms",    ap:"PROMISE",base:150, trust:-14,rumour:+12, t:"Post: “Lab results prove our products are safe. Case closed.”",
-        react:["bad|'Case closed'? One batch WAS bad!","bad|Misleading. Parents are furious.","bad|Journalists start digging deeper."]}
-    ],
-    fact:"Honesty is a core rule of crisis communication: trust comes from telling the full truth.", src:"CDC — CERC principle “Be credible”" }
-  ]}
-};
 
 /* =========================================================
    helpers
@@ -427,14 +468,16 @@ const params = new URLSearchParams(location.search);
 const IS_HOST = params.has("host") || location.hash === "#host";
 const DEMO = params.has("demo") || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("PASTE");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const toMs = v => v == null ? null : (typeof v === "number" ? v : (v.toMillis ? v.toMillis() : null));
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-const T = ROUND_SECONDS * 1000;
+const Tms = r => SECS[r] * 1000;
 const PAL = ["#e5402a","#2453d6","#15803d","#7c3aed","#db2777","#0891b2","#c2410c","#0d9488","#475569","#b45309"];
 const hash = s => [...String(s)].reduce((h,c) => (h*31 + c.charCodeAt(0)) >>> 0, 7);
-const avatar = (name, cls="av") => `<span class="${cls}" style="background:${PAL[hash(name)%PAL.length]}">${esc((name||"?").trim().charAt(0).toUpperCase())}</span>`;
+const colorOf = n => PAL[hash(n) % PAL.length];
+const initial = n => (String(n||"?").trim().charAt(0) || "?").toUpperCase();
+const avatar = (name, cls="av") => `<span class="${cls}" style="background:${colorOf(name)}">${esc(initial(name))}</span>`;
+const mmss = s => s == null ? "—" : "0:" + String(Math.round(s)).padStart(2,"0");
 let fb = null, db = null, clockOff = 0;
-const now = () => Date.now() + clockOff;   // server-synced clock
+const now = () => Date.now() + clockOff;
 const R_ = path => fb.ref(db, DB_ROOT + "/" + path);
 async function initFB(){
   if (DEMO) return;
@@ -443,24 +486,33 @@ async function initFB(){
   db = fb.getDatabase(appMod.initializeApp(firebaseConfig));
   fb.onValue(fb.ref(db, ".info/serverTimeOffset"), s => clockOff = s.val() || 0);
 }
-function scoreFor(S, round, ans, qStartMs){
-  const o = S.rounds[round].opts.find(x => x.k === ans.opt); if (!o) return 0;
-  const at = toMs(ans.at); const el = (at != null && qStartMs != null) ? at - qStartMs : 0;
-  if (el > T + 2500) return 0;
-  return Math.round(o.base * (0.6 + 0.4 * clamp(1 - el / T, 0, 1)));
+
+/* ---- scoring: one place, used by big screen ---- */
+function evalRound(r, ans, qStart, branch){
+  if (r === 0){
+    if (!ans || !ans.pub) return {pts:0, sp:-1, op:-1, silent:true};
+    const sec = clamp(((ans.at||0) - (qStart||0)) / 1000, 0, SECS[0]);
+    if (qStart && (ans.at - qStart) > Tms(0) + 3000) return {pts:0, sp:-1, op:-1, silent:true};
+    const ids = String(ans.chips||"").split(",").filter(Boolean), n = k => ids.filter(id => CH[id]?.kind === k).length;
+    const V = n("V"), U = n("U"), E = n("E"), Rr = n("R"), P = n("P");
+    const base = 250*V + 150*U + 100*E - 350*Rr - 300*P;
+    const pts = Math.max(0, Math.round(base * 1.3 * (1 - .6 * sec / SECS[0])));
+    const op = clamp(.45*V + .35*U + .2*E - .8*Rr - .8*P, -1, 1);
+    return {pts, sp: 1 - 2*sec/SECS[0], op, sec, clean: Rr + P === 0, ids};
+  }
+  if (!ans || !ans.opt) return {pts:0, sp:-1, op:-1, none:true};
+  const o = roundData(r, branch).opts.find(x => x.k === ans.opt); if (!o) return {pts:0, sp:-1, op:-1, none:true};
+  const el = qStart ? (ans.at - qStart) : 0;
+  if (el > Tms(r) + 3000) return {pts:0, sp:-1, op:-1, none:true};
+  return {pts: Math.round(o.base * (.6 + .4 * clamp(1 - el / Tms(r), 0, 1))), sp:o.sp, op:o.op, opt:o.k, best:!!o.best};
 }
 
 /* =========================================================
-   SOUND — synthesized with Web Audio (no files needed)
+   SOUND — synthesized with Web Audio
    ========================================================= */
 const Sound = {
-  ctx:null, out:null, on:true,
-  init(){
-    try{
-      if (!this.ctx){ this.ctx = new (window.AudioContext||window.webkitAudioContext)(); this.out = this.ctx.createGain(); this.out.gain.value = .55; this.out.connect(this.ctx.destination); }
-      if (this.ctx.state === "suspended") this.ctx.resume();
-    }catch(e){}
-  },
+  ctx:null, out:null, on:true, lastPost:0,
+  init(){ try{ if (!this.ctx){ this.ctx = new (window.AudioContext||window.webkitAudioContext)(); this.out = this.ctx.createGain(); this.out.gain.value = .55; this.out.connect(this.ctx.destination); } if (this.ctx.state === "suspended") this.ctx.resume(); }catch(e){} },
   tone(f, dur, type="sine", vol=.25, when=0, to=null){
     if (!this.on || !this.ctx) return;
     const t = this.ctx.currentTime + when, o = this.ctx.createOscillator(), g = this.ctx.createGain();
@@ -479,8 +531,9 @@ const Sound = {
     src.connect(f); f.connect(g); g.connect(this.out); src.start(t); src.stop(t + dur);
   },
   pop(){ this.tone(660,.09,"sine",.16,0,990); },
-  post(){ this.tone(1180,.05,"sine",.07); this.tone(1580,.07,"sine",.05,.04); },
+  post(){ const n = performance.now(); if (n - this.lastPost < 140) return; this.lastPost = n; this.tone(1180,.05,"sine",.06); this.tone(1580,.07,"sine",.045,.04); },
   join(){ this.tone(520,.1,"triangle",.14); this.tone(780,.14,"triangle",.12,.07); },
+  ding(){ this.tone(1046,.25,"triangle",.18); this.tone(1568,.4,"triangle",.14,.12); },
   alert(){ for (let i=0;i<3;i++){ this.tone(880,.13,"square",.08,i*.26); this.tone(660,.13,"square",.07,i*.26+.13); } this.noise(.6,.12,600,0,.7,2400); },
   beat(fast){ this.tone(fast?70:58,.22,"sine",.5,0,38); this.tone(fast?70:58,.18,"sine",.32,.16,38); },
   tick(){ this.tone(1500,.05,"square",.08); },
@@ -511,8 +564,42 @@ function setGauge(id, v, delta){
   if (t) t.textContent = Math.round(v);
   if (d && delta != null){ d.textContent = delta ? (delta>0?"+":"") + delta : ""; d.className = (id==="gr" ? delta<0 : delta>0) ? "up" : "dn"; }
 }
-const timerHTML = () => `<div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="t-bg" cx="50" cy="50" r="42"/><circle id="tring" class="t-fg" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0" transform="rotate(-90 50 50)"/></svg><b id="tsec">${ROUND_SECONDS}</b></div>`;
+const timerHTML = s => `<div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="t-bg" cx="50" cy="50" r="42"/><circle id="tring" class="t-fg" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0" transform="rotate(-90 50 50)"/></svg><b id="tsec">${s}</b></div>`;
 const stampSVG = `<svg class="stamp" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg>`;
+
+/* The Leadership DNA map: x = openness, y = speed */
+const MAPC = 200, MAPR = 150;
+const mx = (op, pid) => MAPC + clamp(op,-1,1) * MAPR * .86 + (pid ? ((hash(pid) % 17) - 8) * 1.4 : 0);
+const my = (sp, pid) => MAPC - clamp(sp,-1,1) * MAPR * .86 + (pid ? (((hash(pid) >> 5) % 17) - 8) * 1.4 : 0);
+function dnaSVG(dots, avg, opt = {}){
+  const r = opt.r || 11, lab = opt.labels !== false;
+  const q = (x,y,t) => `<rect x="${x}" y="${y}" width="${MAPR+16}" height="${MAPR+16}" fill="${TYPES[t].tint}"/>`;
+  const L = MAPC - MAPR - 16, H = MAPC;
+  return `<svg class="dna" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet">
+    ${q(L,L,"FIREFIGHTER")}${q(H,L,"LIGHTHOUSE")}${q(L,H,"FORTRESS")}${q(H,H,"SCHOLAR")}
+    <rect x="${L}" y="${L}" width="${2*(MAPR+16)}" height="${2*(MAPR+16)}" fill="none" stroke="#d3cfc2" stroke-width="2" rx="6"/>
+    <line x1="${MAPC}" y1="${L}" x2="${MAPC}" y2="${MAPC+MAPR+16}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 5"/>
+    <line x1="${L}" y1="${MAPC}" x2="${MAPC+MAPR+16}" y2="${MAPC}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 5"/>
+    ${lab ? `
+    <text class="ql" x="${L+10}" y="${L+24}" fill="${TYPES.FIREFIGHTER.color}">Firefighter</text>
+    <text class="ql" x="${MAPC+MAPR+6}" y="${L+24}" fill="${TYPES.LIGHTHOUSE.color}" text-anchor="end">Lighthouse</text>
+    <text class="ql" x="${L+10}" y="${MAPC+MAPR+8}" fill="${TYPES.FORTRESS.color}">Fortress</text>
+    <text class="ql" x="${MAPC+MAPR+6}" y="${MAPC+MAPR+8}" fill="${TYPES.SCHOLAR.color}" text-anchor="end">Scholar</text>` : ""}
+    <text class="ax" x="${MAPC}" y="${L-8}" text-anchor="middle">ACTS FAST ▲</text>
+    <text class="ax" x="${MAPC}" y="${MAPC+MAPR+32}" text-anchor="middle">▼ WAITS</text>
+    <text class="ax" x="${L-8}" y="${MAPC}" text-anchor="middle" transform="rotate(-90 ${L-8} ${MAPC})">◀ CONTROLS</text>
+    <text class="ax" x="${MAPC+MAPR+24}" y="${MAPC}" text-anchor="middle" transform="rotate(90 ${MAPC+MAPR+24} ${MAPC})">SHARES ▶</text>
+    ${dots.map(d => `<g class="dot" data-pid="${esc(d.pid)}" data-x="${d.x}" data-y="${d.y}" style="transform:translate(${d.fx ?? d.x}px,${d.fy ?? d.y}px)">
+       <circle r="${d.me ? r*1.5 : r}" fill="${d.me ? "#e5402a" : colorOf(d.name)}" stroke="#fff" stroke-width="${d.me?4:2.5}"/>
+       <text font-size="${d.me ? r*1.1 : r}">${esc(d.me ? "YOU" : initial(d.name))}</text></g>`).join("")}
+    ${avg ? `<g class="avg" data-x="${avg.x}" data-y="${avg.y}" style="transform:translate(${avg.fx ?? avg.x}px,${avg.fy ?? avg.y}px)">
+       <rect x="-11" y="-11" width="22" height="22" transform="rotate(45)" fill="#0f172a" stroke="#fff" stroke-width="3"/>
+       <text y="30" text-anchor="middle" font-size="12" fill="#0f172a">CLASS</text></g>` : ""}
+  </svg>`;
+}
+function animateDots(root){
+  requestAnimationFrame(() => setTimeout(() => root.querySelectorAll(".dot,.avg").forEach(g => g.style.transform = `translate(${g.dataset.x}px,${g.dataset.y}px)`), 60));
+}
 function confetti(){
   const box = document.createElement("div"); box.className = "confetti";
   const cols = ["#e5402a","#2453d6","#f59e0b","#15803d","#db2777","#0891b2"];
@@ -520,7 +607,7 @@ function confetti(){
     const c = document.createElement("i");
     c.style.left = Math.random()*100 + "vw"; c.style.background = cols[i % cols.length];
     c.style.animationDuration = (2.6 + Math.random()*2.4) + "s"; c.style.animationDelay = (Math.random()*1.6) + "s";
-    c.style.transform = `rotate(${Math.random()*360}deg)`; if (i%3===0) c.style.borderRadius = "50%";
+    if (i%3===0) c.style.borderRadius = "50%";
     box.appendChild(c);
   }
   document.body.appendChild(box); setTimeout(() => box.remove(), 7000);
@@ -533,13 +620,13 @@ function flash(){ const f = document.createElement("div"); f.className = "flash"
 async function host(){
   await initFB();
   const code = Array.from({length:4}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random()*24)]).join("");
-  const room = {state:"lobby", round:0, scenario:"bank", qStarts:{}, meters:{trust:50, rumour:50}, results:{}};
+  const room = {state:"lobby", round:0, branch:null, qStarts:{}, meters:{trust:50, rumour:50}};
   let players = {}, localQStart = 0, revealing = false, shown = {trust:50, rumour:50};
-  let nextPostAt = 0, stormIdx = 0, lastSec = null, reactTimers = [];
-  const S = () => SCEN[room.scenario];
+  let nextPostAt = 0, stormIdx = 0, lastSec = null, dripShown = new Set(), tlShown = new Set(), prevPos = {}, prevAvg = null;
+
   async function push(patch){ Object.assign(room, patch); if (!DEMO) await fb.update(R_(code), patch); }
   if (!DEMO){
-    await fb.set(R_(code), {state:"lobby", round:0, scenario:"bank", createdAt: now()});
+    await fb.set(R_(code), {state:"lobby", round:0, createdAt: now()});
     fb.onValue(R_(code + "/players"), s => {
       const p = s.val() || {};
       const added = Object.keys(p).filter(k => !players[k]); players = p; onPlayers(added);
@@ -553,61 +640,73 @@ async function host(){
     const iv = setInterval(() => {
       if (i >= DEMO_PLAYERS || room.state !== "lobby"){ clearInterval(iv); return; }
       const id = "bot"+i; players[id] = {name: BOTN[i % BOTN.length], answers:{}}; i++; onPlayers([id]);
-    }, 420);
+    }, 400);
   }
   function demoAnswer(r){
-    const opts = S().rounds[r].opts;
-    Object.keys(players).forEach(pid => setTimeout(() => {
-      if (room.state !== "question" || room.round !== r) return;
-      const x = Math.random(), ap = x < .48 ? "OPEN" : x < .7 ? "WAIT" : x < .87 ? "PROMISE" : "DEFLECT";
-      const pool = opts.filter(o => o.ap === ap); const o = (pool.length ? pool : opts)[Math.floor(Math.random()*(pool.length || opts.length))];
-      players[pid].answers[r] = {opt:o.k, at:Date.now()};
-    }, 2500 + Math.random() * (T - 7000)));
+    Object.keys(players).forEach(pid => {
+      const style = hash(pid) % 4;          // each bot has a personality
+      if (r === 0){
+        if (Math.random() < (style === 3 ? .5 : .1)) return;  // some stay silent
+        const at = style === 0 ? 4 + Math.random()*10 : style === 1 ? 2 + Math.random()*8 : 12 + Math.random()*24;
+        setTimeout(() => {
+          if (room.state !== "question" || room.round !== 0) return;
+          const avail = STORY.r1.chips.filter(c => c.at <= at);
+          let ids = avail.filter(c => c.kind === "V" || (c.kind !== "R" && c.kind !== "P" && Math.random() < .7)).map(c => c.id);
+          if (style === 1 || Math.random() < .15) ids = ids.concat(avail.filter(c => c.kind === "R" || c.kind === "P").map(c => c.id));
+          if (!ids.length) ids = ["c1"];
+          players[pid].answers[0] = {pub:true, chips:ids.join(","), at:Date.now()};
+        }, at * 1000);
+        return;
+      }
+      setTimeout(() => {
+        if (room.state !== "question" || room.round !== r) return;
+        const opts = roundData(r, room.branch).opts;
+        const pref = style === 0 ? opts.find(o => o.best) : style === 1 ? opts.find(o => o.sp > 0 && o.op < 0) : style === 2 ? opts.find(o => o.sp < 0 && o.op >= 0) : opts.find(o => o.sp < 0 && o.op < 0);
+        const o = Math.random() < .65 && pref ? pref : opts[Math.floor(Math.random()*4)];
+        players[pid].answers[r] = {opt:o.k, at:Date.now()};
+      }, 2500 + Math.random() * (Tms(r) - 7000));
+    });
   }
 
   /* ---- maths ---- */
-  const qStartMs = r => toMs(room.qStarts?.[r]);
+  const qStartOf = r => room.qStarts?.[r];
   function compute(upTo){
     const rows = Object.entries(players).map(([pid,p]) => {
-      let score = 0, last = null; const aps = [];
+      let score = 0, sp = 0, op = 0; const per = [];
       for (let r = 0; r <= upTo; r++){
-        const a = p.answers?.[r]; if (!a) continue;
-        const pts = scoreFor(S(), r, a, qStartMs(r)); score += pts;
-        const o = S().rounds[r].opts.find(x => x.k === a.opt); if (o) aps.push(o.ap);
-        if (r === upTo) last = {opt:a.opt, pts, best: o?.ap === "OPEN"};
+        const e = evalRound(r, p.answers?.[r], qStartOf(r), room.branch);
+        per.push(e); score += e.pts; sp += e.sp; op += e.op;
       }
-      return {pid, name:p.name || "Player", score, last, aps};
+      sp /= (upTo + 1); op /= (upTo + 1);
+      return {pid, name:p.name || "Player", score, sp, op, per, type: typeOf(sp, op)};
     });
     rows.sort((a,b) => b.score - a.score || a.name.localeCompare(b.name));
     rows.forEach((x,i) => x.rank = i + 1);
     return rows;
   }
-  function votes(r){
-    const c = {A:0,B:0,C:0,D:0}; let n = 0;
-    Object.values(players).forEach(p => { const a = p.answers?.[r]; if (a && c[a.opt] != null){ c[a.opt]++; n++; } });
-    return {c, n};
-  }
-  const answeredCount = r => Object.values(players).filter(p => p.answers?.[r]).length;
-  function dominant(aps){
-    const c = {}; aps.forEach(t => c[t] = (c[t]||0) + 1);
-    return Object.keys(c).sort((a,b) => c[b] - c[a] || (a==="OPEN"?-1:b==="OPEN"?1:0))[0] || "OPEN";
+  const answeredCount = r => Object.values(players).filter(p => r === 0 ? p.answers?.[0]?.pub : p.answers?.[r]).length;
+  function mapDots(rows){
+    const dots = rows.map(x => { const X = mx(x.op, x.pid), Y = my(x.sp, x.pid), pv = prevPos[x.pid] || {x:MAPC, y:MAPC}; return {pid:x.pid, name:x.name, x:X, y:Y, fx:pv.x, fy:pv.y}; });
+    const n = rows.length || 1, a = {x: mx(rows.reduce((s,x)=>s+x.op,0)/n), y: my(rows.reduce((s,x)=>s+x.sp,0)/n)};
+    const avg = rows.length ? {...a, fx:(prevAvg||{x:MAPC}).x, fy:(prevAvg||{y:MAPC}).y} : null;
+    dots.forEach(d => prevPos[d.pid] = {x:d.x, y:d.y}); if (avg) prevAvg = {x:avg.x, y:avg.y};
+    return {dots, avg};
   }
 
   /* ---- shell ---- */
   function shell(inner){
     app.innerHTML = `<div class="host">
       <div class="top">
-        <div class="mark"><span class="h">#</span>TRENDING<small>The Crisis Feed</small></div>
+        <div class="mark"><span class="h">#</span>TRENDING<small>${esc(STORY.name)} · ${esc(STORY.company)}</small></div>
         <div class="chips">
-          ${DEMO ? `<span class="chip demo">Demo mode · simulated class</span>` : ""}
-          ${room.state !== "lobby" ? `<span class="chip">${svgI(ICONS[S().icon])}${esc(S().company)}</span>` : ""}
+          ${DEMO ? `<span class="chip demo">Demo · simulated class</span>` : ""}
           <span class="chip">Room <b>${code}</b></span>
-          <span class="chip">${svgI('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a5.5 5.5 0 0 1 3.5 6"/>')}<b id="crewN">${Object.keys(players).length}</b></span>
+          <span class="chip">${svgI(ICONS.people)}<b id="crewN">${Object.keys(players).length}</b></span>
           <button class="chip snd ${Sound.on?"":"off"}" id="snd" title="Sound (M)">${svgI(ICONS.sound)}</button>
         </div>
       </div>
       ${inner}
-      <div class="foot"><span>Fictional companies · Crisis simulation · MBA Communicating &amp; Negotiating · UTAS-Ibra</span><span>Next: Space / → / clicker · Sound: M</span></div>
+      <div class="foot"><span>Fictional bank · Crisis simulation · MBA Communicating &amp; Negotiating · UTAS-Ibra</span><span>Next: Space / → / clicker · Sound: M</span></div>
     </div>`;
     $("#snd").onclick = toggleSound;
   }
@@ -618,19 +717,15 @@ async function host(){
     const url = location.origin + location.pathname + "?room=" + code;
     shell(`<div class="lobby">
       <div class="lb-l">
-        <span class="eyebrow"><span class="live"></span> Live crisis simulation</span>
-        <h1>Your company is <span class="hl">trending.<svg viewBox="0 0 300 20" preserveAspectRatio="none"><path d="M4 14 C 80 4, 160 4, 296 10"/></svg></span><span class="soft">Not in a good way.</span></h1>
-        <p class="lead">You are the <b>crisis team</b>. Make <b>3 decisions</b>, with <b>30 seconds</b> for each. Every choice changes public trust. Be right, and be fast.</p>
-        <div class="picker">${Object.values(SCEN).map((s,i) => `
-          <button class="scen ${room.scenario===s.id?"on":""}" data-s="${s.id}">
-            <span class="ic" style="background:${s.tint};color:${s.ink}">${svgI(ICONS[s.icon])}</span>
-            <span><h3>${esc(s.name)}</h3><p>${esc(s.company)} · ${esc(s.tagline)}</p><span class="key">PRESS ${i+1}</span></span>
-          </button>`).join("")}</div>
+        <span class="eyebrow"><span class="live"></span> Live crisis simulation · Salary day</span>
+        <h1>Your bank is <span class="hl">trending.<svg viewBox="0 0 300 20" preserveAspectRatio="none"><path d="M4 14 C 80 4, 160 4, 296 10"/></svg></span><span class="soft">Not in a good way.</span></h1>
+        <p class="lead">You lead the <b>Falaj Bank</b> crisis team. <b>3 decisions</b>, one story. What the class decides changes what happens next. At the end, discover your <b>crisis leadership type</b>.</p>
+        <div class="types4">${Object.values(TYPES).map(t => `<div class="tcard"><span class="ti" style="background:${t.tint};color:${t.color}">${svgI(t.icon)}</span><b style="color:${t.color}">${t.name}</b><span>${t.axes}</span></div>`).join("")}</div>
       </div>
       <div class="lb-r">
         <div class="join">
           <div id="qr"></div>
-          <div><div class="lbl">Scan or open the link, then enter</div>
+          <div><div class="lbl">Scan, or open the link and enter</div>
             <div class="code">${[...code].map(c => `<span>${c}</span>`).join("")}</div>
             <div class="url">${esc(url)}</div></div>
         </div>
@@ -638,18 +733,12 @@ async function host(){
           <div class="crowd-h"><span><b id="bigN">${Object.keys(players).length}</b> &nbsp;in the crisis room</span><span>waiting…</span></div>
           <div class="bubbles" id="bubs">${Object.keys(players).length ? "" : `<div class="empty">Scan the code to join the team</div>`}</div>
         </div>
-        <div class="lb-go"><button class="btn coral" id="go">Start the crisis ${svgI('<path d="M5 12h14M13 6l6 6-6 6"/>')}</button></div>
+        <div class="lb-go"><button class="btn coral" id="go">Start the crisis ${svgI(ICONS.arrow)}</button></div>
       </div>
     </div>`);
     try { new QRCode($("#qr"), {text:url, width:240, height:240, colorDark:"#0f172a", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.M}); } catch(e){}
-    document.querySelectorAll(".scen").forEach(b => b.onclick = () => pick(b.dataset.s));
     $("#go").onclick = next;
-    Object.entries(players).forEach(([id,p]) => addBubble(p.name, false));
-  }
-  function pick(id){
-    if (room.state !== "lobby" || !SCEN[id]) return;
-    push({scenario:id}); Sound.pop();
-    document.querySelectorAll(".scen").forEach(b => b.classList.toggle("on", b.dataset.s === id));
+    Object.values(players).forEach(p => addBubble(p.name, false));
   }
   function addBubble(name, sound=true){
     const el = $("#bubs"); if (!el) return;
@@ -665,61 +754,131 @@ async function host(){
   }
 
   /* ---- feed ---- */
-  function addPost(str, mood){
+  function addPost(str){
     const box = $("#posts"); if (!box) return;
-    let [h, text] = str.split("|"); if (text === undefined){ text = h; h = "user"; }
-    const likes = 20 + (hash(text) % 900), shares = 3 + (hash(h) % 300);
-    box.insertAdjacentHTML("afterbegin", `<div class="post ${mood||""}">${avatar(h)}<div><div class="h">@${esc(h)}</div><p>${esc(text)}</p>
-      <div class="m"><span>${svgI(ICONS.heart)}${likes}</span><span>${svgI(ICONS.share)}${shares}</span></div></div></div>`);
+    const [h, text] = str.split("|");
+    box.insertAdjacentHTML("afterbegin", `<div class="post">${avatar(h)}<div><div class="h">@${esc(h)}</div><p>${esc(text)}</p>
+      <div class="m"><span>${svgI(ICONS.heart)}${20 + hash(text) % 900}</span><span>${svgI(ICONS.share)}${3 + hash(h) % 300}</span></div></div></div>`);
     while (box.children.length > 7) box.lastElementChild.remove();
     Sound.post();
   }
-  const HANDLES = ["om_voice","gulf_watch","citizen_88","daily_take","muscat_now","fatma_r","ibra_life","just_asking"];
+  const feedSide = (extra="") => `<aside class="side">
+      <div class="side-h"><span class="live"></span> Live feed <span class="tag">${esc(STORY.tag)}</span></div>
+      <div class="posts" id="posts"></div>
+      <div class="gauges">${gaugeHTML("gt","Public trust","#15803d",shown.trust)}${gaugeHTML("gr","Rumours","#e5402a",shown.rumour)}</div>
+      ${extra}
+    </aside>`;
 
-  /* ---- question ---- */
+  /* ---- ROUND 1: statement builder ---- */
+  const TLW = 1000, TLH = 70;
+  function r1View(){
+    const R = STORY.r1;
+    shell(`<div class="stage">
+      <div class="main">
+        <div class="alertc"><span class="bell">${svgI(ICONS.bell)}</span><div><div class="clk">Decision 1 of 3 · ${esc(R.clock)}</div><p>${esc(R.inject)}</p></div></div>
+        <div class="qrow"><div><h2 class="q">${esc(R.q)}</h2><div class="qsub">${esc(R.sub)}</div></div>${timerHTML(SECS[0])}</div>
+        <div class="drip" id="drip">${R.chips.filter(c => c.src).map(c => `<div class="fact wait" id="f-${c.id}"><span class="fi">${svgI(ICONS.clock)}</span><div><small>Incoming…</small><p>New information at 0:${String(c.at).padStart(2,"0")}</p></div></div>`).join("")}</div>
+        <div class="ltl"><div class="ltl-h"><span>Who has gone public?</span><span><b id="pubN">0</b> / <span id="pubT">${Object.keys(players).length}</span> published</span></div>
+          <svg viewBox="0 0 ${TLW} ${TLH}" id="tl">
+            <line x1="0" y1="40" x2="${TLW}" y2="40" stroke="#e3e0d6" stroke-width="6" stroke-linecap="round"/>
+            <line id="tlnow" x1="0" y1="40" x2="0" y2="40" stroke="#0f172a" stroke-width="6" stroke-linecap="round"/>
+            ${[0,10,20,30,40].map(s => `<text x="${s/40*TLW}" y="68" font-size="14" font-weight="800" fill="#64748b" text-anchor="${s===0?"start":s===40?"end":"middle"}">0:${String(s).padStart(2,"0")}</text>`).join("")}
+            <g id="tldots"></g>
+          </svg></div>
+      </div>
+      ${feedSide(`<div class="fstat"><span>Statements published</span><span><b id="ans">0</b> / <span id="tot">${Object.keys(players).length}</span></span></div>`)}
+    </div>`);
+    dripShown = new Set(); tlShown = new Set();
+  }
+  function showDrip(c){
+    const el = document.getElementById("f-" + c.id); if (!el) return;
+    el.outerHTML = `<div class="fact ${c.kind}"><span class="fi">${svgI(KICON[c.kind])}</span><div><small>${KIND[c.kind]}</small><p>${esc(c.src)}</p></div></div>`;
+    Sound.ding();
+  }
+  function tlDot(pid, p, a){
+    const g = $("#tldots"); if (!g) return;
+    const sec = clamp(((a.at||0) - (qStartOf(0)||0))/1000, 0, SECS[0]);
+    const ids = String(a.chips||"").split(","), clean = !ids.some(id => CH[id] && (CH[id].kind === "R" || CH[id].kind === "P"));
+    const lane = hash(pid) % 3;
+    g.insertAdjacentHTML("beforeend", `<g class="tl-dot"><circle cx="${sec/SECS[0]*TLW}" cy="${16 + lane*12}" r="9" fill="${clean ? "#15803d" : "#d97706"}" stroke="#fff" stroke-width="2.5"/></g>`);
+    Sound.post();
+  }
+  function r1Reveal(dt, dr, stats, rows){
+    const best = ["c1","c2","c5","c6"];
+    const {dots, avg} = mapDots(rows);
+    const dotsTL = Object.entries(players).map(([pid,p]) => {
+      const e = evalRound(0, p.answers?.[0], qStartOf(0));
+      if (e.silent) return "";
+      return `<circle class="tl-dot" cx="${e.sec/SECS[0]*TLW}" cy="${16 + (hash(pid)%3)*12}" r="9" fill="${e.clean ? "#15803d" : "#d97706"}" stroke="#fff" stroke-width="2.5"/>`;
+    }).join("");
+    const nb = STORY.r2[room.branch];
+    shell(`<div class="stage">
+      <div class="main">
+        <div class="qrow"><h2 class="q" style="font-size:2.2em">Who went public, and when?</h2></div>
+        <div class="ltl"><svg viewBox="0 0 ${TLW} ${TLH}">
+            <line x1="0" y1="40" x2="${TLW}" y2="40" stroke="#e3e0d6" stroke-width="6" stroke-linecap="round"/>
+            ${STORY.r1.chips.filter(c => c.src && c.at > 0).map(c => `<line x1="${c.at/40*TLW}" y1="0" x2="${c.at/40*TLW}" y2="48" stroke="${c.kind==="V"?"#15803d":"#d97706"}" stroke-width="2" stroke-dasharray="4 4"/><text x="${c.at/40*TLW + 6}" y="12" font-size="13" font-weight="800" fill="${c.kind==="V"?"#15803d":"#d97706"}">${c.kind==="V"?"✓ balances safe":"? guess"}</text>`).join("")}
+            ${[0,10,20,30,40].map(s => `<text x="${s/40*TLW}" y="68" font-size="14" font-weight="800" fill="#64748b" text-anchor="${s===0?"start":s===40?"end":"middle"}">0:${String(s).padStart(2,"0")}</text>`).join("")}
+            ${dotsTL}
+        </svg></div>
+        <div class="r1stats">
+          <div class="stt"><i style="background:#15803d"></i><b>${stats.clean}</b><span>published only<br>confirmed facts</span></div>
+          <div class="stt" style="animation-delay:.1s"><i style="background:#d97706"></i><b>${stats.messy}</b><span>included a guess<br>or a promise</span></div>
+          <div class="stt" style="animation-delay:.2s"><i style="background:#94a3b8"></i><b>${stats.silent}</b><span>stayed<br>silent</span></div>
+        </div>
+        <div class="bestpost"><div class="bh">${svgI(ICONS.check)} The strongest statement · published by 0:10</div><p>${esc(stmt(best))}</p></div>
+        <div class="note"><span class="bulb">${svgI(ICONS.bulb)}</span><div><p>${esc(STORY.r1.fact)}</p><small>${esc(STORY.r1.src)}</small></div></div>
+        <div class="next-scene">${svgI(ICONS.arrow)} <span>${esc(nb.lead)} next comes <b>${esc(nb.title)}</b>.</span></div>
+      </div>
+      <aside class="side">
+        <div class="side-h">Leadership map <span class="tag" style="background:var(--blue-l);color:var(--blue)">after decision 1</span></div>
+        <div class="mapwrap" id="mapw">${dnaSVG(dots, avg, {r:10})}</div>
+        <div class="gauges">${gaugeHTML("gt","Public trust","#15803d",shown.trust)}${gaugeHTML("gr","Rumours","#e5402a",shown.rumour)}</div>
+        <div class="ctrl"><button class="btn" id="nx">Next decision ${svgI(ICONS.arrow)}</button></div>
+      </aside>
+    </div>`);
+    $("#nx").onclick = next;
+    animateDots($("#mapw"));
+    setTimeout(() => { setGauge("gt", room.meters.trust, Math.round(dt)); setGauge("gr", room.meters.rumour, Math.round(dr)); shown = {...room.meters}; }, 500);
+  }
+
+  /* ---- ROUND 2/3: choices ---- */
   function optHTML(o){
     const R = ROLES[o.role];
-    return `<div class="opt" data-k="${o.k}" style="--rc:${R.color}">
+    return `<div class="opt${o.best ? " is-best" : ""}" data-k="${o.k}" style="--rc:${R.color}">
       <div class="ohead"><span class="olet">${o.k}</span><span class="role">${svgI(R.icon)}${esc(R.name)}</span></div>
       <p class="say">${esc(o.t)}</p><span class="pct"></span><span class="vote"><i></i></span>${stampSVG}</div>`;
   }
-  function questionView(){
-    const R = S().rounds[room.round];
+  function mcView(){
+    const r = room.round, R = roundData(r, room.branch);
     shell(`<div class="stage">
       <div class="main">
-        <div class="alertc"><span class="bell">${svgI(ICONS.bell)}</span><div><div class="clk">Round ${room.round+1} of 3 · ${esc(R.clock)}</div><p>${esc(R.inject)}</p></div></div>
-        <div class="qrow"><h2 class="q">${esc(R.q)}</h2>${timerHTML()}</div>
+        <div class="alertc"><span class="bell">${svgI(ICONS.bell)}</span><div>${r===1 ? `<span class="branch">Scene: ${esc(R.title)}</span>` : `<span class="branch">${esc(R.title)}</span>`}<div class="clk">Decision ${r+1} of 3 · ${esc(R.clock)}</div><p>${esc(R.inject)}</p></div></div>
+        <div class="qrow"><h2 class="q">${esc(R.q)}</h2>${timerHTML(SECS[r])}</div>
         <div class="opts">${R.opts.map(optHTML).join("")}</div>
       </div>
-      <aside class="feed">
-        <div class="feed-h"><span class="live"></span> Live feed <span class="tag">${esc(S().tag)}</span></div>
-        <div class="posts" id="posts"></div>
-        <div class="gauges">${gaugeHTML("gt","Public trust","#15803d",shown.trust)}${gaugeHTML("gr","Rumours","#e5402a",shown.rumour)}</div>
-        <div class="drift">While you wait, rumours grow…</div>
-        <div class="fstat"><span>Decisions in</span><span><b id="ans">0</b> / <span id="tot">${Object.keys(players).length}</span></span></div>
-      </aside>
+      ${feedSide(`<div class="fstat"><span>Decisions in</span><span><b id="ans">0</b> / <span id="tot">${Object.keys(players).length}</span></span></div>`)}
     </div>`);
   }
-
-  /* ---- reveal ---- */
-  function revealView(dt, dr){
-    const r = room.round, R = S().rounds[r], {c, n} = votes(r);
-    const best = R.opts.find(o => o.ap === "OPEN");
-    const top = n ? R.opts.reduce((a,b) => c[b.k] > c[a.k] ? b : a) : R.opts.find(o => o.ap === "WAIT") || R.opts[0];
-    const good = top.ap === "OPEN";
-    const ranks = compute(r).slice(0,5);
+  function mcReveal(dt, dr, rows){
+    const r = room.round, R = roundData(r, room.branch);
+    const c = {A:0,B:0,C:0,D:0}; let n = 0;
+    Object.values(players).forEach(p => { const a = p.answers?.[r]; if (a && c[a.opt] != null){ c[a.opt]++; n++; } });
+    const top = n ? R.opts.reduce((a,b) => c[b.k] > c[a.k] ? b : a) : null;
+    const {dots, avg} = mapDots(rows);
     shell(`<div class="stage">
       <div class="main">
         <div class="qrow"><h2 class="q" style="font-size:2.1em">${esc(R.q)}</h2></div>
-        <div class="opts revealed">${R.opts.map(o => optHTML(o).replace('class="opt"', `class="opt${o.k===best.k?" best":""}"`)).join("")}</div>
+        <div class="opts revealed">${R.opts.map(o => optHTML(o).replace(`class="opt${o.best?" is-best":""}"`, `class="opt${o.best?" best":""}"`)).join("")}</div>
+        <div class="headline ${top?.best ? "good" : ""}"><span class="tg">${top ? "CLASS CHOSE " + top.k : "NO DECISION"}</span><span>${esc(top ? top.head : "Nobody decided. Silence is also a message.")}</span></div>
         <div class="note"><span class="bulb">${svgI(ICONS.bulb)}</span><div><p>${esc(R.fact)}</p><small>${esc(R.src)}</small></div></div>
-        <div class="top5">${ranks.map(x => `<span class="bub">${avatar(x.name)}<span class="rk">${x.rank}</span>${esc(x.name)}<b>${x.score}</b></span>`).join("")}</div>
+        <div class="top5">${rows.slice(0,5).map(x => `<span class="bub">${avatar(x.name)}<span class="rk">${x.rank}</span>&nbsp;${esc(x.name)}<b>${x.score}</b></span>`).join("")}</div>
       </div>
-      <aside class="feed">
-        <div class="feed-h"><span class="live"></span> ${n ? `The class chose ${top.k}` : "Nobody decided"} <span class="tag ${good?"good":""}">${esc(good ? S().goodTag : S().tag)}</span></div>
-        <div class="posts" id="posts"></div>
+      <aside class="side">
+        <div class="side-h">Leadership map <span class="tag" style="background:var(--blue-l);color:var(--blue)">after decision ${r+1}</span></div>
+        <div class="mapwrap" id="mapw">${dnaSVG(dots, avg, {r:10})}</div>
         <div class="gauges">${gaugeHTML("gt","Public trust","#15803d",shown.trust)}${gaugeHTML("gr","Rumours","#e5402a",shown.rumour)}</div>
-        <div class="ctrl" style="padding:.7em .8em"><button class="btn" id="nx">${r < 2 ? "Next round" : "Final results"} ${svgI('<path d="M5 12h14M13 6l6 6-6 6"/>')}</button></div>
+        <div class="ctrl"><button class="btn" id="nx">${r < 2 ? "Next decision" : "Reveal leadership types"} ${svgI(ICONS.arrow)}</button></div>
       </aside>
     </div>`);
     $("#nx").onclick = next;
@@ -728,88 +887,102 @@ async function host(){
       el.querySelector(".pct").textContent = p + "%";
       setTimeout(() => el.querySelector(".vote i").style.width = p + "%", 120);
     });
+    animateDots($("#mapw"));
     setTimeout(() => { setGauge("gt", room.meters.trust, Math.round(dt)); setGauge("gr", room.meters.rumour, Math.round(dr)); shown = {...room.meters}; }, 500);
-    reactTimers.forEach(clearTimeout); reactTimers = [];
-    top.react.forEach((s,i) => reactTimers.push(setTimeout(() => { const [m, t] = s.split("|"); addPost(HANDLES[(i + r*3) % HANDLES.length] + "|" + t, m); }, 700 + i*1100)));
   }
 
-  /* ---- final ---- */
-  function finalView(){
-    const rows = compute(2);
-    const stats = Object.keys(APPROACH).map(ap => {
-      let picks = 0, pts = 0;
-      Object.values(players).forEach(p => S().rounds.forEach((R,r) => {
-        const a = p.answers?.[r]; if (!a) return;
-        const o = R.opts.find(x => x.k === a.opt);
-        if (o?.ap === ap){ picks++; pts += scoreFor(S(), r, a, qStartMs(r)); }
-      }));
-      return {ap, picks, avg: picks ? Math.round(pts/picks) : 0};
-    }).sort((a,b) => b.avg - a.avg);
-    const total = stats.reduce((s,x) => s + x.picks, 0) || 1, maxAvg = Math.max(1, ...stats.map(s => s.avg));
-    const win = stats[0];
-    const pod = (x, cls, num) => x ? `<div class="pod ${cls}">${cls==="p1" ? `<div class="ttl">${esc(APPROACH[dominant(x.aps)].title)}</div>` : ""}${avatar(x.name)}<div class="nm">${esc(x.name)}</div><div class="pts">${x.score} pts</div><div class="blk">${num}</div></div>` : `<div class="pod ${cls}"></div>`;
+  /* ---- FINAL ---- */
+  function finalView(rows){
+    const {dots, avg} = mapDots(rows);
+    const cnt = {}, sum = {};
+    rows.forEach(x => { cnt[x.type] = (cnt[x.type]||0) + 1; sum[x.type] = (sum[x.type]||0) + x.score; });
+    const avgBy = Object.keys(TYPES).filter(t => cnt[t]).map(t => ({t, a: sum[t]/cnt[t]})).sort((a,b) => b.a - a.a);
+    let verdict = "";
+    if (avgBy.length >= 2){
+      const hi = avgBy[0], lo = avgBy[avgBy.length-1];
+      verdict = `In this room, <b>${esc(TYPES[hi.t].short)}</b> earned <b>${lo.a > 0 ? (hi.a/lo.a).toFixed(1) + "×" : "far"}</b> more public trust than <b>${esc(TYPES[lo.t].short)}</b>.`;
+    } else if (avgBy.length === 1) verdict = `The whole room leads like <b>${esc(TYPES[avgBy[0].t].short)}</b>.`;
     shell(`<div class="final">
       <div class="panel">
-        <h2>Best leader <small>Most points · right and fast</small></h2>
-        <div class="podium">${pod(rows[1],"p2",2)}${pod(rows[0],"p1",1)}${pod(rows[2],"p3",3)}</div>
-        <div class="rest">${rows.slice(3,10).map(x => `<span class="bub">${avatar(x.name)}<span class="rk">${x.rank}</span>&nbsp;${esc(x.name)} · ${x.score}</span>`).join("")}</div>
+        <h2>Our crisis leadership map <small>${rows.length} leaders · 3 decisions</small></h2>
+        <div class="bigmap"><div style="flex:1;min-height:0;display:flex" id="mapw">${dnaSVG(dots, avg, {r:13})}</div>
+          <div class="tcount">${Object.entries(TYPES).map(([k,t],i) => `<div class="tc" style="background:${t.tint};animation-delay:${.3+i*.12}s"><b style="color:${t.color}">${cnt[k]||0}</b><span style="color:${t.color}">${t.short}</span></div>`).join("")}</div>
+        </div>
       </div>
       <div class="panel">
-        <h2>Best strategy <small>Average points per decision</small></h2>
-        ${stats.map(s => `<div class="srow ${s.ap===win.ap && s.picks ? "win":""}"><span class="fill" data-w="${Math.round(s.avg/maxAvg*100)}"></span>
-          <div class="t"><span>${esc(APPROACH[s.ap].name)}${s.ap===win.ap && s.picks ? `<span class="win-b">WINNER</span>`:""}</span><b>${s.avg}</b></div>
-          <div class="s">${esc(APPROACH[s.ap].desc)} · chosen ${Math.round(s.picks/total*100)}% of the time</div></div>`).join("")}
-        <div class="gauges" style="margin-top:auto;border:0;background:none">${gaugeHTML("gt","Final trust","#15803d",shown.trust)}${gaugeHTML("gr","Final rumours","#e5402a",shown.rumour)}</div>
+        <h2>Best crisis leaders <small>Trust earned · right and fast</small></h2>
+        <div class="leaders">${rows.slice(0,3).map((x,i) => `<div class="ldr ${i===0?"first":""}" style="animation-delay:${1.2 - i*.3}s"><span class="pos">${i+1}</span>${avatar(x.name)}<div><div class="nm">${esc(x.name)}</div><div class="ty" style="color:${TYPES[x.type].color}">${esc(TYPES[x.type].name)}</div></div><span class="sc">${x.score}</span></div>`).join("")}</div>
+        ${verdict ? `<div class="verdict">${verdict}</div>` : ""}
+        <div class="cardcall">${svgI(ICONS.pdf)} Your personal Leadership Card is ready on your phone. Download it as a PDF.</div>
       </div>
     </div>
     <div class="lesson"><span>Communicate early</span><i class="dot"></i><span>Share verified facts</span><i class="dot"></i><span>Update continuously</span></div>`);
-    setTimeout(() => document.querySelectorAll(".srow .fill").forEach(b => b.style.width = b.dataset.w + "%"), 200);
-    return rows;
+    animateDots($("#mapw"));
   }
 
   /* ---- flow ---- */
-  async function startQuestion(r){
-    reactTimers.forEach(clearTimeout); reactTimers = [];
+  async function startRound(r){
     revealing = false; localQStart = Date.now(); stormIdx = 0; nextPostAt = Date.now() + 900; lastSec = null;
     room.qStarts[r] = DEMO ? localQStart : now();
     await push({state:"question", round:r, qStarts: {...room.qStarts}});
-    questionView(); Sound.alert();
+    r === 0 ? r1View() : mcView();
+    Sound.alert();
     if (DEMO) demoAnswer(r);
   }
   async function reveal(){
     if (revealing) return; revealing = true;
-    const r = room.round, R = S().rounds[r], {c, n} = votes(r);
+    const r = room.round, rows = compute(r), N = rows.length || 1;
     let dt = 0, dr = 0;
+    if (r === 0){
+      const per = rows.map(x => x.per[0]);
+      const stats = {clean: per.filter(e => !e.silent && e.clean).length, messy: per.filter(e => !e.silent && !e.clean).length, silent: per.filter(e => e.silent).length};
+      const c = stats.clean/N, m = stats.messy/N, s = stats.silent/N;
+      dt = 22*c - 12*m - 16*s; dr = -20*c + 18*m + 22*s;
+      if (!rows.length){ dt = -16; dr = 22; }
+      room.branch = rows.length && c >= .5 ? "clean" : "messy";
+      room.meters = {trust: clamp(room.meters.trust + dt, 0, 100), rumour: clamp(room.meters.rumour + dr, 0, 100)};
+      const results = {}; rows.forEach(x => { const e = x.per[0]; results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, pts:e.pts, silent:!!e.silent, clean:!!e.clean, sec: e.silent ? null : Math.round(e.sec)}; });
+      await push({state:"reveal", branch: room.branch, meters: room.meters, results});
+      flash(); r1Reveal(dt, dr, stats, rows); Sound.reveal();
+      return;
+    }
+    const R = roundData(r, room.branch), c = {A:0,B:0,C:0,D:0}; let n = 0;
+    Object.values(players).forEach(p => { const a = p.answers?.[r]; if (a && c[a.opt] != null){ c[a.opt]++; n++; } });
     if (n) R.opts.forEach(o => { dt += o.trust * c[o.k] / n; dr += o.rumour * c[o.k] / n; });
-    else { const s = R.opts.find(o => o.ap === "WAIT") || R.opts[0]; dt = s.trust; dr = s.rumour; }
-    const meters = {trust: clamp(room.meters.trust + dt, 0, 100), rumour: clamp(room.meters.rumour + dr, 0, 100)};
-    room.meters = meters;
-    const rows = compute(r), N = rows.length, results = {};
-    rows.forEach(x => results[x.pid] = {score:x.score, rank:x.rank, of:N, pts:x.last?.pts || 0, opt:x.last?.opt || null, best:!!x.last?.best});
-    await push({state:"reveal", meters, results, bestOpt: R.opts.find(o => o.ap === "OPEN").k});
-    flash(); revealView(dt, dr); Sound.reveal();
+    else { dt = -10; dr = 15; }
+    room.meters = {trust: clamp(room.meters.trust + dt, 0, 100), rumour: clamp(room.meters.rumour + dr, 0, 100)};
+    const results = {}; rows.forEach(x => { const e = x.per[r]; results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, pts:e.pts, opt:e.opt || null, best:!!e.best}; });
+    await push({state:"reveal", meters: room.meters, results, bestOpt: R.opts.find(o => o.best).k});
+    flash(); mcReveal(dt, dr, rows); Sound.reveal();
   }
   async function finish(){
-    const rows = finalView(), N = rows.length, results = {};
-    rows.forEach(x => { const ap = dominant(x.aps); results[x.pid] = {score:x.score, rank:x.rank, of:N, title:APPROACH[ap].title, strat:APPROACH[ap].name}; });
-    Sound.final(); confetti();
-    await push({state:"final", results});
+    const rows = compute(2), N = rows.length || 1;
+    const cls = {sp: rows.reduce((s,x)=>s+x.sp,0)/N, op: rows.reduce((s,x)=>s+x.op,0)/N, n: rows.length};
+    finalView(rows); Sound.final(); setTimeout(confetti, 900);
+    const results = {};
+    rows.forEach(x => {
+      const e0 = x.per[0];
+      results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, type:x.type, sp:+x.sp.toFixed(3), op:+x.op.toFixed(3),
+        sec: e0.silent ? null : Math.round(e0.sec), clean: !!e0.clean, silent: !!e0.silent,
+        c2: x.per[1].opt || null, c3: x.per[2].opt || null};
+    });
+    await push({state:"final", results, cls});
   }
   function next(){
-    if (room.state === "lobby"){ shown = {trust:50, rumour:50}; room.meters = {trust:50, rumour:50}; return startQuestion(0); }
+    if (room.state === "lobby"){ shown = {trust:50, rumour:50}; room.meters = {trust:50, rumour:50}; return startRound(0); }
     if (room.state === "question") return reveal();
-    if (room.state === "reveal") return room.round < 2 ? startQuestion(room.round + 1) : finish();
+    if (room.state === "reveal") return room.round < 2 ? startRound(room.round + 1) : finish();
   }
   document.addEventListener("keydown", e => {
     if ([" ","Enter","ArrowRight","PageDown"].includes(e.key)){ e.preventDefault(); next(); }
     else if (e.key === "m" || e.key === "M") toggleSound();
-    else if (room.state === "lobby" && (e.key === "1" || e.key === "2")) pick(Object.keys(SCEN)[+e.key - 1]);
   });
 
   /* ---- ticker ---- */
   setInterval(() => {
     if (room.state !== "question") return;
-    const now = Date.now(), el = now - localQStart, left = Math.max(0, T - el), frac = clamp(el / T, 0, 1), s = Math.ceil(left / 1000);
+    const r = room.round, T = Tms(r);
+    const t = Date.now(), el = t - localQStart, left = Math.max(0, T - el), frac = clamp(el / T, 0, 1), s = Math.ceil(left / 1000);
     const tr = $("#tring"); if (tr) tr.style.strokeDashoffset = 100 * frac;
     const ts = $("#tsec"); if (ts) ts.textContent = s;
     const tm = $("#timer"); if (tm) tm.classList.toggle("low", s <= 5);
@@ -818,14 +991,21 @@ async function host(){
       if (s <= 5) Sound.tick(); else if (s % 2 === 0 || s <= 10) Sound.beat(s <= 10);
       setGauge("gr", clamp(shown.rumour + 12*frac, 0, 100));
     }
-    if (now >= nextPostAt && left > 0){
-      const st = S().rounds[room.round].storm; addPost(st[stormIdx % st.length], "bad"); stormIdx++;
-      nextPostAt = now + 3200 - 1800*frac;
+    if (r === 0){
+      STORY.r1.chips.forEach(c => { if (c.src && !dripShown.has(c.id) && el >= c.at*1000){ dripShown.add(c.id); showDrip(c); } });
+      const tl = $("#tlnow"); if (tl) tl.setAttribute("x2", frac * TLW);
+      Object.entries(players).forEach(([pid,p]) => { const a = p.answers?.[0]; if (a?.pub && !tlShown.has(pid)){ tlShown.add(pid); tlDot(pid, p, a); } });
+      const pn = $("#pubN"); if (pn) pn.textContent = tlShown.size;
+      const pt = $("#pubT"); if (pt) pt.textContent = Object.keys(players).length;
     }
-    const a = answeredCount(room.round), n = Object.keys(players).length;
+    if (t >= nextPostAt && left > 0){
+      const st = roundData(r, room.branch).storm; addPost(st[stormIdx % st.length]); stormIdx++;
+      nextPostAt = t + 3400 - 1800*frac;
+    }
+    const a = answeredCount(r), n = Object.keys(players).length;
     const ae = $("#ans"); if (ae) ae.textContent = a;
     const te = $("#tot"); if (te) te.textContent = n;
-    if (!revealing && (left <= 0 || (n > 0 && a >= n && el > 4000))) setTimeout(reveal, 600);
+    if (!revealing && (left <= 0 || (n > 0 && a >= n && el > 5000))) setTimeout(reveal, 600);
   }, 100);
 
   lobby();
@@ -833,21 +1013,127 @@ async function host(){
 }
 
 /* =========================================================
+   LEADERSHIP CARD — drawn on canvas, saved as PDF
+   ========================================================= */
+function roundRect(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function wrap(ctx, text, x, y, maxW, lh){
+  const words = String(text).split(" "); let line = "", yy = y;
+  for (const w of words){ const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line){ ctx.fillText(line, x, yy); line = w; yy += lh; } else line = t; }
+  if (line) ctx.fillText(line, x, yy); return yy + lh;
+}
+async function drawCard(d){
+  try { await document.fonts.ready; } catch(e){}
+  const W = 1240, H = 1754, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d"), T = TYPES[d.type] || TYPES.LIGHTHOUSE;
+  const DF = '"Bricolage Grotesque", "Segoe UI", Arial, sans-serif', BF = '"Figtree", "Segoe UI", Arial, sans-serif';
+  ctx.fillStyle = "#f6f4ee"; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = "#ffffff"; roundRect(ctx, 40, 40, W-80, H-80, 36); ctx.fill();
+  // header band
+  ctx.save(); roundRect(ctx, 40, 40, W-80, 250, 36); ctx.clip();
+  ctx.fillStyle = "#e5402a"; ctx.fillRect(40, 40, W-80, 250);
+  ctx.strokeStyle = "rgba(255,255,255,.14)"; ctx.lineWidth = 3;
+  for (let i=1;i<=6;i++){ ctx.beginPath(); ctx.arc(W-90, 300, i*55, Math.PI, 2*Math.PI); ctx.stroke(); }
+  ctx.restore();
+  ctx.fillStyle = "#fff"; ctx.font = `800 70px ${DF}`; ctx.textBaseline = "alphabetic"; ctx.fillText("#TRENDING", 100, 150);
+  ctx.font = `800 26px ${BF}`; ctx.globalAlpha = .9; ctx.fillText("CRISIS LEADERSHIP CARD", 104, 200); ctx.globalAlpha = 1;
+  ctx.font = `700 24px ${BF}`; ctx.globalAlpha = .85; ctx.fillText("Salary Day Blackout · a fictional crisis simulation", 104, 245); ctx.globalAlpha = 1;
+  // name
+  ctx.fillStyle = "#0f172a"; ctx.font = `800 84px ${DF}`;
+  let nm = d.name || "Leader"; while (ctx.measureText(nm).width > W-200 && nm.length > 3) nm = nm.slice(0,-2);
+  ctx.fillText(nm, 100, 400);
+  ctx.fillStyle = "#64748b"; ctx.font = `600 26px ${BF}`;
+  ctx.fillText(`MBA Communicating & Negotiating · UTAS-Ibra · ${d.date}`, 102, 448);
+  // type block
+  ctx.fillStyle = T.tint; roundRect(ctx, 100, 480, W-200, 250, 28); ctx.fill();
+  ctx.fillStyle = T.color; ctx.font = `800 24px ${BF}`; ctx.fillText("YOUR CRISIS LEADERSHIP TYPE", 140, 535);
+  ctx.font = `800 82px ${DF}`; ctx.fillText(T.name, 136, 620);
+  ctx.fillStyle = "#0f172a"; ctx.font = `600 30px ${BF}`; wrap(ctx, T.axes + ". " + T.desc, 140, 672, W-300, 38);
+  // map
+  const mx0 = 110, my0 = 800, ms = 480, half = ms/2;
+  const tints = [["FIREFIGHTER",0,0],["LIGHTHOUSE",1,0],["FORTRESS",0,1],["SCHOLAR",1,1]];
+  tints.forEach(([k,i,j]) => { ctx.fillStyle = TYPES[k].tint; ctx.fillRect(mx0 + i*half, my0 + j*half, half, half); });
+  ctx.strokeStyle = "#d3cfc2"; ctx.lineWidth = 3; ctx.strokeRect(mx0, my0, ms, ms);
+  ctx.setLineDash([8,8]); ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(mx0+half, my0); ctx.lineTo(mx0+half, my0+ms); ctx.moveTo(mx0, my0+half); ctx.lineTo(mx0+ms, my0+half); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font = `800 26px ${DF}`;
+  ctx.fillStyle = TYPES.FIREFIGHTER.color; ctx.fillText("Firefighter", mx0+16, my0+40);
+  ctx.fillStyle = TYPES.LIGHTHOUSE.color; ctx.textAlign = "right"; ctx.fillText("Lighthouse", mx0+ms-16, my0+40);
+  ctx.fillStyle = TYPES.SCHOLAR.color; ctx.fillText("Scholar", mx0+ms-16, my0+ms-18);
+  ctx.textAlign = "left"; ctx.fillStyle = TYPES.FORTRESS.color; ctx.fillText("Fortress", mx0+16, my0+ms-18);
+  ctx.fillStyle = "#64748b"; ctx.font = `800 18px ${BF}`; ctx.textAlign = "center";
+  ctx.fillText("ACTS FAST", mx0+half, my0-14); ctx.fillText("WAITS", mx0+half, my0+ms+30);
+  ctx.save(); ctx.translate(mx0-16, my0+half); ctx.rotate(-Math.PI/2); ctx.fillText("CONTROLS", 0, 0); ctx.restore();
+  ctx.save(); ctx.translate(mx0+ms+16, my0+half); ctx.rotate(Math.PI/2); ctx.fillText("SHARES", 0, 0); ctx.restore();
+  const px = v => mx0 + half + clamp(v,-1,1)*(half-40), py = v => my0 + half - clamp(v,-1,1)*(half-40);
+  if (d.cls){ const cx = px(d.cls.op), cy = py(d.cls.sp); ctx.save(); ctx.translate(cx, cy); ctx.rotate(Math.PI/4); ctx.fillStyle = "#0f172a"; ctx.fillRect(-14,-14,28,28); ctx.restore(); ctx.fillStyle = "#0f172a"; ctx.font = `800 17px ${BF}`; ctx.fillText("CLASS", cx, cy+40); }
+  const ux = px(d.op), uy = py(d.sp);
+  ctx.fillStyle = "rgba(229,64,42,.18)"; ctx.beginPath(); ctx.arc(ux, uy, 46, 0, 7); ctx.fill();
+  ctx.fillStyle = "#e5402a"; ctx.strokeStyle = "#fff"; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(ux, uy, 28, 0, 7); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#fff"; ctx.font = `800 18px ${BF}`; ctx.fillText("YOU", ux, uy+6);
+  ctx.textAlign = "left";
+  // stats
+  const sx = 690, sw = W - 100 - sx;
+  const stat = (y, label, value, sub) => {
+    ctx.fillStyle = "#f6f4ee"; roundRect(ctx, sx, y, sw, 150, 24); ctx.fill();
+    ctx.fillStyle = "#64748b"; ctx.font = `800 20px ${BF}`; ctx.fillText(label, sx+30, y+42);
+    ctx.fillStyle = "#0f172a"; ctx.font = `800 56px ${DF}`; ctx.fillText(value, sx+28, y+102);
+    if (sub){ ctx.fillStyle = "#64748b"; ctx.font = `600 22px ${BF}`; ctx.fillText(sub, sx+30, y+134); }
+  };
+  stat(800, "TRUST SCORE", String(d.score), "points from 3 decisions");
+  stat(965, "RANK", `#${d.rank}`, `out of ${d.of} leaders`);
+  stat(1130, "FIRST STATEMENT", d.silent ? "Silent" : mmss(d.sec), d.silent ? "you stayed silent" : d.clean ? "confirmed facts only" : "included a guess or promise");
+  // traits
+  let y = 1385;
+  const trait = (label, text, col) => {
+    ctx.fillStyle = col; ctx.font = `800 20px ${BF}`; ctx.fillText(label, 100, y);
+    ctx.fillStyle = "#0f172a"; ctx.font = `600 27px ${BF}`; y = wrap(ctx, text, 290, y, W - 390, 35) + 10;
+  };
+  trait("STRENGTH", T.strength, "#15803d");
+  trait("BLIND SPOT", T.blind, "#e5402a");
+  trait("THEORY", T.theory, "#2453d6");
+  // footer
+  ctx.fillStyle = "#0f172a"; roundRect(ctx, 100, H-160, W-200, 84, 24); ctx.fill();
+  ctx.fillStyle = "#fff"; ctx.font = `800 30px ${DF}`; ctx.textAlign = "center";
+  ctx.fillText("Communicate early  •  Share verified facts  •  Update continuously", W/2, H-107);
+  ctx.textAlign = "left";
+  return cv;
+}
+function loadScript(src){ return new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+async function downloadCard(d, btn){
+  const old = btn ? btn.innerHTML : "";
+  if (btn){ btn.disabled = true; btn.textContent = "Preparing your card…"; }
+  try {
+    const cv = await drawCard(d);
+    const safe = String(d.name || "Leader").replace(/[^\p{L}\p{N}]+/gu, "-").slice(0,30);
+    try {
+      if (!window.jspdf) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      const pdf = new window.jspdf.jsPDF({unit:"mm", format:"a5", orientation:"portrait"});
+      pdf.addImage(cv.toDataURL("image/jpeg", .93), "JPEG", 0, 0, 148, 210);
+      const url = URL.createObjectURL(pdf.output("blob")), a = document.createElement("a");
+      a.href = url; a.download = `Leadership-Card-${safe}.pdf`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+    } catch(e){
+      const a = document.createElement("a"); a.href = cv.toDataURL("image/png"); a.download = `Leadership-Card-${safe}.png`; a.click();
+    }
+  } finally { if (btn){ btn.disabled = false; btn.innerHTML = old; } }
+}
+
+/* =========================================================
    PLAYER — phone
    ========================================================= */
 async function player(){
   if (DEMO){
-    app.innerHTML = `<div class="play"><div class="ptop"><div class="mark"><span class="h">#</span>TRENDING</div><span>Setup</span></div>
-      <div class="pcard"><div class="pbig" style="font-size:30px">Not connected yet</div>
-      <p class="pmute" style="margin-top:10px">Students can join once the Firebase settings are added at the top of this file. You can preview the big screen now with a simulated class.</p>
-      <button class="pbtn" id="demoGo">Open big-screen demo</button></div></div>`;
+    app.innerHTML = `<div class="play"><div class="ptop"><div class="mark"><span class="h">#</span>TRENDING</div><span>Rehearsal</span></div>
+      <div class="pcard"><div class="pbig" style="font-size:30px">Rehearsal mode</div>
+      <p class="pmute" style="margin-top:10px">This link is in demo mode. Open the big screen to rehearse with a simulated class, or preview a sample Leadership Card.</p>
+      <button class="pbtn" id="demoGo">Open big-screen demo</button>
+      <button class="pbtn ink" id="demoCard">${svgI(ICONS.pdf)} Sample Leadership Card</button></div></div>`;
     $("#demoGo").onclick = () => host();
+    $("#demoCard").onclick = e => downloadCard({name:"Ismail", type:"LIGHTHOUSE", score:2840, rank:1, of:24, sp:.72, op:.81, sec:9, clean:true, silent:false, cls:{sp:.1, op:.25}, date:new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}, e.currentTarget);
     return;
   }
   await initFB();
   let code = (params.get("room") || "").toUpperCase().replace(/[^A-Z]/g,"").slice(0,4);
-  let pid = null, name = "", room = null, me = null, seenQ = {}, sentFor = {}, tick = null, lastKey = "";
-  const S = () => SCEN[room?.scenario] || SCEN.bank;
+  let pid = null, name = "", room = null, me = {}, tick = null, lastKey = "", sel = [], published = {}, shownChips = 0;
   const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
 
   function joinView(err){
@@ -855,9 +1141,9 @@ async function player(){
       <div class="ptop"><div class="mark"><span class="h">#</span>TRENDING</div><span>Crisis team</span></div>
       <div class="pcard">
         <div class="pbig">Join the<br>crisis team.</div>
-        <p class="pmute" style="margin-top:8px">3 decisions. 30 seconds each. Be right and be fast.</p>
+        <p class="pmute" style="margin-top:8px">One story. 3 decisions. At the end you get your personal Leadership Card.</p>
         <div class="fld">Room code</div><input class="inp" id="rc" maxlength="4" value="${esc(code)}" placeholder="ABCD" autocapitalize="characters" style="text-transform:uppercase;letter-spacing:.2em">
-        <div class="fld">Your name</div><input class="inp" id="nm" maxlength="16" placeholder="e.g. Maryam" autocomplete="off">
+        <div class="fld">Your name (for your card)</div><input class="inp" id="nm" maxlength="20" placeholder="e.g. Maryam Al Harthy" autocomplete="off">
         <div class="err" id="er">${esc(err||"")}</div>
         <button class="pbtn" id="jb">Join now</button>
       </div>
@@ -868,7 +1154,7 @@ async function player(){
   }
   async function join(){
     code = $("#rc").value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,4);
-    name = $("#nm").value.trim().slice(0,16);
+    name = $("#nm").value.trim().slice(0,20);
     if (code.length !== 4) return joinView("Enter the 4-letter room code.");
     if (!name){ $("#er").textContent = "Enter your name."; return; }
     $("#jb").disabled = true;
@@ -883,76 +1169,154 @@ async function player(){
     } catch(e){ joinView("Connection problem. Please try again."); }
   }
   const head = right => `<div class="ptop"><span style="display:flex;align-items:center;gap:8px">${avatar(name)}<b style="color:var(--ink)">${esc(name)}</b></span><span>${right||""}</span></div>`;
+  const elapsed = r => { const q = room?.qStarts?.[r]; return q ? (now() - q) / 1000 : 0; };
 
   function render(){
     if (!room) return;
-    const r = room.round, res = room.results?.[pid];
-    const key = room.state + ":" + r + ":" + room.scenario + ":" + (res ? res.score : "");
-    if (key === lastKey && room.state !== "question") return; lastKey = key;
+    const r = room.round || 0, res = room.results?.[pid];
+    const answered = r === 0 ? (published[0] || me.answers?.[0]?.pub) : (published[r] || me.answers?.[r]);
+    const key = [room.state, r, room.branch, answered ? "a" : "", res ? res.score + ":" + (res.type||"") : ""].join("|");
+    if (key === lastKey) return; lastKey = key;
     clearInterval(tick);
+
     if (room.state === "lobby"){
-      const s = S();
       app.innerHTML = `<div class="play">${head("Room " + esc(code))}<div class="pcard" style="text-align:center">
         <svg class="wait-ill" viewBox="0 0 150 120"><rect x="45" y="6" width="60" height="108" rx="12" fill="#fff" stroke="#0f172a" stroke-width="4"/><rect x="66" y="12" width="18" height="4" rx="2" fill="#0f172a"/>
           <g class="n1"><rect x="18" y="28" width="70" height="18" rx="9" fill="#e5402a"/><circle cx="29" cy="37" r="5" fill="#fff"/></g>
           <g class="n2"><rect x="62" y="54" width="76" height="18" rx="9" fill="#2453d6"/><circle cx="73" cy="63" r="5" fill="#fff"/></g>
           <g class="n3"><rect x="24" y="80" width="64" height="18" rx="9" fill="#d97706"/><circle cx="35" cy="89" r="5" fill="#fff"/></g></svg>
         <div class="pbig" style="font-size:32px">You're in!</div>
-        <p class="pmute" style="margin-top:8px">Today's crisis:</p>
-        <span class="badge">${esc(s.company)} · ${esc(s.name)}</span>
+        <p class="pmute" style="margin-top:8px">You lead the crisis team of</p>
+        <span class="badge">Falaj Bank · Salary Day</span>
         <p class="pmute" style="margin-top:12px">Watch the big screen. The crisis starts soon.</p></div></div>`;
       return;
     }
-    if (room.state === "question"){
-      const R = S().rounds[r];
-      if (!seenQ[r]){ seenQ[r] = Date.now(); buzz(120); }
-      if (sentFor[r] || me?.answers?.[r]){
-        const k = sentFor[r] || me.answers[r].opt;
-        if (lastKey === key + ":lock") return; lastKey = key + ":lock";
-        app.innerHTML = `<div class="play">${head("Round " + (r+1) + " of 3")}<div class="pcard lockc">
-          <svg viewBox="0 0 120 120"><circle class="lk-ring" cx="60" cy="60" r="50" pathLength="300"/><text class="lk-l" x="60" y="76" text-anchor="middle">${esc(k)}</text></svg>
-          <div class="pbig" style="font-size:30px;margin-top:10px">Decision locked</div>
-          <p class="pmute" style="margin-top:6px">Watch the screen to see how the public reacts.</p></div></div>`;
+
+    if (room.state === "question" && r === 0){
+      if (answered){
+        const ids = (published[0] || me.answers[0].chips || "").split(",");
+        app.innerHTML = `<div class="play">${head("Decision 1 of 3")}<div class="pcard lockc">
+          <svg class="ring" viewBox="0 0 120 120"><circle class="lk-ring" cx="60" cy="60" r="50" pathLength="300"/><text class="lk-l" x="60" y="74" text-anchor="middle" style="font-size:30px">✓</text></svg>
+          <div class="pbig" style="font-size:30px;margin-top:8px">Published!</div>
+          <p class="pmute" style="margin-top:6px">Watch the big screen to see who went public, and when.</p></div>
+          <div class="preview"><div class="ph"><span class="av">F</span>Falaj Bank <span class="pmute" style="font-size:12px">· just now</span></div><p>${esc(stmt(ids))}</p></div></div>`;
         return;
       }
-      if (lastKey === key + ":q") return; lastKey = key + ":q";
-      app.innerHTML = `<div class="play">${head("Round " + (r+1) + " of 3")}
-        <div class="pclock"><span class="badge">${esc(R.clock)}</span><span class="s" id="ps">${ROUND_SECONDS}</span></div>
+      buzz(120); sel = []; shownChips = -1;
+      const R = STORY.r1;
+      app.innerHTML = `<div class="play">${head("Decision 1 of 3")}
+        <div class="pclock"><span class="badge">${esc(R.clock)}</span><span class="s" id="ps">${SECS[0]}</span></div>
         <div class="palert"><b>ALERT</b>${esc(R.inject)}</div>
-        <div class="pq">${esc(R.q)}</div>
-        <div class="popts">${R.opts.map(o => { const RL = ROLES[o.role]; return `<button class="popt" data-k="${o.k}" style="--rc:${RL.color}"><span class="olet">${o.k}</span><span><span class="role">${svgI(RL.icon)}${esc(RL.name)}</span><p>${esc(o.t)}</p></span></button>`; }).join("")}</div></div>`;
-      document.querySelectorAll(".popt").forEach(b => b.onclick = () => answer(r, b.dataset.k));
-      const upd = () => { const s = Math.max(0, Math.ceil((T - (Date.now() - seenQ[r])) / 1000)); const el = $("#ps"); if (el){ el.textContent = s; el.classList.toggle("low", s <= 5); } };
+        <div class="pq">Build your first statement</div>
+        <p class="pmute" style="margin-top:-4px">Tap lines to add them. New facts will appear. Publish when you're ready.</p>
+        <div class="pchips" id="pchips"></div>
+        <div class="preview"><div class="ph"><span class="av">F</span>Falaj Bank <span class="pmute" style="font-size:12px">· your post</span></div><p id="pv" class="empty">Tap the lines above to build your post…</p></div>
+        <button class="pbtn" id="pub" disabled>Publish now</button></div>`;
+      $("#pub").onclick = publish;
+      const upd = () => {
+        const el = elapsed(0), s = Math.max(0, Math.ceil(SECS[0] - el));
+        const ps = $("#ps"); if (ps){ ps.textContent = s; ps.classList.toggle("low", s <= 5); }
+        const avail = R.chips.filter(c => c.at <= el).length;
+        if (avail !== shownChips){ if (shownChips >= 0) buzz(60); shownChips = avail; drawChips(el); }
+      };
       upd(); tick = setInterval(upd, 250);
       return;
     }
-    if (room.state === "reveal"){
-      const best = room.bestOpt, ok = res?.best, none = !res?.opt;
-      buzz(ok ? [60,60,60] : 200);
-      app.innerHTML = `<div class="play">${head("Round " + (r+1) + " of 3")}<div class="pcard res">
-        <span class="badge">Best answer: ${esc(best||"")}</span>
-        <div class="pbig ${ok?"ok":"no"}" style="margin-top:14px">${none ? "No decision." : ok ? "Strong call!" : "The public noticed."}</div>
-        <p class="pmute" style="margin-top:8px">${none ? "Silence is also a message." : ok ? "Facts, honesty and a next step. Trust goes up." : `You chose ${esc(res.opt)}. The best move was ${esc(best)}.`}</p>
-        <div class="stats"><div class="stat"><b>+${res?.pts||0}</b><span>Round</span></div><div class="stat"><b>${res?.score||0}</b><span>Total</span></div><div class="stat"><b>${res ? "#" + res.rank : "–"}</b><span>of ${res?.of||"–"}</span></div></div>
+
+    if (room.state === "question"){
+      const R = roundData(r, room.branch);
+      if (answered){
+        const k = published[r] || me.answers[r].opt;
+        app.innerHTML = `<div class="play">${head("Decision " + (r+1) + " of 3")}<div class="pcard lockc">
+          <svg class="ring" viewBox="0 0 120 120"><circle class="lk-ring" cx="60" cy="60" r="50" pathLength="300"/><text class="lk-l" x="60" y="74" text-anchor="middle">${esc(k)}</text></svg>
+          <div class="pbig" style="font-size:30px;margin-top:8px">Decision locked</div>
+          <p class="pmute" style="margin-top:6px">Watch the screen to see how the public reacts.</p></div></div>`;
+        return;
+      }
+      buzz(120);
+      app.innerHTML = `<div class="play">${head("Decision " + (r+1) + " of 3")}
+        <div class="pclock"><span class="badge">${esc(R.title)}</span><span class="s" id="ps">${SECS[r]}</span></div>
+        <div class="palert"><b>${esc(R.clock)}</b>${esc(R.inject)}</div>
+        <div class="pq">${esc(R.q)}</div>
+        <div class="popts">${R.opts.map(o => { const RL = ROLES[o.role]; return `<button class="popt" data-k="${o.k}" style="--rc:${RL.color}"><span class="olet">${o.k}</span><span><span class="role">${svgI(RL.icon)}${esc(RL.name)}</span><p>${esc(o.t)}</p></span></button>`; }).join("")}</div></div>`;
+      document.querySelectorAll(".popt").forEach(b => b.onclick = () => answer(r, b.dataset.k));
+      const upd = () => { const s = Math.max(0, Math.ceil(SECS[r] - elapsed(r))); const el = $("#ps"); if (el){ el.textContent = s; el.classList.toggle("low", s <= 5); } };
+      upd(); tick = setInterval(upd, 250);
+      return;
+    }
+
+    if (room.state === "reveal" && r === 0){
+      const nb = STORY.r2[room.branch || "messy"];
+      buzz(res && !res.silent && res.clean ? [60,60,60] : 200);
+      const title = !res || res.silent ? "You stayed silent." : res.clean ? "Clean and early!" : "You included a guess.";
+      const msg = !res || res.silent ? "Silence is also a message. Others spoke for you." : res.clean ? `You went public at ${mmss(res.sec)} with confirmed facts only.` : `You went public at ${mmss(res.sec)}, but a guess or promise can backfire.`;
+      app.innerHTML = `<div class="play">${head("Decision 1 of 3")}<div class="pcard res">
+        <div class="pbig ${res && !res.silent && res.clean ? "ok" : "no"}">${title}</div>
+        <p class="pmute" style="margin-top:8px">${msg}</p>
+        <div class="stats"><div class="stat"><b>+${res?.pts||0}</b><span>Points</span></div><div class="stat"><b>${res?.score||0}</b><span>Total</span></div><div class="stat"><b>${res ? "#" + res.rank : "–"}</b><span>of ${res?.of||"–"}</span></div></div>
+        <p class="pmute" style="margin-top:14px">Next scene: <b style="color:var(--ink)">${esc(nb.title)}</b></p>
       </div></div>`;
       return;
     }
+
+    if (room.state === "reveal"){
+      const best = room.bestOpt, ok = res?.best, none = !res?.opt;
+      buzz(ok ? [60,60,60] : 200);
+      app.innerHTML = `<div class="play">${head("Decision " + (r+1) + " of 3")}<div class="pcard res">
+        <span class="badge">Strongest move: ${esc(best||"")}</span>
+        <div class="pbig ${ok?"ok":"no"}" style="margin-top:14px">${none ? "No decision." : ok ? "Strong call!" : "The public noticed."}</div>
+        <p class="pmute" style="margin-top:8px">${none ? "Silence is also a message." : ok ? "Facts, honesty and a next step. Trust goes up." : `You chose ${esc(res.opt)}. The strongest move was ${esc(best)}.`}</p>
+        <div class="stats"><div class="stat"><b>+${res?.pts||0}</b><span>Points</span></div><div class="stat"><b>${res?.score||0}</b><span>Total</span></div><div class="stat"><b>${res ? "#" + res.rank : "–"}</b><span>of ${res?.of||"–"}</span></div></div>
+      </div></div>`;
+      return;
+    }
+
     if (room.state === "final"){
       buzz([80,60,80,60,200]);
-      app.innerHTML = `<div class="play">${head("Final")}<div class="pcard res">
-        <div class="fld" style="margin-top:0">Your leadership style</div>
-        <div class="pbig" style="color:var(--coral)">${esc(res?.title || "Team member")}</div>
-        <p class="pmute" style="margin-top:6px">${esc(res?.strat || "")}</p>
-        <div class="stats"><div class="stat"><b>${res?.score||0}</b><span>Points</span></div><div class="stat"><b>#${res?.rank||"–"}</b><span>Rank</span></div><div class="stat"><b>${res?.of||"–"}</b><span>Players</span></div></div>
-        <p style="margin-top:18px;font-weight:800">Communicate early · Share verified facts · Update continuously</p>
-      </div></div>`;
+      if (!res){ app.innerHTML = `<div class="play">${head("Final")}<div class="pcard"><div class="pbig" style="font-size:28px">Thanks for playing!</div><p class="pmute" style="margin-top:8px">You joined too late to get a Leadership Card this time.</p></div></div>`; return; }
+      const T = TYPES[res.type] || TYPES.LIGHTHOUSE;
+      const cardData = {name, type:res.type, score:res.score, rank:res.rank, of:res.of, sp:res.sp, op:res.op, sec:res.sec, clean:res.clean, silent:res.silent, cls:room.cls,
+        date:new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})};
+      const dots = [{pid:"me", name, x:mx(res.op), y:my(res.sp), fx:MAPC, fy:MAPC, me:true}];
+      const avg = room.cls ? {x:mx(room.cls.op), y:my(room.cls.sp), fx:MAPC, fy:MAPC} : null;
+      app.innerHTML = `<div class="play">${head("Rank #" + res.rank + " of " + res.of)}
+        <div class="ptype" style="background:${T.color}"><small>YOUR CRISIS LEADERSHIP TYPE</small><h2>${esc(T.name)}</h2><p>${esc(T.axes)}. ${esc(T.desc)}</p></div>
+        <div class="pcard pmap" id="pmap" style="padding:10px">${dnaSVG(dots, avg, {r:12})}</div>
+        <div class="pcard ptrait">
+          <div><b style="color:var(--green)">Strength</b>${esc(T.strength)}</div>
+          <div><b style="color:var(--coral)">Blind spot</b>${esc(T.blind)}</div>
+          <div><b style="color:var(--blue)">Theory</b>${esc(T.theory)}</div>
+        </div>
+        <div class="stats" style="margin-top:0"><div class="stat"><b>${res.score}</b><span>Trust score</span></div><div class="stat"><b>#${res.rank}</b><span>Rank</span></div><div class="stat"><b>${res.silent ? "—" : mmss(res.sec)}</b><span>Went public</span></div></div>
+        <button class="pbtn" id="dl">${svgI(ICONS.pdf)} Download my Leadership Card (PDF)</button>
+        <p class="pmute" style="text-align:center;font-weight:800;color:var(--ink)">Communicate early · Share verified facts · Update continuously</p></div>`;
+      animateDots($("#pmap"));
+      $("#dl").onclick = e => downloadCard(cardData, e.currentTarget);
     }
   }
+  function drawChips(el){
+    const box = $("#pchips"); if (!box) return;
+    const R = STORY.r1, avail = R.chips.filter(c => c.at <= el), soon = R.chips.filter(c => c.at > el);
+    box.innerHTML = avail.map(c => `<button class="pchip ${c.kind} ${sel.includes(c.id) ? "on" : ""}" data-id="${c.id}"><span class="ck">${svgI(ICONS.check)}</span><span><p>${esc(c.t)}</p><small>${KIND[c.kind]}${c.kind==="R"||c.kind==="P" ? " · from IT, unverified" : ""}</small></span></button>`).join("")
+      + (soon.length ? `<div class="pchip soon"><span class="ck">${svgI(ICONS.clock)}</span><span><p>${soon.length} more update${soon.length>1?"s":""} coming…</p></span></div>` : "");
+    box.querySelectorAll("button.pchip").forEach(b => b.onclick = () => {
+      const id = b.dataset.id; sel = sel.includes(id) ? sel.filter(x => x !== id) : sel.concat(id);
+      b.classList.toggle("on"); buzz(15);
+      const pv = $("#pv"); pv.textContent = sel.length ? stmt(sel) : "Tap the lines above to build your post…"; pv.classList.toggle("empty", !sel.length);
+      $("#pub").disabled = !sel.length;
+    });
+  }
+  async function publish(){
+    if (!sel.length || published[0] || room.state !== "question" || room.round !== 0) return;
+    published[0] = sel.join(","); buzz([40,40,40]); lastKey = ""; render();
+    try { await fb.set(R_(code + "/players/" + pid + "/answers/0"), {pub:true, chips:published[0], at: now()}); }
+    catch(e){ delete published[0]; lastKey = ""; render(); }
+  }
   async function answer(r, k){
-    if (sentFor[r] || room.state !== "question" || room.round !== r) return;
-    sentFor[r] = k; buzz(40); render();
+    if (published[r] || room.state !== "question" || room.round !== r) return;
+    published[r] = k; buzz(40); lastKey = ""; render();
     try { await fb.set(R_(code + "/players/" + pid + "/answers/" + r), {opt:k, at: now()}); }
-    catch(e){ delete sentFor[r]; lastKey = ""; render(); }
+    catch(e){ delete published[r]; lastKey = ""; render(); }
   }
   joinView();
 }
