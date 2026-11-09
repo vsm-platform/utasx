@@ -162,18 +162,21 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .top5 .pill{border:1px solid var(--line)}
 
 /* lobby */
-.lobbycard{left:1.4em;top:1.4em;bottom:1.4em;width:min(30em,46%);background:var(--paper);color:var(--ink);border-radius:1.2em;padding:1.5em 1.6em;display:flex;flex-direction:column;justify-content:center;gap:1.1em;box-shadow:0 24px 50px -20px #000c;animation:fadeUp .7s both}
+.lobbycard{left:1.4em;top:1.4em;bottom:1.4em;width:min(30em,46%);background:var(--paper);color:var(--ink);border-radius:1.2em;padding:1.4em 1.6em;display:flex;flex-direction:column;justify-content:safe center;gap:min(1em,1.6vh);overflow:hidden;box-shadow:0 24px 50px -20px #000c;animation:fadeUp .7s both}
 .kick{font-family:var(--M);font-weight:800;color:var(--red);letter-spacing:.18em;font-size:.78em;display:flex;align-items:center;gap:.6em}
 .kick i{width:.6em;height:.6em;border-radius:50%;background:var(--red);animation:blink 1s infinite}
-.h1{font-family:var(--D);font-weight:800;font-size:3.6em;line-height:.98;letter-spacing:-.03em}
+.h1{font-family:var(--D);font-weight:800;font-size:min(3.2em,6.6vh);line-height:.98;letter-spacing:-.03em}
 .h1 em{font-style:normal;color:var(--red)}
 .lead{font-size:1.1em;line-height:1.5;color:var(--ink2);font-weight:600}
 .lead b{color:var(--ink)}
 .joinrow{display:flex;gap:1.1em;align-items:center;border-top:2px solid var(--line);padding-top:1em}
-#qr{line-height:0;min-width:2em;min-height:2em}
-#qr img,#qr canvas{width:7.8em!important;height:7.8em!important}
+#qr{line-height:0;width:min(7.6em,15vh);height:min(7.6em,15vh);flex:none;overflow:hidden;background:#fff}
+#qr img,#qr canvas{width:100%!important;height:100%!important;display:block}
+#qr canvas+img{display:block}
+#qr img+canvas,#qr canvas:has(+img[style*="block"]){display:none!important}
+.joinrow>div:last-child{min-width:0}
 .joinrow .lbl{font-family:var(--M);font-weight:800;font-size:.66em;letter-spacing:.16em;color:var(--mute)}
-.code{font-family:var(--M);font-weight:800;font-size:3.2em;letter-spacing:.12em;line-height:1.05}
+.code{font-family:var(--M);font-weight:800;font-size:min(3em,6vh);letter-spacing:.12em;line-height:1.05}
 .url{font-size:.68em;color:var(--mute);font-weight:600;word-break:break-all}
 .board{right:1.4em;top:1.4em;width:min(21em,34%);background:#050d1ccc;border:1px solid #ffffff22;border-radius:1em;overflow:hidden;backdrop-filter:blur(6px)}
 .board .bh{display:flex;justify-content:space-between;padding:.6em .9em;font-family:var(--M);font-weight:800;font-size:.68em;letter-spacing:.16em;color:var(--amber);border-bottom:1px solid #ffffff1f}
@@ -299,7 +302,7 @@ const firebaseConfig = {
   appId: "1:1026974496932:web:0cde5f783b04ca1ead4e31"
 };
 const DB_ROOT = "tr";
-const VERSION = "flight-2026-11-09b";   // change when the questions change: phones with an old copy reload themselves
+const VERSION = "flight-2026-11-09c";   // change when the questions change: phones with an old copy reload themselves
 const SECS = [30, 30, 30, 30, 30];
 const NQ = SECS.length;
 const DEMO_PLAYERS = 24;
