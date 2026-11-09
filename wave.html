@@ -325,7 +325,8 @@ const firebaseConfig = {
   appId: "1:1026974496932:web:0cde5f783b04ca1ead4e31"
 };
 const DB_ROOT = "tr";
-const SECS = [30, 30, 30];
+const SECS = [20, 20, 20, 20, 20];
+const NQ = SECS.length;
 const DEMO_PLAYERS = 24;
 
 /* =========================================================
@@ -379,59 +380,71 @@ const TYPES = {
 };
 const typeOf = (sp, op) => sp >= 0 ? (op >= 0 ? "LIGHTHOUSE" : "CAPTAIN") : (op >= 0 ? "NAVIGATOR" : "BREAKWATER");
 
-const R1 = {
-  clock:"10:05 · T+3 MIN", title:"The First Warning",
-  situ:"<b>10:02.</b> A magnitude 8.1 earthquake strikes the Arabian Sea. A tsunami may be coming. Buoy data that can confirm it needs about <b>20 minutes</b>. Waves could reach the Oman coast in about <b>25 minutes</b>.",
-  q:"Issue the first warning.",
-  lines:[
-    {id:"l1", k:"V", t:"A strong earthquake (M8.1) hit the Arabian Sea at 10:02."},
-    {id:"l2", k:"V", t:"A tsunami is possible. It is not confirmed yet."},
-    {id:"l3", k:"V", t:"The sea is pulling back at Ras Al Hadd."},
-    {id:"l4", k:"A", t:"Move away from beaches and low coastal areas now."},
-    {id:"l5", k:"U", t:"Next update in 10 minutes."},
-    {id:"l6", k:"G", t:"Waves will be small, under 1 metre."},
-    {id:"l7", k:"G", t:"There is no danger for Muscat."}
-  ],
-  fact:"In 2004 the Indian Ocean had no tsunami warning system. About 230,000 people died.", src:"2004 Indian Ocean tsunami · UNESCO-IOC"
-};
-const KTAG = {V:"CONFIRMED", A:"ACTION", U:"COMMITMENT", G:"GUESS · NOT CONFIRMED"};
-const LN = Object.fromEntries(R1.lines.map(l => [l.id, l]));
-const warningText = ids => R1.lines.filter(l => ids.includes(l.id)).map(l => l.t).join(" ");
-const BEST_IDS = ["l1","l2","l3","l4","l5"];
+const QS = [
+  { title:"The First Message", clock:"10:05 · T+3 MIN", minutes:3,
+    situ:"<b>10:02.</b> A strong earthquake (M8.1) in the Arabian Sea. A tsunami is <b>possible, not confirmed</b>. Waves could reach Oman in about <b>25 minutes</b>.",
+    q:"Your first message?",
+    opts:[
+      {k:"A", role:"ops",      sp:1,  op:-.3, base:550, dE:+14, dT:-4,  timely:true, t:"“A tsunami is coming. Leave the beaches now.”", head:"People move. Later, “coming” is used against you when the wave is small."},
+      {k:"B", role:"comms", sp:1,  op:1,   base:1000,dE:+20, dT:+12, timely:true, best:true, t:"“A tsunami is possible. Leave the beaches now. Next update in 10 minutes.”", head:"Beaches empty fast, and people wait for your next update."},
+      {k:"C", role:"director", sp:.3, op:.6,  base:450, dE:+2,  dT:+4,  t:"“Earthquake detected. We are checking for a tsunami. Update in 10 minutes.”", head:"Honest, but no instruction. Many families stay on the beach to wait."},
+      {k:"D", role:"tourism",  sp:.5, op:-1,  base:150, dE:-8,  dT:-6,  t:"“Stay calm. Any waves are expected to be small.”", head:"Families stay on the beach to watch the sea."}
+    ],
+    fact:"A first message should say what we know, what we don't know yet, and what to do now.", src:"CDC — Crisis & Emergency Risk Communication (CERC)" },
+  { title:"The Sirens", clock:"10:07 · T+5 MIN", minutes:5,
+    situ:"Buoy data arrives in <b>15 minutes</b>. The Interior Minister asks: <b>“Do we sound the coastal sirens now?”</b>",
+    q:"When do the sirens sound?",
+    opts:[
+      {k:"A", role:"minister", sp:-1, op:0,   base:250, dE:-12, dT:-4,  t:"After the buoy data, in 15 minutes.", head:"15 minutes lost. Only 10 minutes left to move people."},
+      {k:"B", role:"director", sp:.6, op:.3,  base:600, dE:+10, dT:+4,  timely:true, t:"Now, but only at Sur and Ras Al Hadd, where waves arrive first.", head:"The first towns move. Muscat waits, then rushes at the last minute."},
+      {k:"C", role:"security", sp:-.6,op:-.3, base:150, dE:-18, dT:-8,  t:"Only if the sea starts pulling back.", head:"When the sea pulls back, it is already too late to run far."},
+      {k:"D", role:"ops",      sp:1,  op:.8,  base:1000,dE:+22, dT:+8,  timely:true, best:true, t:"Now, along the whole Oman coast.", head:"The whole coast moves in time. Some say it was too much."}
+    ],
+    fact:"In 2004 the Indian Ocean had no tsunami warning system. About 230,000 people died.", src:"2004 Indian Ocean tsunami · UNESCO-IOC" },
+  { title:"The Rumour", clock:"10:14 · T+12 MIN", minutes:12,
+    situ:"A video shows a wave hitting Gwadar. Posts say: <b>“10-metre wave coming to Muscat!”</b> Your data says <b>1–2 metres</b>.",
+    q:"What do you post?",
+    opts:[
+      {k:"A", role:"comms",    sp:1,  op:1,   base:1000,dE:+12, dT:+16, best:true, t:"“Expected 1–2 m, not 10. Still dangerous. Stay away until we say it is safe.”", head:"Fear drops, but people stay away from the coast. The rumour fades."},
+      {k:"B", role:"director", sp:1,  op:-.4, base:250, dE:-14, dT:-6,  t:"“The 10 m story is fake. There is no big danger.”", head:"People hear “no danger” and go back to the beach."},
+      {k:"C", role:"ops",      sp:1,  op:.2,  base:450, dE:+8,  dT:-8,  t:"Share the video: “This is real. Stay away from the coast.”", head:"Panic. Roads jam as everyone flees inland at once."},
+      {k:"D", role:"legal",    sp:-.5,op:-.2, base:350, dE:-2,  dT:-10, t:"Ignore the posts. Keep repeating the first warning.", head:"The 10 m rumour becomes the main story of the day."}
+    ],
+    fact:"Not correcting rumours in real time is one of the most common crisis communication mistakes.", src:"CDC — CERC Best Practices" },
+  { calm:{ title:"Panic for Nothing?", clock:"10:25 · T+23 MIN", minutes:23, lead:"Most of you warned early, so the coast moved in time. Next:",
+      situ:"The wave is smaller than feared: <b>0.5–1 m</b> on open coasts, but <b>narrow bays can make it bigger</b>. Hotels lost business. Posts say: <b>“Panic for nothing.”</b>",
+      q:"What do you say now?",
+      opts:[
+        {k:"A", role:"tourism",  sp:1,  op:-.2, base:300, dE:-20, dT:-6,  t:"Cancel the warning and apologise for the false alarm.", head:"A 1.5 m surge hits a narrow bay. Two fishing boats sink."},
+        {k:"B", role:"minister", sp:1,  op:1,   base:1000,dE:+8,  dT:+18, best:true, t:"Lower it to an advisory: stay off beaches 3 more hours, and explain why we warned.", head:"People understand why they moved. The bays stay empty. No losses."},
+        {k:"C", role:"legal",    sp:-1, op:-.6, base:350, dE:-6,  dT:-12, t:"Keep the full evacuation. Say nothing new until the sea is calm.", head:"People go home on their own. The warning loses authority."},
+        {k:"D", role:"director", sp:.5, op:-1,  base:150, dE:-4,  dT:-16, t:"Say the alarm came from the international centre's model, not from us.", head:"Two agencies argue in public. Nobody knows whom to believe."}
+      ],
+      fact:"False alarms are costly, but explaining why a warning was issued keeps people listening next time.", src:"Breznitz (1984), Cry Wolf: The Psychology of False Alarms" },
+    late:{ title:"Too Late", clock:"10:27 · T+25 MIN", minutes:25, lead:"Most of you waited or only half-warned, so…",
+      situ:"The first waves hit a fishing village. Videos spread: <b>“Why was there no warning?”</b> More waves may come for hours.",
+      q:"What do you do now?",
+      opts:[
+        {k:"A", role:"legal",    sp:-1, op:-1,  base:250, dE:-10, dT:-16, t:"Wait for the full damage report before speaking.", head:"“The silent centre” leads every news channel."},
+        {k:"B", role:"comms",    sp:.5, op:-1,  base:150, dE:-4,  dT:-14, t:"Say the tsunami was impossible to predict.", head:"Scientists publicly disagree. Anger grows."},
+        {k:"C", role:"minister", sp:1,  op:1,   base:1000,dE:+14, dT:+14, best:true, t:"Speak now: what we know, what we don't, what to do this hour. Review the delay later.", head:"People move away before the second wave. Trust starts to recover."},
+        {k:"D", role:"director", sp:1,  op:-.3, base:350, dE:0,   dT:+2,  t:"Promise full compensation for everyone, today.", head:"A promise without a plan. The second wave hits while people argue about money."}
+      ],
+      fact:"When people are hurt, they expect leaders to speak, take responsibility and guide action.", src:"Coombs (2007), Situational Crisis Communication Theory" } },
+  { title:"The Next Warning", clock:"6 MONTHS LATER · 14:40", minutes:6, newQuake:true,
+    situ:"A new <b>M7.2</b> earthquake in the same area. Many people say: <b>“Last time it was nothing. We'll stay.”</b>",
+    q:"How do you warn this time?",
+    opts:[
+      {k:"A", role:"director", sp:1,   op:0,   base:400, dE:-8,  dT:-4,  t:"Send the same full alarm as last time.", head:"Half the coast ignores it. The “cry wolf” effect."},
+      {k:"B", role:"legal",    sp:-1,  op:.3,  base:300, dE:-16, dT:-6,  t:"Wait for buoy data this time, to avoid another false alarm.", head:"20 minutes lost. The wave arrives before the warning."},
+      {k:"C", role:"ops",      sp:1,   op:1,   base:1000,dE:+16, dT:+16, best:true, t:"“A small tsunami is possible. Stay off beaches for 2 hours. Here is why this time is different.”", head:"Clear, honest and specific. People follow it."},
+      {k:"D", role:"security", sp:-.4, op:-1,  base:150, dE:-12, dT:-18, t:"Warn officials only, not the public.", head:"It leaks within minutes: “They knew and told nobody.”"}
+    ],
+    fact:"Warnings work when they say what is happening, how sure we are, and what to do.", src:"CDC — Crisis & Emergency Risk Communication (CERC)" }
+];
+const BRANCH_AT = 1;   // after question 2 the class result picks question 4's scene
+const roundData = (r, branch) => r === 3 ? QS[3][branch || "late"] : QS[r];
 
-const R2 = {
-  calm:{ title:"Panic for Nothing?", clock:"10:25 · T+23 MIN", lead:"Most of you warned early with confirmed facts, so the coast moved in time. Next:",
-    situ:"Buoys: the wave is smaller than feared, <b>0.5–1 m</b> on open coasts, but <b>narrow bays can amplify it</b>. Hotels and the port lost hours of business. Social media: <b>“Panic for nothing.”</b>",
-    q:"What do you say now?", minutes:23,
-    opts:[
-      {k:"A", role:"tourism",  sp:1,  op:-.2, base:300, dE:-20, dT:-6,  t:"Cancel the warning and apologise for the false alarm.", head:"A 1.5 m surge hits a narrow bay. Two fishing boats sink."},
-      {k:"B", role:"director", sp:1,  op:1,   base:1000,dE:+8,  dT:+18, t:"Downgrade to an advisory: stay off beaches for 3 more hours. Explain why we warned and what changed.", head:"People understand why they moved. The bays stay empty. No losses.", best:true},
-      {k:"C", role:"legal",    sp:-1, op:-.6, base:350, dE:-6,  dT:-12, t:"Keep the full evacuation. Say nothing new until the sea is calm.", head:"People go home on their own. The warning loses authority."},
-      {k:"D", role:"comms",    sp:.5, op:-1,  base:150, dE:-4,  dT:-16, t:"Blame the international centre's model for the alarm.", head:"Two agencies argue in public. Nobody knows whom to believe."}
-    ],
-    fact:"False alarms are costly, but explaining why a warning was issued keeps people listening next time.", src:"Breznitz (1984), Cry Wolf: The Psychology of False Alarms" },
-  late:{ title:"Too Late", clock:"10:27 · T+25 MIN", lead:"Most of you warned late, guessed, or stayed silent. Next:",
-    situ:"The first waves hit a fishing village. Videos spread: <b>“Why was there no warning?”</b> More waves may follow for hours.",
-    q:"What do you do now?", minutes:25,
-    opts:[
-      {k:"A", role:"legal",    sp:-1, op:-1,  base:250, dE:-10, dT:-16, t:"Wait for the full damage assessment before speaking.", head:"“The silent centre” leads every news channel."},
-      {k:"B", role:"comms",    sp:.5, op:-1,  base:150, dE:-4,  dT:-14, t:"Say the tsunami was unpredictable.", head:"Scientists publicly disagree. Anger grows."},
-      {k:"C", role:"director", sp:1,  op:1,   base:1000,dE:+14, dT:+14, t:"Brief the public now: what we know, what we don't, what to do in the next hour. Investigate the delay.", head:"People move away before the second wave. Trust starts to recover.", best:true},
-      {k:"D", role:"minister", sp:1,  op:-.3, base:350, dE:0,   dT:+2,  t:"Promise full compensation for everyone, today.", head:"A promise without a plan. The second wave hits while people argue about money."}
-    ],
-    fact:"When people are hurt, they expect leaders to speak, take responsibility and guide action.", src:"Coombs (2007), Situational Crisis Communication Theory" }
-};
-const R3 = { title:"The Next Warning", clock:"6 MONTHS LATER · 14:40",
-  situ:"A new <b>M7.2</b> earthquake in the same area. Many people say: <b>“Last time it was nothing. We'll stay.”</b>",
-  q:"How do you warn this time?", minutes:6,
-  opts:[
-    {k:"A", role:"ops",      sp:1,   op:0,   base:400, dE:-8,  dT:-4,  t:"Send the same full alarm as last time.", head:"Half the coast ignores it. The “cry wolf” effect."},
-    {k:"B", role:"legal",    sp:-1,  op:.3,  base:300, dE:-16, dT:-6,  t:"Wait for buoy confirmation this time, to avoid another false alarm.", head:"20 minutes lost. The wave arrives before the warning."},
-    {k:"C", role:"security", sp:-.4, op:-1,  base:150, dE:-12, dT:-18, t:"Warn officials only, not the public.", head:"It leaks within minutes: “They knew and told nobody.”"},
-    {k:"D", role:"director", sp:1,   op:1,   base:1000,dE:+16, dT:+16, t:"Graded warning: “A small tsunami is possible. Stay off beaches for 2 hours. Here's why this one is different.”", head:"Clear, honest and specific. People follow it.", best:true}
-  ],
-  fact:"Warnings work when they say what is happening, how sure we are, and what to do.", src:"CDC — Crisis & Emergency Risk Communication (CERC)" };
-const roundData = (r, branch) => r === 1 ? R2[branch || "late"] : R3;
 
 const ICON = {
   wave:'<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M4 11c1-4 4-7 8-7 3 0 5 2 5 4-2-1-4 0-4 2"/>',
@@ -475,22 +488,11 @@ async function initFB(){
 
 /* ---- scoring ---- */
 function evalRound(r, ans, qStart, branch){
-  if (r === 0){
-    if (!ans || !ans.pub) return {pts:0, sp:-1, op:-1, silent:true};
-    const sec = clamp(((ans.at||0) - (qStart||0)) / 1000, 0, SECS[0]);
-    if (qStart && (ans.at - qStart) > Tms(0) + 3000) return {pts:0, sp:-1, op:-1, silent:true};
-    const ids = String(ans.ids||"").split(",").filter(Boolean), n = k => ids.filter(id => LN[id]?.k === k).length;
-    const V = n("V"), A = n("A"), U = n("U"), G = n("G");
-    const base = 260*V + 320*A + 160*U - 450*G;
-    const pts = Math.max(0, Math.round(base * (1 - .8 * sec / SECS[0])));
-    const op = clamp(.3*V + .35*A + .3*U - .8*G, -1, 1);
-    return {pts, sp: 1 - 2*sec/SECS[0], op, sec, clean: G === 0, early: sec <= 15, action: A > 0, ids};
-  }
   if (!ans || !ans.opt) return {pts:0, sp:-1, op:-1, none:true};
   const o = roundData(r, branch).opts.find(x => x.k === ans.opt); if (!o) return {pts:0, sp:-1, op:-1, none:true};
   const el = qStart ? (ans.at - qStart) : 0;
   if (el > Tms(r) + 3000) return {pts:0, sp:-1, op:-1, none:true};
-  return {pts: Math.round(o.base * (.6 + .4 * clamp(1 - el / Tms(r), 0, 1))), sp:o.sp, op:o.op, opt:o.k, best:!!o.best};
+  return {pts: Math.round(o.base * (.6 + .4 * clamp(1 - el / Tms(r), 0, 1))), sp:o.sp, op:o.op, opt:o.k, best:!!o.best, timely:!!o.timely};
 }
 
 /* =========================================================
@@ -630,17 +632,6 @@ async function host(){
   function demoAnswer(r){
     Object.keys(players).forEach(pid => {
       const st = hash(pid) % 4;
-      if (r === 0){
-        if (Math.random() < (st === 3 ? .45 : .08)) return;
-        const at = st === 0 ? 3 + Math.random()*8 : st === 1 ? 2 + Math.random()*6 : 12 + Math.random()*16;
-        setTimeout(() => {
-          if (room.state !== "question" || room.round !== 0) return;
-          let ids = ["l1","l2"]; if (Math.random() < .8) ids.push("l4"); if (Math.random() < .6) ids.push("l5"); if (Math.random() < .5) ids.push("l3");
-          if (st === 1 || Math.random() < .12) ids.push(Math.random() < .5 ? "l6" : "l7");
-          players[pid].answers[0] = {pub:true, ids:ids.join(","), at:Date.now()};
-        }, at * 1000);
-        return;
-      }
       setTimeout(() => {
         if (room.state !== "question" || room.round !== r) return;
         const os = roundData(r, room.branch).opts;
@@ -663,7 +654,7 @@ async function host(){
     rows.sort((a,b) => b.score - a.score || a.name.localeCompare(b.name)); rows.forEach((x,i) => x.rank = i + 1);
     return rows;
   }
-  const answered = r => Object.values(players).filter(p => r === 0 ? p.answers?.[0]?.pub : p.answers?.[r]).length;
+  const answered = r => Object.values(players).filter(p => p.answers?.[r]).length;
   function dotsOf(rows){
     const dots = rows.map(x => { const X = tx(x.op, x.pid), Y = ty(x.sp, x.pid), pv = prevPos[x.pid] || {x:TM, y:TM}; return {pid:x.pid, name:x.name, x:X, y:Y, fx:pv.x, fy:pv.y}; });
     const n = rows.length || 1, a = {x:tx(rows.reduce((s,x)=>s+x.op,0)/n), y:ty(rows.reduce((s,x)=>s+x.sp,0)/n)};
@@ -710,7 +701,7 @@ async function host(){
     shell(`<div class="paper">
         <div class="kick"><span class="dot"></span>INDIAN OCEAN · 10:02 LOCAL TIME</div>
         <div class="h1">25 minutes.<br><em>That's all the sea gives you.</em></div>
-        <p class="lead">You run the <b>tsunami warning centre</b>. Three decisions. Every second you wait, the wave gets closer. Every word you get wrong, people stop listening.</p>
+        <p class="lead">You run the <b>tsunami warning centre</b>. Five questions, 20 seconds each. Every second you wait, the wave gets closer. Every word you get wrong, people stop listening.</p>
         ${OFFLINE ? `<p class="lead"><b>Offline mode:</b> the class votes by raising hands. Click the choice with the most hands.</p>` : `
         <div class="joinrow"><div id="qr"></div><div><div class="lbl">SCAN TO JOIN THE CENTRE</div><div class="code">${code}</div><div class="url">${esc(url)}</div></div></div>`}
         <div><button class="btn sig" id="go">Sound the alarm ${svgI(ICON.arrow)}</button></div>
@@ -735,77 +726,20 @@ async function host(){
     if (room.state === "lobby") added.forEach(id => addPill(players[id]?.name || "Player"));
   }
 
-  /* ---- decision 1 ---- */
-  const TLW = 1000;
-  function r1View(){
-    shell(`<div class="paper" style="justify-content:flex-start;padding-top:.4vh">
-        <div class="kick"><span class="dot"></span>DECISION 1 OF 3 · ${R1.clock}</div>
-        <div class="timer" id="timer"><span class="tw"><svg viewBox="0 0 100 100"><circle class="t-bg" cx="50" cy="50" r="40"/><circle id="tring" class="t-fg" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0" transform="rotate(-90 50 50)"/></svg><b id="tsec">${SECS[0]}</b></span>
-          <div><div class="h2">${R1.q}</div><span>Tap lines on your phone, then <b>BROADCAST</b>. Earlier is better, but only with what is true.</span></div></div>
-        <div class="lines">${R1.lines.map((l,i) => `<div class="ln"><span class="n">${i+1}</span><p>${esc(l.t)}</p><span class="tag ${l.k}">${KTAG[l.k]}</span></div>`).join("")}</div>
-        ${OFFLINE ? `<div class="offbar" id="offbar"><button data-v="clean">Most warned early, facts only</button><button data-v="guess">Most included a guess</button><button data-v="silent">Most waited</button></div>` : `
-        <div class="issued"><div class="hd"><span>Warnings broadcast</span><span><b id="pubN">0</b> / <span id="pubT">${Object.keys(players).length}</span></span></div>
-          <svg viewBox="0 0 ${TLW} 60"><line x1="0" y1="34" x2="${TLW}" y2="34" stroke="#e2dccd" stroke-width="6" stroke-linecap="round"/><line id="tlnow" x1="0" y1="34" x2="0" y2="34" stroke="#0b1b26" stroke-width="6" stroke-linecap="round"/>
-          ${[0,10,20,30].map(s => `<text x="${s/30*TLW}" y="58" font-size="13" font-family="JetBrains Mono" font-weight="800" fill="#6b7b86" text-anchor="${s===0?"start":s===30?"end":"middle"}">0:${String(s).padStart(2,"0")}</text>`).join("")}<g id="tldots"></g></svg></div>`}
-      </div>
-      <div class="sea">${mapSVG({front:3/MIN_PER_PX})}
-        <div class="ov epi-l">EPICENTRE <b>M8.1</b> · 10:02</div>
-        <div class="ov cd" id="cd"><small>WAVES REACH OMAN IN</small><b id="cdv">22:00</b></div>
-        ${metersHTML()}
-      </div>`);
-    tlShown = new Set();
-    if (OFFLINE) document.querySelectorAll("#offbar button").forEach(b => b.onclick = () => {
-      document.querySelectorAll("#offbar button").forEach(x => x.classList.toggle("on", x === b));
-      const v = b.dataset.v;
-      players.cls.answers[0] = v === "silent" ? undefined : {pub:true, ids: v === "clean" ? BEST_IDS.join(",") : "l1,l2,l4,l6", at: (qs(0)||0) + (v === "clean" ? 8000 : 6000)};
-    });
-  }
-  function tlDot(pid, a){
-    const g = $("#tldots"); if (!g) return;
-    const sec = clamp(((a.at||0) - (qs(0)||0))/1000, 0, SECS[0]);
-    const ids = String(a.ids||"").split(","), clean = !ids.some(id => LN[id]?.k === "G");
-    g.insertAdjacentHTML("beforeend", `<circle class="tl-dot" cx="${sec/SECS[0]*TLW}" cy="${10 + (hash(pid)%3)*8}" r="8" fill="${clean ? "#17a389" : "#e63b2e"}" stroke="#fff" stroke-width="2.5"/>`);
-    Sound.pop();
-  }
-  function r1Reveal(stats, rows, dE, dT){
-    const {dots, avg} = dotsOf(rows), nb = R2[room.branch];
-    const tl = OFFLINE ? "" : Object.entries(players).map(([pid,p]) => { const e = evalRound(0, p.answers?.[0], qs(0)); return e.silent ? "" : `<circle class="tl-dot" cx="${e.sec/SECS[0]*TLW}" cy="${10 + (hash(pid)%3)*8}" r="8" fill="${e.clean ? "#17a389" : "#e63b2e"}" stroke="#fff" stroke-width="2.5"/>`; }).join("");
-    shell(`<div class="paper" style="justify-content:flex-start;padding-top:.4vh">
-        <div class="kick"><span class="dot"></span>DECISION 1 · RESULT</div>
-        <div class="h2">Who warned the coast, and when?</div>
-        ${OFFLINE ? "" : `<div class="issued"><svg viewBox="0 0 ${TLW} 60"><line x1="0" y1="34" x2="${TLW}" y2="34" stroke="#e2dccd" stroke-width="6" stroke-linecap="round"/><line x1="${15/30*TLW}" y1="0" x2="${15/30*TLW}" y2="42" stroke="#ff6a2b" stroke-width="2" stroke-dasharray="4 4"/><text x="${15/30*TLW+6}" y="10" font-size="12" font-family="JetBrains Mono" font-weight="800" fill="#ff6a2b">0:15 · LATE AFTER THIS</text>
-          ${[0,10,20,30].map(s => `<text x="${s/30*TLW}" y="58" font-size="13" font-family="JetBrains Mono" font-weight="800" fill="#6b7b86" text-anchor="${s===0?"start":s===30?"end":"middle"}">0:${String(s).padStart(2,"0")}</text>`).join("")}${tl}</svg></div>`}
-        <div class="stats3">
-          <div class="s3"><b><i style="background:#17a389"></i>${stats.good}</b><span>early, with confirmed facts only</span></div>
-          <div class="s3" style="animation-delay:.1s"><b><i style="background:#e63b2e"></i>${stats.guess}</b><span>included a guess</span></div>
-          <div class="s3" style="animation-delay:.2s"><b><i style="background:#94a3b8"></i>${stats.late}</b><span>late (after 0:15) or silent</span></div>
-        </div>
-        <div class="bestw"><div class="h">THE STRONGEST WARNING · BROADCAST IN THE FIRST 5 SECONDS</div><p>${esc(warningText(BEST_IDS))}</p></div>
-        <div class="fact"><div><p>${esc(R1.fact)}</p><small>${esc(R1.src)}</small></div></div>
-        <div class="nextsc">${svgI(ICON.arrow)} <span>${esc(nb.lead)} <b>${esc(nb.title)}</b></span></div>
-        <div class="ctrl"><button class="btn" id="nx">Next decision ${svgI(ICON.arrow)}</button></div>
-      </div>
-      <div class="sea" style="display:flex;flex-direction:column">
-        <h3 style="color:#fff;font-family:var(--D);font-weight:900;font-size:1.6em;padding:.8em 1em 0">Where the room stands<small style="display:block;font-family:var(--M);font-size:.42em;letter-spacing:.18em;color:var(--sig2);margin-top:.3em">AFTER DECISION 1 · EVERY DOT IS ONE OF YOU</small></h3>
-        <div id="tw" style="flex:1;min-height:0;padding:.4em 1em 5.4em">${typesSVG(dots, avg, {r:10})}</div>
-        ${metersHTML()}
-      </div>`);
-    $("#nx").onclick = next; animateDots($("#tw")); setMeters(dE, dT);
-  }
-
-  /* ---- decisions 2 & 3 ---- */
+  /* ---- questions ---- */
   const optHTML = o => `<div class="opt" data-k="${o.k}" style="--rc:${ROLES[o.role].color}"><div class="ohd"><span class="olet">${o.k}</span><span class="role">${esc(ROLES[o.role].name)}</span></div><p class="say">${esc(o.t)}</p><span class="pct"></span><span class="vote"><i></i></span><svg class="stamp" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg></div>`;
   function mcView(){
     const r = room.round, R = roundData(r, room.branch);
     shell(`<div class="paper" style="justify-content:flex-start;padding-top:.4vh">
-        <div class="scene"><span class="dot"></span>DECISION ${r+1} OF 3 · ${esc(R.title.toUpperCase())}</div>
+        <div class="scene"><span class="dot"></span>QUESTION ${r+1} OF ${NQ} · ${esc(R.title.toUpperCase())}</div>
         <div class="kick">${esc(R.clock)}</div>
         <p class="situ">${R.situ}</p>
         <div class="timer" id="timer"><span class="tw"><svg viewBox="0 0 100 100"><circle class="t-bg" cx="50" cy="50" r="40"/><circle id="tring" class="t-fg" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0" transform="rotate(-90 50 50)"/></svg><b id="tsec">${SECS[r]}</b></span><div class="h2">${esc(R.q)}</div></div>
         ${OFFLINE ? "" : `<div class="issued" style="display:flex;justify-content:space-between;font-weight:800"><span>Decisions in</span><span><b id="ans" style="font-family:var(--M)">0</b> / <span id="tot">${Object.keys(players).length}</span></span></div>`}
       </div>
       <div class="sea">${mapSVG({front: R.minutes / MIN_PER_PX})}
-        <div class="ov epi-l">${r === 2 ? "NEW EPICENTRE <b>M7.2</b> · 14:34" : "EPICENTRE <b>M8.1</b> · 10:02"}</div>
+        <div class="ov epi-l">${R.newQuake ? "NEW EPICENTRE <b>M7.2</b> · 14:34" : "EPICENTRE <b>M8.1</b> · 10:02"}</div>
+        ${R.minutes < 25 && !R.newQuake ? `<div class="ov cd" id="cd"><small>WAVES REACH OMAN IN</small><b id="cdv">${String(25 - R.minutes).padStart(2,"0")}:00</b></div>` : ""}
         ${metersHTML()}
       </div>
       <div class="opts ${OFFLINE ? "offline" : ""}">${R.opts.map(optHTML).join("")}</div>`, "stage mc");
@@ -819,15 +753,16 @@ async function host(){
     const top = n ? R.opts.reduce((a,b) => c[b.k] > c[a.k] ? b : a) : null;
     const {dots, avg} = dotsOf(rows);
     shell(`<div class="paper" style="justify-content:flex-start;padding-top:.4vh">
-        <div class="scene"><span class="dot"></span>DECISION ${r+1} · RESULT</div>
+        <div class="scene"><span class="dot"></span>QUESTION ${r+1} OF ${NQ} · RESULT</div>
         <div class="h2" style="font-size:2.2em">${esc(R.q)}</div>
         <div class="conseq ${top?.best ? "good" : ""}"><small>${top ? "THE CLASS CHOSE " + top.k + " · WHAT HAPPENED" : "NO DECISION"}</small><p>${esc(top ? top.head : "Nobody decided. Silence is also a message.")}</p></div>
         <div class="fact"><div><p>${esc(R.fact)}</p><small>${esc(R.src)}</small></div></div>
+        ${r === BRANCH_AT ? `<div class="nextsc">${svgI(ICON.arrow)} <span>${esc(QS[3][room.branch].lead)} <b>${esc(QS[3][room.branch].title)}</b></span></div>` : ""}
         ${OFFLINE ? "" : `<div class="top5">${rows.slice(0,5).map(x => `<span class="pill">${avatar(x.name)}${x.rank}. ${esc(x.name)}<b>${x.score}</b></span>`).join("")}</div>`}
-        <div class="ctrl" style="margin-top:auto"><button class="btn" id="nx">${r < 2 ? "Next decision" : "Reveal leadership types"} ${svgI(ICON.arrow)}</button></div>
+        <div class="ctrl" style="margin-top:auto"><button class="btn" id="nx">${r < NQ - 1 ? "Next question" : "Reveal leadership types"} ${svgI(ICON.arrow)}</button></div>
       </div>
       <div class="sea" style="display:flex;flex-direction:column">
-        <h3 style="color:#fff;font-family:var(--D);font-weight:900;font-size:1.6em;padding:.8em 1em 0">Where the room stands<small style="display:block;font-family:var(--M);font-size:.42em;letter-spacing:.18em;color:var(--sig2);margin-top:.3em">AFTER DECISION ${r+1}</small></h3>
+        <h3 style="color:#fff;font-family:var(--D);font-weight:900;font-size:1.6em;padding:.8em 1em 0">Where the room stands<small style="display:block;font-family:var(--M);font-size:.42em;letter-spacing:.18em;color:var(--sig2);margin-top:.3em">AFTER QUESTION ${r+1} · EVERY DOT IS ONE OF YOU</small></h3>
         <div id="tw" style="flex:1;min-height:0;padding:.4em 1em 5.4em">${typesSVG(dots, avg, {r:10})}</div>
         ${metersHTML()}
       </div>
@@ -847,7 +782,7 @@ async function host(){
     else if (by.length >= 2){ const hi = by[0], lo = by[by.length-1]; verdict = `In this room, <b>${esc(TYPES[hi.t].short)}</b> earned <b>${lo.a > 0 ? (hi.a/lo.a).toFixed(1) + "×" : "far"}</b> more points than <b>${esc(TYPES[lo.t].short)}</b>. Speed and honesty won together.`; }
     else if (by.length === 1) verdict = `The whole room led like <b>${esc(TYPES[by[0].t].short)}</b>.`;
     shell(`<div class="sea">
-        <h3>The leaders in this room<small>${OFFLINE ? "THE CLASS AS ONE TEAM" : rows.length + " LEADERS · 3 DECISIONS"}</small></h3>
+        <h3>The leaders in this room<small>${OFFLINE ? "THE CLASS AS ONE TEAM" : rows.length + " LEADERS · " + NQ + " DECISIONS"}</small></h3>
         <div class="tw" id="tw">${typesSVG(dots, avg, {r:13})}</div>
         <div class="tcount">${Object.entries(TYPES).map(([k,t],i) => `<div class="tc" style="background:${t.color};animation-delay:${.3+i*.1}s"><b>${cnt[k]||0}</b><span>${t.short}</span></div>`).join("")}</div>
       </div>
@@ -867,50 +802,42 @@ async function host(){
     revealing = false; localQStart = Date.now(); lastSec = null;
     room.qStarts[r] = LOCAL ? localQStart : now();
     await push({state:"question", round:r, qStarts:{...room.qStarts}});
-    r === 0 ? r1View() : mcView();
+    mcView();
     Sound.siren(); setTimeout(() => Sound.ocean(true), 800);
     if (DEMO) demoAnswer(r);
   }
   async function reveal(){
     if (revealing) return; revealing = true; Sound.ocean(false);
-    const r = room.round, rows = compute(r), N = rows.length || 1;
-    let dE = 0, dT = 0;
-    if (r === 0){
-      const per = rows.map(x => x.per[0]);
-      const stats = {good: per.filter(e => !e.silent && e.clean && e.early).length, guess: per.filter(e => !e.silent && !e.clean).length, late: per.filter(e => e.silent || (e.clean && !e.early)).length};
-      const g = stats.good/N, q = stats.guess/N, l = stats.late/N;
-      dE = 55*g + 10*q - 5*l; dT = 20*g - 14*q - 16*l;
-      room.branch = rows.length && g >= .5 ? "calm" : "late";
-      room.m = {evac: clamp(room.m.evac + dE, 0, 100), trust: clamp(room.m.trust + dT, 0, 100)};
-      const results = {}; rows.forEach(x => { const e = x.per[0]; results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, pts:e.pts, silent:!!e.silent, clean:!!e.clean, early:!!e.early, sec: e.silent ? null : Math.round(e.sec)}; });
-      await push({state:"reveal", branch:room.branch, results});
-      flash(); r1Reveal(stats, rows, dE, dT); Sound.reveal();
-      return;
-    }
-    const R = roundData(r, room.branch), c = {A:0,B:0,C:0,D:0}; let n = 0;
+    const r = room.round, rows = compute(r), R = roundData(r, room.branch), c = {A:0,B:0,C:0,D:0}; let n = 0, dE = 0, dT = 0;
     Object.values(players).forEach(p => { const a = p.answers?.[r]; if (a && c[a.opt] != null){ c[a.opt]++; n++; } });
     if (n) R.opts.forEach(o => { dE += o.dE * c[o.k] / n; dT += o.dT * c[o.k] / n; }); else { dE = -10; dT = -14; }
     room.m = {evac: clamp(room.m.evac + dE, 0, 100), trust: clamp(room.m.trust + dT, 0, 100)};
+    const patch = {state:"reveal", bestOpt: R.opts.find(o => o.best).k};
+    if (r === BRANCH_AT){
+      let t = 0, tot = 0; rows.forEach(x => [0,1].forEach(q => { tot++; if (x.per[q].timely) t++; }));
+      room.branch = tot && t / tot >= .5 ? "calm" : "late"; patch.branch = room.branch;
+    }
     const results = {}; rows.forEach(x => { const e = x.per[r]; results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, pts:e.pts, opt:e.opt || null, best:!!e.best}; });
-    await push({state:"reveal", results, bestOpt: R.opts.find(o => o.best).k});
+    patch.results = results;
+    await push(patch);
     flash(); mcReveal(rows, dE, dT); Sound.reveal();
   }
   async function finish(){
-    const rows = compute(2), N = rows.length || 1;
+    const rows = compute(NQ - 1), N = rows.length || 1;
     const cls = {sp: rows.reduce((s,x)=>s+x.sp,0)/N, op: rows.reduce((s,x)=>s+x.op,0)/N};
     finalView(rows); Sound.final(); setTimeout(confetti, 900);
-    const results = {}; rows.forEach(x => { const e0 = x.per[0]; results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, type:x.type, sp:+x.sp.toFixed(3), op:+x.op.toFixed(3), sec: e0.silent ? null : Math.round(e0.sec), clean:!!e0.clean, silent:!!e0.silent}; });
+    const results = {}; rows.forEach(x => { results[x.pid] = {score:x.score, rank:x.rank, of:rows.length, type:x.type, sp:+x.sp.toFixed(3), op:+x.op.toFixed(3), bestN: x.per.filter(e => e.best).length}; });
     await push({state:"final", results, cls});
   }
   function next(){
     if (room.state === "lobby"){ room.m = {evac:20, trust:50}; shown = {...room.m}; return startRound(0); }
     if (room.state === "question") return reveal();
-    if (room.state === "reveal") return room.round < 2 ? startRound(room.round + 1) : finish();
+    if (room.state === "reveal") return room.round < NQ - 1 ? startRound(room.round + 1) : finish();
   }
   document.addEventListener("keydown", e => {
     if ([" ","Enter","ArrowRight","PageDown"].includes(e.key)){ e.preventDefault(); next(); }
     else if (e.key === "m" || e.key === "M") toggleSound();
-    else if (OFFLINE && room.state === "question" && room.round > 0 && /^[a-d]$/i.test(e.key)){ players.cls.answers[room.round] = {opt:e.key.toUpperCase(), at:(qs(room.round)||0) + 8000}; reveal(); }
+    else if (OFFLINE && room.state === "question" && /^[a-d]$/i.test(e.key)){ players.cls.answers[room.round] = {opt:e.key.toUpperCase(), at:(qs(room.round)||0) + 8000}; reveal(); }
   });
 
   /* ---- ticker loop ---- */
@@ -921,15 +848,8 @@ async function host(){
     const ts = $("#tsec"); if (ts) ts.textContent = s;
     const tm = $("#timer"); if (tm) tm.classList.toggle("low", s <= 5);
     if (s !== lastSec && left > 0){ lastSec = s; if (s <= 5) Sound.tick(); else if (s % 2 === 0) Sound.beat(s <= 10); if (s % 4 === 0) Sound.ping(); }
-    if (r === 0){
-      const simMin = 3 + 10 * frac;                     // 30 s on screen = 10 minutes of wave travel
-      setFront(simMin);
-      const toOman = Math.max(0, 25 - simMin), mm = Math.floor(toOman), ss = Math.round((toOman - mm) * 60);
-      const cv = $("#cdv"); if (cv) cv.textContent = String(mm).padStart(2,"0") + ":" + String(ss === 60 ? 59 : ss).padStart(2,"0");
-      const tl = $("#tlnow"); if (tl) tl.setAttribute("x2", frac * TLW);
-      if (!OFFLINE) Object.entries(players).forEach(([pid,p]) => { const a = p.answers?.[0]; if (a?.pub && !tlShown.has(pid)){ tlShown.add(pid); tlDot(pid, a); } });
-      const pn = $("#pubN"); if (pn) pn.textContent = tlShown.size; const pt = $("#pubT"); if (pt) pt.textContent = Object.keys(players).length;
-    }
+    { const R = roundData(r, room.branch), m = R.minutes + 2 * frac; setFront(m);
+      const cv = $("#cdv"); if (cv){ const left2 = Math.max(0, 25 - m), mm = Math.floor(left2), ss = Math.min(59, Math.round((left2 - mm) * 60)); cv.textContent = String(mm).padStart(2,"0") + ":" + String(ss).padStart(2,"0"); } }
     const a = answered(r), n = Object.keys(players).length;
     const ae = $("#ans"); if (ae) ae.textContent = a; const te = $("#tot"); if (te) te.textContent = n;
     if (!OFFLINE && !revealing && (left <= 0 || (n > 0 && a >= n && el > 5000))) setTimeout(reveal, 600);
@@ -986,9 +906,9 @@ async function drawCard(d){
   const sx = 660, sw = W - 92 - sx;
   const stat = (y, label, value, sub) => { c.fillStyle = "#fff"; c.strokeStyle = "#e2dccd"; c.lineWidth = 3; rr(c, sx, y, sw, 160, 22); c.fill(); c.stroke();
     c.fillStyle = "#6b7b86"; c.font = `800 18px ${M}`; c.fillText(label, sx+28, y+42); c.fillStyle = "#0b1b26"; c.font = `900 58px ${D}`; c.fillText(value, sx+26, y+106); c.fillStyle = "#6b7b86"; c.font = `600 21px ${B}`; c.fillText(sub, sx+28, y+140); };
-  stat(700, "POINTS", String(d.score), "from 3 decisions");
+  stat(700, "POINTS", String(d.score), `from ${NQ} questions`);
   stat(880, "RANK", "#" + d.rank, `out of ${d.of} leaders`);
-  stat(1060, "FIRST WARNING", d.silent ? "None" : secs(d.sec), d.silent ? "you did not broadcast" : d.clean ? "confirmed facts only" : "included a guess");
+  stat(1060, "STRONGEST MOVES", `${d.bestN ?? 0}/${NQ}`, "questions answered best");
   // traits
   let y = 1350;
   const trait = (label, text, col) => { c.fillStyle = col; c.font = `800 18px ${M}`; c.fillText(label, 92, y); c.fillStyle = "#0b1b26"; c.font = `600 27px ${B}`; y = wrap(c, text, 300, y, W - 392, 36) + 12; };
@@ -1026,7 +946,7 @@ async function player(){
       <button class="pbtn" id="demoGo">Open the big screen</button>
       <button class="pbtn ink" id="demoCard">${svgI(ICON.pdf)} Sample Leadership Card</button></div></div>`;
     $("#demoGo").onclick = () => host();
-    $("#demoCard").onclick = e => downloadCard({name:"Ismail", type:"LIGHTHOUSE", score:2860, rank:1, of:24, sp:.74, op:.82, sec:4, clean:true, silent:false, cls:{sp:.1, op:.2}, date:today()}, e.currentTarget);
+    $("#demoCard").onclick = e => downloadCard({name:"Ismail", type:"LIGHTHOUSE", score:3920, rank:1, of:24, sp:.74, op:.82, bestN:4, cls:{sp:.1, op:.2}, date:today()}, e.currentTarget);
     return;
   }
   await initFB();
@@ -1038,7 +958,7 @@ async function player(){
   function joinView(err){
     app.innerHTML = `<div class="phone">${head("")}<div class="pbody">
       <div class="pbig">Join the warning centre.</div>
-      <p class="pmute">A tsunami may be coming. Three decisions, 30 seconds each. At the end you get your Leadership Card.</p>
+      <p class="pmute">A tsunami may be coming. Five questions, 20 seconds each. At the end you get your Leadership Card.</p>
       <div class="fld">ROOM CODE</div><input class="inp" id="rc" maxlength="4" value="${esc(code)}" placeholder="ABCD" autocapitalize="characters" style="text-transform:uppercase;letter-spacing:.25em;font-family:var(--M)">
       <div class="fld">YOUR NAME (FOR YOUR CARD)</div><input class="inp" id="nm" maxlength="20" placeholder="e.g. Maryam Al Harthy" autocomplete="off">
       <div class="err" id="er">${esc(err||"")}</div>
@@ -1064,7 +984,7 @@ async function player(){
   function render(){
     if (!room) return;
     const r = room.round || 0, res = room.results?.[pid];
-    const done = r === 0 ? (sent[0] || me.answers?.[0]?.pub) : (sent[r] || me.answers?.[r]);
+    const done = sent[r] || me.answers?.[r];
     const key = [room.state, r, room.branch, done ? "a" : "", res ? res.score + ":" + (res.type||"") : ""].join("|");
     if (key === lastKey) return; lastKey = key; clearInterval(tick);
 
@@ -1076,45 +996,17 @@ async function player(){
       return;
     }
 
-    if (room.state === "question" && r === 0){
-      if (done){
-        const ids = (sent[0] || me.answers[0].ids || "").split(",");
-        app.innerHTML = `<div class="phone">${head(whoH("1/3"))}<div class="pbody"><div class="pcard lockc">
-          <svg viewBox="0 0 120 120"><circle class="lk" cx="60" cy="60" r="50" pathLength="300"/><text class="lkt" x="60" y="72" text-anchor="middle">✓</text></svg>
-          <div class="pbig" style="font-size:30px;margin-top:6px">Warning broadcast.</div><p class="pmute" style="margin-top:6px">Watch the big screen.</p></div>
-          <div class="alertbox"><div class="ah">${svgI(ICON.alert)} EMERGENCY ALERT · WARNING CENTRE</div><p>${esc(warningText(ids))}</p></div></div></div>`;
-        return;
-      }
-      buzz([200,80,200]); sel = [];
-      app.innerHTML = `<div class="phone">${head(whoH("1/3"))}<div class="pbody">
-        <div class="pclock"><span class="t">${R1.clock}</span><span class="s" id="ps">${SECS[0]}</span></div>
-        <p class="psitu">${R1.situ}</p>
-        <div class="pq">${R1.q}</div>
-        <p class="pmute" style="margin-top:-4px">Tap the lines you want. Then broadcast. Earlier is better, but only with what is true.</p>
-        <div class="plines">${R1.lines.map(l => `<button class="pl" data-id="${l.id}"><span class="ck">${svgI(ICON.check)}</span><span><p>${esc(l.t)}</p><span class="tag ${l.k}">${KTAG[l.k]}</span></span></button>`).join("")}</div>
-        <div class="alertbox"><div class="ah">${svgI(ICON.alert)} EMERGENCY ALERT · PREVIEW</div><p id="pv" class="empty">Tap lines above to build your warning…</p></div>
-        <button class="pbtn" id="pub" disabled>Broadcast warning</button></div></div>`;
-      document.querySelectorAll(".pl").forEach(b => b.onclick = () => {
-        const id = b.dataset.id; sel = sel.includes(id) ? sel.filter(x => x !== id) : sel.concat(id); b.classList.toggle("on"); buzz(15);
-        const pv = $("#pv"); pv.textContent = sel.length ? warningText(sel) : "Tap lines above to build your warning…"; pv.classList.toggle("empty", !sel.length); $("#pub").disabled = !sel.length;
-      });
-      $("#pub").onclick = publish;
-      const upd = () => { const s = Math.max(0, Math.ceil(SECS[0] - elapsed(0))); const el = $("#ps"); if (el){ el.textContent = s; el.classList.toggle("low", s <= 5); } };
-      upd(); tick = setInterval(upd, 250);
-      return;
-    }
-
     if (room.state === "question"){
       const R = roundData(r, room.branch);
       if (done){
         const k = sent[r] || me.answers[r].opt;
-        app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/3"))}<div class="pbody"><div class="pcard lockc">
+        app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/" + NQ))}<div class="pbody"><div class="pcard lockc">
           <svg viewBox="0 0 120 120"><circle class="lk" cx="60" cy="60" r="50" pathLength="300"/><text class="lkt" x="60" y="72" text-anchor="middle">${esc(k)}</text></svg>
           <div class="pbig" style="font-size:30px;margin-top:6px">Decision locked.</div><p class="pmute" style="margin-top:6px">Watch the big screen for what happens next.</p></div></div></div>`;
         return;
       }
       buzz(150);
-      app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/3"))}<div class="pbody">
+      app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/" + NQ))}<div class="pbody">
         <div class="pclock"><span class="t">${esc(R.title.toUpperCase())}</span><span class="s" id="ps">${SECS[r]}</span></div>
         <p class="psitu">${R.situ}</p>
         <div class="pq">${esc(R.q)}</div>
@@ -1125,25 +1017,14 @@ async function player(){
       return;
     }
 
-    if (room.state === "reveal" && r === 0){
-      const good = res && !res.silent && res.clean && res.early;
-      buzz(good ? [60,60,60] : 250);
-      const title = !res || res.silent ? "No warning sent." : !res.clean ? "Your warning had a guess." : res.early ? "Early and accurate." : "Accurate, but late.";
-      const msg = !res || res.silent ? "The sea doesn't wait. Silence cost the coast time." : !res.clean ? `Broadcast at ${secs(res.sec)}. A wrong guess makes people stay on the beach.` : res.early ? `Broadcast at ${secs(res.sec)} with confirmed facts only.` : `Broadcast at ${secs(res.sec)}. Every second counted here.`;
-      app.innerHTML = `<div class="phone">${head(whoH("1/3"))}<div class="pbody"><div class="pcard res">
-        <div class="pbig ${good ? "ok" : "no"}" style="font-size:32px">${title}</div><p class="pmute" style="margin-top:8px">${msg}</p>
-        <div class="pst"><div><b>+${res?.pts||0}</b><span>POINTS</span></div><div><b>${res?.score||0}</b><span>TOTAL</span></div><div><b>${res ? "#" + res.rank : "–"}</b><span>OF ${res?.of||"–"}</span></div></div>
-        <p class="pmute" style="margin-top:12px">Next scene: <b style="color:var(--ink)">${esc(R2[room.branch || "late"].title)}</b></p></div></div></div>`;
-      return;
-    }
-
     if (room.state === "reveal"){
       const best = room.bestOpt, ok = res?.best, none = !res?.opt;
       buzz(ok ? [60,60,60] : 250);
-      app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/3"))}<div class="pbody"><div class="pcard res">
+      app.innerHTML = `<div class="phone">${head(whoH((r+1) + "/" + NQ))}<div class="pbody"><div class="pcard res">
         <div class="pbig ${ok ? "ok" : "no"}" style="font-size:32px">${none ? "No decision." : ok ? "Strong call." : "Not the strongest move."}</div>
         <p class="pmute" style="margin-top:8px">${none ? "Silence is also a message." : ok ? "Honest, specific, and in time." : `You chose ${esc(res.opt)}. The strongest move was ${esc(best)}.`}</p>
-        <div class="pst"><div><b>+${res?.pts||0}</b><span>POINTS</span></div><div><b>${res?.score||0}</b><span>TOTAL</span></div><div><b>${res ? "#" + res.rank : "–"}</b><span>OF ${res?.of||"–"}</span></div></div></div></div></div>`;
+        <div class="pst"><div><b>+${res?.pts||0}</b><span>POINTS</span></div><div><b>${res?.score||0}</b><span>TOTAL</span></div><div><b>${res ? "#" + res.rank : "–"}</b><span>OF ${res?.of||"–"}</span></div></div>
+        ${r === BRANCH_AT && room.branch ? `<p class="pmute" style="margin-top:12px">The class result changes the story. Next scene: <b style="color:var(--ink)">${esc(QS[3][room.branch].title)}</b></p>` : ""}</div></div></div>`;
       return;
     }
 
@@ -1151,7 +1032,7 @@ async function player(){
       buzz([80,60,80,60,200]);
       if (!res){ app.innerHTML = `<div class="phone">${head(whoH())}<div class="pbody"><div class="pbig" style="font-size:28px">Thanks for joining.</div><p class="pmute">You joined too late for a Leadership Card this time.</p></div></div>`; return; }
       const T = TYPES[res.type] || TYPES.LIGHTHOUSE;
-      const card = {name, type:res.type, score:res.score, rank:res.rank, of:res.of, sp:res.sp, op:res.op, sec:res.sec, clean:res.clean, silent:res.silent, cls:room.cls, date:today()};
+      const card = {name, type:res.type, score:res.score, rank:res.rank, of:res.of, sp:res.sp, op:res.op, bestN:res.bestN, cls:room.cls, date:today()};
       const dots = [{pid:"me", name, x:tx(res.op), y:ty(res.sp), fx:TM, fy:TM, me:true}], avg = room.cls ? {x:tx(room.cls.op), y:ty(room.cls.sp), fx:TM, fy:TM} : null;
       app.innerHTML = `<div class="phone">${head(whoH("#" + res.rank + " of " + res.of))}<div class="pbody">
         <div class="ptype" style="background:${T.color}"><small>YOUR CRISIS LEADERSHIP TYPE</small><h2>${esc(T.name)}</h2><p>${esc(T.axes)}. ${esc(T.desc)}</p>${svgI(T.icon, "i big")}</div>
@@ -1160,16 +1041,11 @@ async function player(){
           <div class="trait"><b style="color:var(--safe)">STRENGTH</b>${esc(T.strength)}</div>
           <div class="trait"><b style="color:var(--red)">BLIND SPOT</b>${esc(T.blind)}</div>
           <div class="trait"><b style="color:var(--sea2)">THEORY</b>${esc(T.theory)}</div></div>
-        <div class="pst" style="margin-top:0"><div><b>${res.score}</b><span>POINTS</span></div><div><b>#${res.rank}</b><span>RANK</span></div><div><b>${res.silent ? "—" : secs(res.sec)}</b><span>1ST WARNING</span></div></div>
+        <div class="pst" style="margin-top:0"><div><b>${res.score}</b><span>POINTS</span></div><div><b>#${res.rank}</b><span>RANK</span></div><div><b>${res.bestN ?? 0}/${NQ}</b><span>BEST MOVES</span></div></div>
         <button class="pbtn" id="dl">${svgI(ICON.pdf)} Download my Leadership Card (PDF)</button>
         <p style="text-align:center;font-family:var(--D);font-weight:900;font-size:18px">Communicate early. <span style="color:var(--sig)">Share verified facts.</span> Update continuously.</p></div></div>`;
       animateDots($("#pmap")); $("#dl").onclick = e => downloadCard(card, e.currentTarget);
     }
-  }
-  async function publish(){
-    if (!sel.length || sent[0] || room.state !== "question" || room.round !== 0) return;
-    sent[0] = sel.join(","); buzz([40,40,40]); lastKey = ""; render();
-    try { await fb.set(R_(code + "/players/" + pid + "/answers/0"), {pub:true, ids:sent[0], at:now()}); } catch(e){ delete sent[0]; lastKey = ""; render(); }
   }
   async function answer(r, k){
     if (sent[r] || room.state !== "question" || room.round !== r) return;
