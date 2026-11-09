@@ -191,8 +191,12 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .fpanel h2 small,.typesbig h2 small{display:block;font-family:var(--M);font-size:.36em;letter-spacing:.18em;color:var(--mute);margin-top:.4em}
 .typesbig{background:#0d1d3c;border:1px solid #ffffff1f;border-radius:1.2em;padding:1.1em 1.2em;display:flex;flex-direction:column;min-height:0}
 .typesbig h2 small{color:var(--glow)}
-.typesbig .tw{flex:1;min-height:0}
+.typesbig .tw{flex:1;min-height:0;margin:.3em 0 .6em}
 .tcount{display:grid;grid-template-columns:repeat(4,1fr);gap:.5em}
+.tc em{display:block;font-style:normal;font-family:var(--M);font-weight:800;font-size:.58em;letter-spacing:.06em;opacity:.9;margin-top:.25em;line-height:1.3}
+.tc p{font-size:.72em;font-weight:600;line-height:1.35;margin-top:.3em;color:#fff}
+.tc .tci{display:flex;align-items:center;justify-content:space-between}
+.tc .tci svg{width:1.4em;height:1.4em;opacity:.9}
 .tc{border-radius:.7em;padding:.45em .6em;animation:fadeUp .5s both}
 .tc b{font-family:var(--M);font-weight:800;font-size:1.5em;display:block;line-height:1;color:#fff}
 .tc span{font-weight:800;font-size:.72em;color:#fff}
@@ -295,8 +299,8 @@ const firebaseConfig = {
   appId: "1:1026974496932:web:0cde5f783b04ca1ead4e31"
 };
 const DB_ROOT = "tr";
-const VERSION = "flight-2026-11-09a";   // change when the questions change: phones with an old copy reload themselves
-const SECS = [20, 20, 20, 20, 20];
+const VERSION = "flight-2026-11-09b";   // change when the questions change: phones with an old copy reload themselves
+const SECS = [30, 30, 30, 30, 30];
 const NQ = SECS.length;
 const DEMO_PLAYERS = 24;
 
@@ -662,7 +666,7 @@ async function host(){
         <div class="ov lobbycard">
           <div class="kick"><i></i>AFTER THE VIDEO · THE CRISIS CONTINUES</div>
           <div class="h1">The video asked:<br><em>what would you do?</em></div>
-          <p class="lead">Now you are in the crisis room. <b>5 questions, 20 seconds each.</b> The answers are close. Choose carefully, and fast.</p>
+          <p class="lead">Now you are in the crisis room. <b>5 questions, 30 seconds each.</b> The answers are close. Choose carefully, and fast.</p>
           ${OFFLINE ? `<p class="lead"><b>Offline mode:</b> the class votes by raising hands. Click the answer with the most hands.</p>` :
           `<div class="joinrow"><div id="qr"></div><div><div class="lbl">SCAN TO JOIN THE CRISIS ROOM</div><div class="code">${code}</div><div class="url">${esc(url)}</div></div></div>`}
           <div><button class="btn red" id="go">Enter the crisis room ${svgI(ICON.arrow)}</button></div>
@@ -747,7 +751,7 @@ async function host(){
     shell(`<div class="typesbig">
         <h2>The leaders in this room<small>${OFFLINE ? "THE CLASS AS ONE TEAM" : rows.length + " LEADERS · " + NQ + " DECISIONS"}</small></h2>
         <div class="tw" id="tw">${typesSVG(dots, avg, {r:13})}</div>
-        <div class="tcount">${Object.entries(TYPES).map(([k,t],i) => `<div class="tc" style="background:${t.color};animation-delay:${.3+i*.1}s"><b>${cnt[k]||0}</b><span>${t.short}</span></div>`).join("")}</div>
+        <div class="tcount">${Object.entries(TYPES).map(([k,t],i) => `<div class="tc" style="background:${t.color};animation-delay:${.3+i*.1}s"><div class="tci"><b>${cnt[k]||0}</b>${svgI(t.icon)}</div><span>${t.name}</span><em>${t.axes}</em><p>${t.desc}</p></div>`).join("")}</div>
       </div>
       <div class="fpanel">
         <div class="kick" style="color:var(--ok)"><i style="background:var(--ok)"></i>ALL CLEAR · DEBRIEF</div>
@@ -913,9 +917,9 @@ async function player(){
   function joinView(err){
     app.innerHTML = `<div class="phone">${head("")}<div class="pbody">
       <div class="pbig">The video asked: what would you do?</div>
-      <p class="pmute">Now you decide. 5 questions, 20 seconds each. At the end you get your Leadership Card.</p>
+      <p class="pmute">Now you decide. 5 questions, 30 seconds each. At the end you get your Leadership Card.</p>
       <div class="fld">ROOM CODE</div><input class="inp" id="rc" maxlength="4" value="${esc(code)}" placeholder="ABCD" autocapitalize="characters" style="text-transform:uppercase;letter-spacing:.25em;font-family:var(--M)">
-      <div class="fld">YOUR NAME (FOR YOUR CARD)</div><input class="inp" id="nm" maxlength="20" placeholder="e.g. Maryam Al Harthy" autocomplete="off">
+      <div class="fld">YOUR NAME (FOR YOUR CARD)</div><input class="inp" id="nm" maxlength="20" placeholder="e.g. Yousuf Al Shabibi" autocomplete="off">
       <div class="err" id="er">${esc(err||"")}</div>
       <button class="pbtn" id="jb">Join the crisis room</button>
       <p class="pmute" style="text-align:center;font-size:12px">Fictional crisis simulation</p></div></div>`;
@@ -1001,6 +1005,8 @@ async function player(){
           <div class="trait"><b style="color:var(--red)">BLIND SPOT</b>${esc(T.blind)}</div>
           <div class="trait"><b style="color:#2563eb">THEORY</b>${esc(T.theory)}</div></div>
         <div class="pst" style="margin-top:0"><div><b>${res.score}</b><span>POINTS</span></div><div><b>#${res.rank}</b><span>RANK</span></div><div><b>${res.bestN ?? 0}/${NQ}</b><span>BEST MOVES</span></div></div>
+        <div class="pcard" style="display:flex;flex-direction:column;gap:12px"><div class="fld" style="margin:0">ALL FOUR LEADERSHIP TYPES</div>
+          ${Object.entries(TYPES).map(([k,t]) => `<div style="display:flex;gap:11px;align-items:flex-start;${k === res.type ? `background:${t.color}1f;border-radius:12px;padding:8px;margin:-8px` : ""}"><span style="width:34px;height:34px;border-radius:10px;background:${t.color};color:#fff;display:grid;place-items:center;flex:none">${svgI(t.icon)}</span><div><b style="font-family:var(--D);font-size:16px">${t.name}${k === res.type ? " · YOU" : ""}</b><div style="font-family:var(--M);font-weight:800;font-size:10.5px;letter-spacing:.06em;color:${t.color};margin:2px 0">${t.axes.toUpperCase()}</div><div class="trait">${t.desc}</div></div></div>`).join("")}</div>
         <button class="pbtn glow" id="dl">${svgI(ICON.pdf)} Download my Leadership Card (PDF)</button>
         <p style="text-align:center;font-family:var(--D);font-weight:800;font-size:17px">Communicate early. <span style="color:var(--red)">Share verified facts.</span> Update continuously.</p></div></div>`;
       animateDots($("#pmap")); $("#dl").onclick = e => downloadCard(card, e.currentTarget);
