@@ -278,7 +278,7 @@ let BEATS = [
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
     say:"Every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the people: they need to know what to do **right now**. Leader A watches only clock one."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"define"},
-    say:"Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes. Crisis experts agree. **Seeger (2006)** brought together a panel of crisis experts, and one of their best practices is: accept uncertainty. In his words: **waiting until all uncertainty is reduced usually means the warning is simply too late.**"},
+    say:"Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes. This is not only our opinion. The **World Health Organization's** outbreak communication guidelines say: **a lack of information is not a reason to delay an announcement**, and **the benefits of early warning outweigh the risks.** Crisis expert **Seeger** agrees: waiting until all uncertainty is reduced usually means the warning is **too late**."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"levels"},
     say:"We will show that silence fails at **three levels**. It fails **the public**, because silence feeds rumours. It fails **the team**, because uncertainty creates anxiety. And it fails **the leader**, because trust goes to whoever speaks first."},
 
@@ -295,10 +295,10 @@ let BEATS = [
     say:"Now think of the airline's **own people**: the staff at the check-in desk, facing angry passengers, with **no information** themselves. Professor **Michelle Buck** of Kellogg School of Management warns that leaders who wait for clarity **lose their teams to anxiety and speculation.** So silence is not only a communication problem. **It is a leadership failure.** Saif will now show how leaders keep trust."},
 
   /* ---------- ARGUMENT 3 · TRUST · Saif ---------- */
-  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"ask"},
-    say:"Some will ask: **how can a leader speak when they don't know?** Our answer is simple: you say what you don't know. And the research shows people accept that."},
-  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
-    say:"Argument three: **honesty keeps trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"cynefin"},
+    say:"Some will ask: **how can a leader act when they don't know?** Leadership research answers this. In the **Cynefin framework**, published in Harvard Business Review by **Snowden and Boone**, a crisis is a **chaotic** situation. There, the leader's first job is to **act** to establish order, **then** sense and respond. Waiting for complete information is the wrong model for chaos. A clear first message **is** that first act."},
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"Stating uncertainty caused only a <em>small</em> decrease in trust, and almost none when it was given as a clear range.", s:"van der Bles et al. (2020) · PNAS · five experiments · 5,780 people"},
+    say:"Argument three: **honesty keeps trust.** In 2020, a study in **PNAS** by van der Bles and colleagues ran five experiments with almost **6,000 people**. Saying “we are not certain” caused only a **small** drop in trust, and almost none when the uncertainty was given clearly. People can handle honesty."},
   {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005) · CDC: be first, be right, be credible"},
     say:"And there is a reward for speaking first. Research calls it **stealing thunder**: when an organisation reveals bad news **itself**, people judge it as **more credible** than when they hear it from others first. That is why the CDC's crisis rule is: **be first, be right, be credible.**"},
 
@@ -338,18 +338,24 @@ let BEATS = [
 const PHASES = BEATS.map(b => b.phase).filter((p,k,a) => p && a.indexOf(p) === k);
 
 const REBUT = [
+  ["KEY LINE for any attack on accuracy","“You have argued against speculation, not against verified early information.”"],
+  ["“Lack of information — we must wait.”","WHO (2005): a lack of information is not a sufficient reason to delay an announcement. Benefits of early warning outweigh the risks."],
+  ["“Legal / reputational risk requires silence.”","Avoid blame and unconfirmed causes. You can still confirm the impact and give guidance."],
+  ["“Let the technical team solve it first.”","Fixing and informing run in parallel. Cynefin: in chaos, act first, then sense and respond."],
   ["“Wait until you have all the facts.”","Seeger (2006): waiting until all uncertainty is reduced usually means the warning is too late."],
   ["“We have nothing to say yet.”","Illusion of transparency (Gilovich et al., 1998). People don't know who is deciding or when they'll hear more."],
   ["“Quick messages spread misinformation.”","Rumour = importance × ambiguity (Allport & Postman). Silence raises ambiguity, so silence spreads MORE rumours."],
   ["“Waiting protects reputation.”","Stealing thunder (2005): revealing bad news yourself increases credibility. Delta 2024 shows the opposite."],
   ["“Telling people early creates panic.”","UCL 2016: uncertainty itself causes the most stress. Clear information reduces anxiety."],
-  ["“Saying ‘we don't know’ looks weak.”","PNAS 2020: trust hardly changed when uncertainty was shown clearly."],
+  ["“Saying ‘we don't know’ looks weak.”","PNAS 2020: only a small drop in trust. Claiming certainty without evidence is weaker."],
   ["“What if the first message is wrong?”","That is why we say UNKNOWN out loud. Correcting is part of the plan, not a failure."],
   ["“An airline is not a global crisis.”","COVID-19: Oman's Supreme Committee communicated early and regularly, and built credibility (Al-Rubai'ey & Al-Sharafi, 2023). CrowdStrike was also worldwide."],
   ["“Give a real leader who did this.”","2008 global financial crisis: Obama — here's what we know, what we don't know, what we do meanwhile (as described by Prof. Buck, Kellogg)."]
 ];
-const QS = {ismail:"If an airline knows its booking system is down but doesn't know the cause yet, should it inform passengers now, or keep them waiting until the investigation is complete?",
-            saif:"If a statement contains only confirmed facts and says “cause under investigation”, which part of it is misinformation?"};
+const QS = {ismail:"What exactly makes information “complete” enough to speak, and who decides that while passengers are waiting?",
+            saif:"If you have confirmed a disruption and have a verified safety instruction, what justifies withholding it until the root cause is known?",
+            backup:"If an airline knows its booking system is down but doesn't know the cause yet, should it inform passengers now, or keep them waiting until the investigation is complete?",
+            agree:"If they agree confirmed facts should be shared early: “Then our disagreement is not about accuracy. It is about whether complete information must come first.”"};
 const FORK = {now:"Then we agree: complete information is not needed before responsible communication begins.",
               wait:"Then what should passengers do while no official information is available?"};
 const CARDS = [["KNOWN","Booking system down","Don't come unless confirmed","#2ec4a6","✓"],["UNKNOWN","Exact cause","Under investigation","#ffb547","?"],["NEXT","Update in 30 min","Even if no news","#4fd1ff","→"]];
@@ -422,7 +428,7 @@ function visual(b){
       <div class="eq"><div class="tile u d1" style="--cc:#2ec4a6"><i>✓</i><b>Verified facts</b><span>What we know for sure</span></div><div class="op u d2">+</div>
       <div class="tile u d2" style="--cc:#ffb547"><i>?</i><b>Honest unknowns</b><span>What we are still checking</span></div><div class="op u d3">+</div>
       <div class="tile u d3" style="--cc:#4fd1ff"><i>→</i><b>Next update</b><span>When people will hear more</span></div></div>
-      <div class="quote u d4" style="max-width:56em;padding:1.1em 1.6em"><p style="font-size:1.45em">“Waiting until all uncertainty is reduced usually means the warning is simply <em>too late</em>.”</p><span class="src" style="margin-top:.6em">Seeger (2006) · Best practices in crisis communication · Journal of Applied Communication Research</span></div></div>`;
+      <div class="quote u d4" style="max-width:56em;padding:1.1em 1.6em"><p style="font-size:1.45em">“The benefits of early warning <em>outweigh the risks</em>.”</p><span class="src" style="margin-top:.6em">WHO Outbreak Communication Guidelines (2005) · also Seeger (2006), Journal of Applied Communication Research</span></div></div>`;
     case "road": return `<div class="v"><div class="kick b u"><i></i>OUR CASE IN THREE STEPS</div>
       <div class="eq">${[["1","Silence","creates a vacuum"],["2","Honesty","builds trust"],["3","Guidance","before the final report"]].map((x,k) => `<div class="tile u d${k+1}" style="--cc:var(--glow)"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join("")}</div></div>`;
     case "vacuum": return `<div class="v"><div class="h u">Silence is <s>not neutral</s>.</div>
@@ -436,6 +442,10 @@ function visual(b){
     case "rule": return `<div class="v"><div class="rule"><span class="u">Be first.</span><span class="u d2">Be right.</span><span class="u d3">Be credible.</span></div>
       <div class="src u d4">CDC · Crisis & Emergency Risk Communication manual (2018)</div><div class="sub u d5">First does not replace right. Leaders do both.</div></div>`;
     case "quote": return `<div class="v"><div class="quote u"><p>${v.q}</p><span class="src">${esc(v.s)}</span></div></div>`;
+    case "cynefin": return `<div class="v"><div class="kick b u"><i></i>CYNEFIN FRAMEWORK · SNOWDEN & BOONE · HARVARD BUSINESS REVIEW (2007)</div>
+      <div class="h u d1">In chaos, leaders <em>act first</em>.</div>
+      <div class="eq">${[["1","Act","Establish order: the first message","#ff3b4e"],["2","Sense","Learn what is happening","#ffb547"],["3","Respond","Update and adjust","#4fd1ff"]].map((x,k) => `<div class="tile u d${k+2}" style="--cc:${x[3]}"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join(`<div class="op u d3">→</div>`)}</div>
+      <div class="sub u d5">Waiting for complete information is the model for simple problems, not for a crisis.</div></div>`;
     case "ask": return `<div class="v"><div class="bigq">?</div><div class="h u d2">“How can you speak when you don't know?”</div><div class="sub u d3">You say what you don't know.</div></div>`;
     case "guide": return `<div class="v"><div class="h u">People need <em>guidance</em>, not a final report.</div>
       <div class="eq">${[["🏠","Should I go to the airport?"],["🔁","Can I rebook?"],["🔔","When will I hear more?"]].map((x,k) => `<div class="tile u d${k+1}" style="--cc:var(--amber)"><i>${x[0]}</i><b>${x[1]}</b></div>`).join("")}</div>
@@ -595,7 +605,7 @@ async function cockpit(){
         <div class="ck-head"><small>${b.team ? teamName(b.team) : "SESSION"}</small><h2>${esc(b.sec)}</h2>${b.who ? `<p>${esc(b.who)}${ks.length > 1 ? ` · beat ${pos + 1} of ${ks.length}` : ""}</p>` : ""}
           ${ks.length > 1 ? `<div class="ck-dots">${ks.map(k => `<i class="${k < S.i ? "done" : k === S.i ? "on" : ""}"></i>`).join("")}</div>` : ""}</div>
         ${b.say ? `<div class="sayb"><h4>SAY</h4><p>${md(b.say)}</p></div>` : ""}
-        ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL ASKS</b>${esc(QS.ismail)}</div><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div><div><b>SAIF ASKS</b>${esc(QS.saif)}</div></div></div>` : ""}
+        ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL ASKS</b>${esc(QS.ismail)}</div><div><b>SAIF ASKS</b>${esc(QS.saif)}</div><div><b>IF THEY AGREE</b>${esc(QS.agree)}</div><div><b>BACKUP QUESTION</b>${esc(QS.backup)}</div><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div></div></div>` : ""}
         ${b.job ? `<div class="box job"><h4>YOUR JOB NOW</h4><p>${esc(b.job)}</p></div>` : ""}
         ${b.rebut ? `<div class="box"><h4>RESPONSE CARDS</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
         ${nx ? `<div class="peek">Next tap → ${peekText(nx)}</div>` : ""}
