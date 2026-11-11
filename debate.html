@@ -527,8 +527,7 @@ function visual(b){
       <div class="fork"><div class="u d2">Inform passengers now</div><div class="u d3">Wait for the full investigation</div></div></div>`;
     case "recap": return `<div class="v"><div class="kick b u"><i></i>SILENCE FAILS AT THREE LEVELS</div><div class="checks">
       ${[["Public","silence feeds rumours"],["Team","uncertainty creates anxiety"],["Leader","trust goes to whoever speaks first"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div>
-      <div class="seq u d4" style="font-size:1.25em">${[["A","Appropriate · honest"],["C","Consistent · with expert practice"],["E","Effective · people know what to do"]].map(x => `<span style="color:#fff"><b style="color:var(--glow)">${x[0]}</b> ${x[1]}</span>`).join("")}</div>
-      <div class="src u d5">Reardon's ACE theory · Chapter 4</div></div>`;
+      <div class="seq u d4" style="font-size:1.25em">${[["A","Appropriate · honest"],["C","Consistent · with expert practice"],["E","Effective · people know what to do"]].map(x => `<span style="color:#fff"><b style="color:var(--glow)">${x[0]}</b> ${x[1]}</span>`).join("")}</div></div>`;
     case "agree": return `<div class="v"><div class="h u">Accuracy matters. <em>We agree.</em></div><div class="sub u d2" style="font-size:1.6em">Speed and accuracy are not enemies.<br>Share what is verified <b style="color:#fff">and</b> keep investigating.</div></div>`;
     case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div></div>`;
     case "format": return `<div class="v"><div class="kick b u"><i></i>HOW TODAY WORKS</div>
