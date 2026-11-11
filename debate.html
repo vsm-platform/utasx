@@ -235,7 +235,6 @@ const CFG = {
   opp:  {label:"OPPOSITION · AGAINST", names:"Opposition team"},
   video: "crisis-video.mp4",
   game: "flight.html?host",
-  gameAt: "end",                 // "end" = after the opposition · "afterOurs" = right after the discussion
 };
 const firebaseConfig = {
   apiKey: "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8",
@@ -263,14 +262,12 @@ let BEATS = [
   {type:"video", sec:"The video", job:"Video is playing. When it ends, tap NEXT."},
 
   /* ---------- OUR CASE · 10 minutes ---------- */
-  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", v:{t:"format"},
-    say:"Good morning, Dr. Reshma and colleagues. We are Ismail and Saif, and we support the motion. Here is how today works: **we present our case**, then we **discuss together**, then our opponents present theirs."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:0, v:{t:"leaders"},
-    say:"The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
+    say:"Good morning, Dr. Reshma and colleagues. We are Ismail and Saif, and we support the motion. The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
     say:"Why? Because every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the public: passengers need to know what to do **right now**. Leader A watches only clock one."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"define"},
-    say:"Let us be clear about the motion. Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes."},
+    say:"Let us be clear about the motion. Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes. Crisis research agrees. **Seeger (2006)** asked a panel of crisis experts for best practices. One of them: **accept uncertainty**, and say “we do not yet have all the facts”. In his words: **waiting until all uncertainty is reduced usually means the warning is simply too late.**"},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"road"},
     say:"We will prove this with three arguments. **One:** silence creates a vacuum. **Two:** honesty about uncertainty builds trust. **Three:** people need guidance before the final report."},
 
@@ -288,7 +285,7 @@ let BEATS = [
   {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:3, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
     say:"Argument two: **honesty builds trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
   {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"guide"},
-    say:"Argument three: **people need guidance, not a final report.** A passenger at 6 a.m. needs to know: should I go to the airport? Can I rebook? When will I hear more? A first message can answer this **before the cause is known**."},
+    say:"Argument three: **people need guidance, not a final report.** A passenger at 6 a.m. needs to know: should I go to the airport? Can I rebook? When will I hear more? A first message can answer this **before the cause is known**. Seeger's expert panel calls this **messages of self-efficacy**: telling people what they can do to protect themselves."},
   {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
     say:"So what does a responsible first message look like? Three cards. **Known:** our booking system is down and flights are delayed."},
   {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
@@ -308,29 +305,24 @@ let BEATS = [
     say:"To close: **silence** creates a vacuum, **honesty** keeps trust, and people need **guidance** before the final report. We agree that **accuracy matters**, but speed and accuracy are not enemies. A good leader shares what is verified **and** keeps investigating."},
   {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"clocks", line:true},
     say:"Remember the two clocks. **Both clocks start together. Only one waits for you.**"},
-  {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"final"},
-    say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you. We are happy to take your questions."},
+  {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"final"}, job:"After “Thank you”, our part is finished. Do NOT tap NEXT. Keep this tab open while the opposition presents. When they finish, tap NEXT for the discussion.",
+    say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you."},
 
-  /* ---------- DISCUSSION · about 5 minutes ---------- */
+  /* ---------- after our closing: the opposition presents (this page stays on our final screen). Then discussion. ---------- */
   {sec:DISC, phase:DISC, team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & discussion"}, rebut:true,
-    job:"When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard. Tap NEXT when it is our turn to ask."},
+    job:"Use this when the discussion starts (after the opposition, or whenever Dr. Reshma opens it). If there is no discussion, tap NEXT three times to reach the competition. When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard. Tap NEXT when it is our turn to ask."},
   {sec:DISC, phase:DISC, team:"prop", who:"Ismail asks", v:{t:"fork"}, fork:true,
     say:"If an airline knows its booking system is down but doesn't know the cause yet, should it **inform passengers now**, or **keep them waiting** until the investigation is complete?"},
   {sec:DISC, phase:DISC, team:"prop", who:"Saif asks", v:{t:"message", q:true},
     say:"If a statement contains **only confirmed facts** and says “cause under investigation”, **which part of it is misinformation?**"},
 
-  /* ---------- OPPOSITION · 10 minutes ---------- */
-  {sec:OPP, phase:OPP, team:"opp", who:"Opposition", v:{t:"neutral", line:"Their case against the motion"},
-    job:"Listen and write their strongest points in their exact words. If the lecturer allows a final reply, use the response cards below.", rebut:true},
-
   {type:"game", sec:GAME, phase:GAME, job:"Ismail: click the button on the projector to open the game. Saif: help classmates join with their phones."},
   {type:"end", sec:"Thank you"}
 ];
-/* Where the competition goes: "end" (after the opposition) or "afterOurs" (after the discussion) */
-if (CFG.gameAt === "afterOurs"){ const g = BEATS.findIndex(b => b.type === "game"); const [gb] = BEATS.splice(g, 1); BEATS.splice(BEATS.findIndex(b => b.phase === OPP), 0, gb); }
 const PHASES = BEATS.map(b => b.phase).filter((p,k,a) => p && a.indexOf(p) === k);
 
 const REBUT = [
+  ["“Wait until you have all the facts.”","Seeger (2006): waiting until all uncertainty is reduced usually means the warning is too late."],
   ["“Quick messages spread misinformation.”","Only when guesses are presented as facts. We separate what is confirmed from what is unknown."],
   ["“Waiting protects reputation.”","Silence damaged reputation in 2024: Delta. Accuracy protects reputation, and so does being first."],
   ["“Fix the problem first, then talk.”","Fixing and informing happen at the same time. Different people, same hour."],
@@ -408,7 +400,8 @@ function visual(b){
     case "define": return `<div class="v"><div class="h u">Communicate quickly <s>≠</s> guess</div>
       <div class="eq"><div class="tile u d1" style="--cc:#2ec4a6"><i>✓</i><b>Verified facts</b><span>What we know for sure</span></div><div class="op u d2">+</div>
       <div class="tile u d2" style="--cc:#ffb547"><i>?</i><b>Honest unknowns</b><span>What we are still checking</span></div><div class="op u d3">+</div>
-      <div class="tile u d3" style="--cc:#4fd1ff"><i>→</i><b>Next update</b><span>When people will hear more</span></div></div></div>`;
+      <div class="tile u d3" style="--cc:#4fd1ff"><i>→</i><b>Next update</b><span>When people will hear more</span></div></div>
+      <div class="quote u d4" style="max-width:56em;padding:1.1em 1.6em"><p style="font-size:1.45em">“Waiting until all uncertainty is reduced usually means the warning is simply <em>too late</em>.”</p><span class="src" style="margin-top:.6em">Seeger (2006) · Best practices in crisis communication · Journal of Applied Communication Research</span></div></div>`;
     case "road": return `<div class="v"><div class="kick b u"><i></i>OUR CASE IN THREE STEPS</div>
       <div class="eq">${[["1","Silence","creates a vacuum"],["2","Honesty","builds trust"],["3","Guidance","before the final report"]].map((x,k) => `<div class="tile u d${k+1}" style="--cc:var(--glow)"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join("")}</div></div>`;
     case "vacuum": return `<div class="v"><div class="h u">Silence is <s>not neutral</s>.</div>
@@ -464,7 +457,7 @@ async function projector(){
   if (!/^[A-Z]{4}$/.test(c)) c = Array.from({length:4}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random()*24)]).join("");
   await connect(c);
   if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; else commit({i:0}); }
-  let lastI = -1, lastPaired = null, armed = false;
+  let lastI = -1, lastPaired = null, armed = false, localVid = null, localName = "";
   const ckUrl = location.origin + location.pathname + "?cockpit&room=" + code;
 
   function routeHTML(b){
@@ -489,7 +482,7 @@ async function projector(){
         ${S.paired ? `<div class="pair"><div><small>COCKPIT</small><b style="font-size:1.6em;letter-spacing:.04em;color:#14957d">Connected ✓</b><p>The phone controls the debate.</p></div></div>`
           : `<div class="pair"><div id="qr"></div><div><small>COCKPIT FOR THE PROPOSITION TEAM</small><b>${code}</b><p>${ONLINE ? "Scan with the phone that will control the debate." : "Offline: control with the clicker or arrow keys."}</p></div></div>`}</div>`;
     } else if (b.type === "video"){
-      inner = `<div class="vid" id="vw"><video id="v" src="${esc(CFG.video)}" playsinline preload="auto"></video><div class="miss"><div>Video file not found: <b>${esc(CFG.video)}</b><br>Upload it to the same folder as this page, or play it from your laptop.</div></div></div>`;
+      inner = `<div class="vid" id="vw"><video id="v" src="${localVid || esc(CFG.video)}" playsinline preload="auto"></video><div class="miss"><div>Video not found online.<br><br><button class="btn pickv" style="font-size:1em">Choose the video from this laptop</button></div></div></div>`;
     } else if (b.type === "game"){
       inner = `<div class="v"><div class="kick"><i></i>OUTSIDE THE ASSESSED DEBATE</div><div class="h">The video asked:<br><s>what would you do?</s></div><div class="sub">Now everyone answers it. Five questions, thirty seconds each.</div><button class="btn" id="gm">Start The Crisis Room ${svgI(ARROW)}</button></div>`;
     } else if (b.type === "end"){
@@ -500,9 +493,13 @@ async function projector(){
       <div class="bar"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE · COMMUNICATING &amp; NEGOTIATING</small></div></div>
         <div class="motion"><b>Motion:</b> ${esc(CFG.motion)}<span class="chip ${ONLINE ? "on" : ""}">${ONLINE ? (S.paired ? "● LINKED" : "● " + code) : "LOCAL"}</span></div></div>
       ${routeHTML(b)}<div class="main">${inner}</div>${footHTML(b)}
-    </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This lets the video play with sound. Then use your phone, the clicker or the arrow keys.</p></div></div>`}`;
+    </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This lets the video play with sound. Then use your phone, the clicker or the arrow keys.</p>
+      <button class="btn pickv" style="margin-top:1.4em;font-size:1em;background:var(--panel);box-shadow:none;border:1px solid var(--line)">${localVid ? "✓ Video ready: " + esc(localName) : "Choose the video from this laptop"}</button></div></div>`}<input type="file" id="vf" accept="video/*" hidden>`;
     const a = $("#arm"); if (a) a.onclick = () => { armed = true; a.remove(); const v = $("#v"); if (v) v.play().catch(() => {}); };
     if (b.type === "welcome" && ONLINE && !S.paired) try { new QRCode($("#qr"), {text:ckUrl, width:200, height:200, colorDark:"#0a1730", colorLight:"#ffffff"}); } catch(e){}
+    const vf = $("#vf");
+    document.querySelectorAll(".pickv").forEach(p => p.onclick = e => { e.stopPropagation(); vf.click(); });
+    vf.onchange = () => { const f = vf.files[0]; if (!f) return; if (localVid) URL.revokeObjectURL(localVid); localVid = URL.createObjectURL(f); localName = f.name; render(); };
     if (b.type === "video"){ const v = $("#v"); v.onerror = () => $("#vw")?.classList.add("missing"); if (armed) v.play().catch(() => {}); }
     if (b.type === "game") $("#gm").onclick = () => window.open(CFG.game, "_blank");
     lastI = S.i; lastPaired = S.paired;
