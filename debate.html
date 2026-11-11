@@ -25,12 +25,17 @@ html,body{height:100%}
 body{background:var(--night);color:#fff;font-family:var(--B);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-@keyframes fadeUp{from{transform:translateY(.8em);opacity:0}to{transform:none;opacity:1}}
+@keyframes up{from{transform:translateY(1em);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:none;opacity:1}}
 @keyframes blink{50%{opacity:.35}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes grow{from{width:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-.35em)}}
+.u{animation:up .7s cubic-bezier(.2,.8,.3,1) both}
+.d1{animation-delay:.25s}.d2{animation-delay:.6s}.d3{animation-delay:.95s}.d4{animation-delay:1.3s}.d5{animation-delay:1.65s}
 
 /* ============ PROJECTOR ============ */
-.scr{height:100vh;display:grid;grid-template-rows:auto 1fr auto;font-size:clamp(14px,1.16vw,30px);
+.scr{height:100vh;display:grid;grid-template-rows:auto auto 1fr auto;font-size:clamp(14px,1.16vw,30px);overflow:hidden;
   background:radial-gradient(80em 40em at 50% 0%,#132a55 0%,transparent 60%),linear-gradient(180deg,#081329,#040a16)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:1.4vh 2vw}
 .logo{display:flex;align-items:center;gap:.7em}
@@ -41,21 +46,123 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .motion b{color:#fff}
 .chip{display:inline-flex;align-items:center;gap:.4em;border:1px solid var(--line);background:#ffffff0d;border-radius:.55em;padding:.35em .75em;font-family:var(--M);font-weight:800;font-size:.75em;margin-left:.6em}
 .chip.on{border-color:var(--ok);color:var(--ok)}
-.main{padding:0 2vw 1.4vh;min-height:0;display:flex}
-.strip{display:flex;gap:.3em;padding:0 2vw 1.6vh}
-.seg{flex:1;height:.5em;border-radius:99px;background:#ffffff1a;position:relative;overflow:hidden}
-.seg.done{background:#ffffff55}
-.seg.now{background:#ffffff26}
-.seg.now i{position:absolute;inset:0 auto 0 0;background:var(--tc);border-radius:99px;transition:width .3s linear}
-.seg.prop{--tc:var(--glow)} .seg.opp{--tc:var(--opp)} .seg.mod{--tc:var(--mod)}
 
-/* welcome */
-.welcome{flex:1;display:grid;grid-template-columns:1.25fr 1fr;gap:2.4vw;align-items:center}
-.kick{font-family:var(--M);font-weight:800;color:var(--red);letter-spacing:.2em;font-size:.8em;display:flex;align-items:center;gap:.6em}
+/* route: the path of our case, always visible during our turns */
+.route{display:flex;align-items:center;gap:.4em;padding:0 2vw 1.2vh;min-height:2.6em}
+.rt{display:flex;align-items:center;gap:.5em;font-family:var(--M);font-weight:800;font-size:.72em;letter-spacing:.12em;color:#ffffff55;white-space:nowrap}
+.rt i{width:1.9em;height:1.9em;border-radius:50%;border:2px solid #ffffff33;display:grid;place-items:center;font-style:normal;font-size:.95em}
+.rt.done{color:#ffffffaa}.rt.done i{background:#ffffff22;border-color:transparent}
+.rt.cur{color:var(--glow)}.rt.cur i{background:var(--glow);border-color:var(--glow);color:#04132a;box-shadow:0 0 0 .35em #4fd1ff33}
+.rline{flex:1;height:2px;background:#ffffff1f;min-width:1em}
+.rline.done{background:#ffffff66}
+
+.main{padding:0 3vw;min-height:0;display:flex;align-items:center;justify-content:center}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:1.2vh 2vw 1.8vh}
+.who{display:flex;align-items:center;gap:.8em;font-weight:700;color:var(--mute)}
+.who b{color:#fff}
+.tag{font-family:var(--M);font-weight:800;font-size:.75em;letter-spacing:.16em;padding:.4em .8em;border-radius:.45em;background:var(--tc);color:#04132a}
+.dots{display:flex;gap:.45em}
+.dots i{width:.6em;height:.6em;border-radius:50%;background:#ffffff26}
+.dots i.on{background:var(--tc);box-shadow:0 0 0 .25em color-mix(in srgb,var(--tc) 30%,transparent)}
+.dots i.done{background:#ffffff66}
+
+/* beat visuals */
+.v{width:100%;max-width:72em;display:flex;flex-direction:column;align-items:center;gap:2.4vh;text-align:center}
+.kick{font-family:var(--M);font-weight:800;color:var(--red);letter-spacing:.2em;font-size:.85em;display:inline-flex;align-items:center;gap:.6em}
 .kick i{width:.6em;height:.6em;border-radius:50%;background:var(--red);animation:blink 1s infinite}
-.bigq{font-family:var(--D);font-weight:800;font-size:3.6em;line-height:1.03;letter-spacing:-.03em;margin:.35em 0 .5em}
-.bigq em{font-style:normal;color:var(--glow)}
-.teams{display:grid;grid-template-columns:1fr 1fr;gap:1em}
+.kick.b{color:var(--glow)}.kick.b i{background:var(--glow)}
+.h{font-family:var(--D);font-weight:800;font-size:3.4em;line-height:1.05;letter-spacing:-.03em}
+.h em{font-style:normal;color:var(--glow)} .h s{text-decoration:none;color:var(--red)}
+.sub{color:var(--mute);font-weight:700;font-size:1.25em;line-height:1.45;max-width:40em}
+.src{font-family:var(--M);font-weight:700;font-size:.8em;letter-spacing:.06em;color:var(--mute)}
+
+.leaders{display:grid;grid-template-columns:1fr 1fr;gap:1.6em;width:100%}
+.ld{background:var(--panel);border:1px solid var(--line);border-radius:1.2em;padding:1.6em 1.6em 1.8em;text-align:left;position:relative}
+.ld small{font-family:var(--M);font-weight:800;font-size:.8em;letter-spacing:.18em;color:var(--mute)}
+.ld p{font-family:var(--D);font-weight:800;font-size:1.9em;line-height:1.2;margin-top:.5em}
+.ld.a{opacity:.55}
+.ld.b{border-color:var(--glow);box-shadow:0 0 0 .3em #4fd1ff1f,0 20px 50px -20px #4fd1ff66}
+.ld.b small{color:var(--glow)}
+.stamp{position:absolute;top:-1em;right:1.2em;background:var(--glow);color:#04132a;font-family:var(--M);font-weight:800;font-size:.8em;letter-spacing:.14em;padding:.5em .9em;border-radius:.5em;animation:pop .6s 1s both}
+
+.clocks{display:grid;grid-template-columns:1fr 1fr;gap:2em}
+.dial{background:var(--panel);border:1px solid var(--line);border-radius:1.4em;padding:1.4em 2em;text-align:center}
+.dial svg{width:min(14em,30vh);height:min(14em,30vh)}
+.dial h5{font-family:var(--M);font-weight:800;font-size:.9em;letter-spacing:.18em;margin-top:.6em}
+.dial p{color:var(--mute);font-weight:700;font-size:1em;margin-top:.3em}
+.dial.inv h5{color:var(--amber)} .dial.pub h5{color:var(--red)}
+.hand{transform-origin:60px 60px}
+.inv .hand{animation:spin 120s linear infinite}
+.pub .hand{animation:spin 3s linear infinite}
+.pub .hand2{transform-origin:60px 60px;animation:spin 36s linear infinite}
+
+.eq{display:flex;align-items:stretch;gap:1em;width:100%;justify-content:center}
+.eq .op{font-family:var(--D);font-weight:800;font-size:2.4em;color:var(--mute);align-self:center}
+.tile{flex:1;max-width:17em;background:var(--paper);color:var(--ink);border-radius:1.1em;padding:1.3em 1.2em 1.5em;border-top:.45em solid var(--cc);text-align:left}
+.tile i{font-style:normal;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:.6em;background:var(--cc);color:#fff;font-family:var(--D);font-weight:800;font-size:1.2em}
+.tile b{display:block;font-family:var(--D);font-weight:800;font-size:1.55em;line-height:1.15;margin-top:.6em}
+.tile span{display:block;color:var(--ink2);font-weight:700;margin-top:.4em;line-height:1.35}
+.tile.dash{background:transparent;border:2px dashed #ffffff33;border-top:.45em solid #ffffff22}
+.tile.dash *{visibility:hidden}
+
+.vac{position:relative;width:min(44em,90%);height:min(22em,42vh)}
+.bub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:15em;height:8em;border:3px dashed #ffffff55;border-radius:1.4em;display:grid;place-items:center;color:var(--mute);font-family:var(--M);font-weight:800;letter-spacing:.14em;font-size:.9em}
+.bub::after{content:"";position:absolute;bottom:-1.3em;left:3em;border:.7em solid transparent;border-top-color:#ffffff55}
+.rum{position:absolute;background:#ff3b4e1f;border:1px solid #ff3b4e88;color:#ffd0d5;font-weight:800;font-size:1.15em;padding:.5em .9em;border-radius:.8em;animation:pop .5s both,float 3s ease-in-out infinite}
+
+.bars{width:min(52em,95%);display:flex;flex-direction:column;gap:1.4em;text-align:left}
+.brow small{display:block;font-weight:800;font-size:1.1em;margin-bottom:.45em}
+.brow small span{color:var(--mute);font-weight:700}
+.btrack{height:2.6em;background:#ffffff10;border-radius:.6em;overflow:hidden}
+.bfill{height:100%;border-radius:.6em;display:flex;align-items:center;justify-content:flex-end;padding:0 .9em;font-family:var(--M);font-weight:800;color:#04132a;animation:grow 1.4s cubic-bezier(.2,.8,.3,1) both}
+
+.rule{display:flex;gap:1.2em;flex-wrap:wrap;justify-content:center}
+.rule span{font-family:var(--D);font-weight:800;font-size:3.6em;letter-spacing:-.02em}
+.rule span:nth-child(2){color:var(--glow)}
+
+.quote{background:var(--paper);color:var(--ink);border-radius:1.4em;padding:1.8em 2.2em;max-width:50em;text-align:left;border-left:.5em solid var(--glow)}
+.quote p{font-family:var(--D);font-weight:800;font-size:2em;line-height:1.25}
+.quote p em{font-style:normal;color:#0a7fb0}
+.quote .src{color:#5b6b87;margin-top:1em;display:block}
+
+.bigq{font-family:var(--D);font-weight:800;font-size:12em;line-height:.9;color:var(--amber);animation:pop .7s both}
+
+.phone{background:var(--paper);color:var(--ink);border-radius:1.4em;padding:1.3em 1.5em;max-width:40em;width:100%;text-align:left;box-shadow:0 30px 60px -25px #000}
+.phone .ph{display:flex;align-items:center;gap:.6em;font-weight:800;color:var(--ink2);font-size:.9em}
+.phone .ph i{width:1.6em;height:1.6em;border-radius:.45em;background:var(--red);display:grid;place-items:center;color:#fff;font-style:normal;font-family:var(--D);font-size:.9em}
+.phone .ph span{margin-left:auto;font-family:var(--M);font-size:.85em;color:#6a7a96}
+.phone .msg{margin-top:.8em;display:flex;flex-direction:column;gap:.55em}
+.phone .ln{font-weight:700;font-size:1.3em;line-height:1.35;padding-left:.8em;border-left:.25em solid var(--cc)}
+.phone .ln b{font-family:var(--M);font-size:.7em;letter-spacing:.14em;color:var(--cc);display:block}
+
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:1.6em;width:min(46em,95%)}
+.fork div{border-radius:1em;padding:1.1em;font-family:var(--D);font-weight:800;font-size:2em}
+.fork div:first-child{background:var(--glow);color:#04132a}
+.fork div:last-child{background:#ffffff14;border:2px solid #ffffff33}
+
+.checks{display:flex;flex-direction:column;gap:1em;text-align:left}
+.ck1{display:flex;align-items:center;gap:.8em;font-family:var(--D);font-weight:800;font-size:2.1em}
+.ck1 i{font-style:normal;width:1.4em;height:1.4em;border-radius:.4em;background:var(--ok);color:#04132a;display:grid;place-items:center;font-size:.8em}
+.ck1 span{color:var(--mute);font-weight:700;font-size:.6em;font-family:var(--B)}
+
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2em;align-items:center;width:min(60em,96%)}
+.vs div{border-radius:1em;padding:1.2em;font-family:var(--D);font-weight:800;font-size:1.7em;line-height:1.2}
+.vs .x{background:#ffffff0d;border:2px solid #ffffff22;color:var(--mute);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:.12em}
+.vs .y{background:var(--glow);color:#04132a}
+.vs b{font-family:var(--M);color:var(--mute);font-size:1.1em}
+
+.final3{display:flex;gap:.6em 1em;font-family:var(--D);font-weight:800;font-size:3.2em;flex-wrap:wrap;justify-content:center}
+.final3 span{animation:up .7s both}
+.final3 span:nth-child(2){animation-delay:.5s;color:var(--glow)} .final3 span:nth-child(3){animation-delay:1s}
+
+.neutral .who2{font-family:var(--D);font-weight:800;font-size:4.6em;letter-spacing:-.03em;line-height:1}
+.seq{display:flex;flex-wrap:wrap;justify-content:center;gap:.5em;max-width:60em}
+.seq span{font-weight:700;font-size:.85em;padding:.4em .8em;border-radius:99px;background:#ffffff0d;border:1px solid var(--line);color:var(--mute)}
+.seq span.cur{background:var(--tc);color:#04132a;border-color:transparent}
+.seq span.done{opacity:.4}
+
+.welcome{width:100%;display:grid;grid-template-columns:1.25fr 1fr;gap:2.4vw;align-items:center;text-align:left}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:1em;margin-top:1.4em}
 .team{background:var(--panel);border:1px solid var(--line);border-top:.3em solid var(--tc);border-radius:1em;padding:1em 1.2em}
 .team small{font-family:var(--M);font-weight:800;font-size:.7em;letter-spacing:.18em;color:var(--tc)}
 .team b{display:block;font-family:var(--D);font-weight:800;font-size:1.5em;margin-top:.3em}
@@ -68,68 +175,11 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .pair b{display:block;font-family:var(--M);font-weight:800;font-size:2.4em;letter-spacing:.12em;line-height:1.1}
 .pair p{font-size:.78em;color:#6a7a96;font-weight:600;line-height:1.35}
 
-/* video */
-.vid{flex:1;position:relative;border-radius:1.2em;overflow:hidden;background:#000;border:1px solid var(--line)}
+.vid{width:100%;height:100%;position:relative;border-radius:1.2em;overflow:hidden;background:#000;border:1px solid var(--line)}
 .vid video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 .vid .miss{position:absolute;inset:0;display:none;place-items:center;text-align:center;color:var(--mute);font-weight:700;padding:2em}
 .vid.missing .miss{display:grid}
-
-/* timed stage */
-.stage{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:2vw;min-height:0}
-.now{display:flex;flex-direction:column;justify-content:center;gap:1.4vh;min-height:0}
-.team-tag{display:inline-flex;align-items:center;gap:.6em;align-self:flex-start;font-family:var(--M);font-weight:800;font-size:.85em;letter-spacing:.18em;padding:.45em .9em;border-radius:.5em;background:var(--tc);color:#04132a}
-.team-tag.mod{background:var(--mod)}
-.sname{font-family:var(--D);font-weight:800;font-size:3.3em;line-height:1.02;letter-spacing:-.025em}
-.speaker{font-size:1.4em;font-weight:700;color:var(--mute)}
-.speaker b{color:#fff}
-.clock{font-family:var(--M);font-weight:800;font-size:9em;line-height:.95;letter-spacing:-.02em;transition:color .3s}
-.clock.warn{color:var(--amber)}
-.clock.over{color:var(--red);animation:blink 1s infinite}
-.clock small{font-size:.18em;letter-spacing:.1em;display:block;color:var(--mute);margin-top:.4em;animation:none}
-.paused{display:inline-block;font-family:var(--M);font-weight:800;font-size:.8em;letter-spacing:.16em;color:var(--amber);border:1px solid var(--amber);border-radius:.4em;padding:.25em .6em;margin-left:.8em;vertical-align:middle}
-.right{display:flex;flex-direction:column;justify-content:center;gap:1.2em;min-height:0}
-.neutral{background:var(--panel);border:1px solid var(--line);border-radius:1.2em;padding:1.3em 1.4em}
-.neutral h4{font-family:var(--M);font-weight:800;font-size:.72em;letter-spacing:.18em;color:var(--mute);margin-bottom:.8em}
-.list{display:flex;flex-direction:column;gap:.45em}
-.li{display:flex;align-items:center;gap:.7em;font-weight:700;font-size:.95em;color:var(--mute)}
-.li i{width:.6em;height:.6em;border-radius:50%;background:var(--tc);flex:none}
-.li.cur{color:#fff}
-.li.done{opacity:.45;text-decoration:line-through}
-.li span:last-child{margin-left:auto;font-family:var(--M);font-size:.85em}
-
-/* two clocks */
-.clocks{display:grid;grid-template-columns:1fr 1fr;gap:1em}
-.dial{background:var(--panel);border:1px solid var(--line);border-radius:1.2em;padding:1em;text-align:center;animation:fadeUp .6s both}
-.dial svg{width:min(11em,22vh);height:min(11em,22vh)}
-.dial h5{font-family:var(--M);font-weight:800;font-size:.75em;letter-spacing:.2em;margin-top:.5em}
-.dial p{color:var(--mute);font-weight:700;font-size:.85em;margin-top:.2em}
-.dial.inv h5{color:var(--amber)} .dial.pub h5{color:var(--red)}
-.hand{transform-origin:60px 60px}
-.inv .hand{animation:spin 120s linear infinite}
-.pub .hand{animation:spin 3s linear infinite}
-.pub .hand2{transform-origin:60px 60px;animation:spin 36s linear infinite}
-.clockline{font-family:var(--D);font-weight:800;font-size:1.25em;text-align:center;line-height:1.3}
-.clockline span{color:var(--red)}
-
-/* three cards */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.9em}
-.card{background:var(--paper);color:var(--ink);border-radius:1em;padding:1.1em 1em 1.3em;min-height:9em;display:flex;flex-direction:column;gap:.5em;border-top:.45em solid var(--cc);opacity:.08;transform:rotateY(80deg);transition:opacity .5s,transform .7s cubic-bezier(.2,.9,.3,1.2)}
-.card.show{opacity:1;transform:none}
-.card:not(.show){background:transparent;border:2px dashed #ffffff33;border-top:.45em solid #ffffff22;opacity:1;transform:none}
-.card:not(.show) *{visibility:hidden}
-.card small{font-family:var(--M);font-weight:800;font-size:.85em;letter-spacing:.2em;color:var(--cc)}
-.card b{font-family:var(--D);font-weight:800;font-size:1.45em;line-height:1.15}
-.cardnote{text-align:center;color:var(--mute);font-weight:700}
-
-/* game + end */
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.4em}
-.center h1{font-family:var(--D);font-weight:800;font-size:4em;line-height:1;letter-spacing:-.03em}
-.center h1 em{font-style:normal;color:var(--red)}
-.center p{color:var(--mute);font-size:1.3em;font-weight:700;max-width:34em;line-height:1.45}
 .btn{display:inline-flex;align-items:center;gap:.6em;background:var(--red);color:#fff;font-weight:800;font-size:1.2em;padding:.85em 1.6em;border-radius:.8em;box-shadow:0 0 0 .3em #ff3b4e33,0 14px 30px -12px #ff3b4e99}
-.final3{display:flex;gap:1em;font-family:var(--D);font-weight:800;font-size:2.4em;flex-wrap:wrap;justify-content:center}
-.final3 span{animation:fadeUp .7s both}
-.final3 span:nth-child(2){animation-delay:.5s;color:var(--glow)} .final3 span:nth-child(3){animation-delay:1s}
 .arm{position:fixed;inset:0;z-index:50;background:#050d1cf2;display:grid;place-items:center;text-align:center;cursor:pointer}
 .arm b{font-family:var(--D);font-size:2.2em;font-weight:800;display:block;margin-bottom:.4em}
 .arm p{color:var(--mute);font-weight:700}
@@ -141,37 +191,29 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .ck-top span{font-family:var(--M);font-weight:800;font-size:11px;letter-spacing:.12em;color:var(--mute)}
 .ck-top .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px}
 .ck-top .dot.off{background:var(--amber)}
-.ck-body{flex:1;padding:14px 16px 150px;display:flex;flex-direction:column;gap:12px;max-width:560px;width:100%;margin:0 auto}
-.ck-stage{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.ck-stage small{font-family:var(--M);font-weight:800;font-size:11px;letter-spacing:.14em;color:var(--tc)}
-.ck-stage h2{font-family:var(--D);font-weight:800;font-size:23px;line-height:1.1;margin-top:3px}
-.ck-stage p{color:var(--mute);font-weight:700;font-size:14px;margin-top:2px}
-.ck-clock{font-family:var(--M);font-weight:800;font-size:46px;line-height:1;text-align:right;flex:none}
-.ck-clock.warn{color:var(--amber)} .ck-clock.over{color:var(--red)}
-.ck-bar{height:6px;border-radius:99px;background:#ffffff1a;overflow:hidden}
-.ck-bar i{display:block;height:100%;background:var(--tc);transition:width .3s linear}
+.ck-body{flex:1;padding:14px 16px 120px;display:flex;flex-direction:column;gap:12px;max-width:560px;width:100%;margin:0 auto}
+.ck-head small{font-family:var(--M);font-weight:800;font-size:11px;letter-spacing:.14em;color:var(--tc)}
+.ck-head h2{font-family:var(--D);font-weight:800;font-size:22px;line-height:1.15;margin-top:3px}
+.ck-head p{color:var(--mute);font-weight:700;font-size:14px;margin-top:3px}
+.ck-dots{display:flex;gap:6px;margin-top:8px}
+.ck-dots i{flex:1;height:5px;border-radius:99px;background:#ffffff1f}
+.ck-dots i.done{background:#ffffff66}.ck-dots i.on{background:var(--tc)}
+.sayb{background:var(--paper);color:var(--ink);border-radius:16px;padding:16px 16px 18px;border-left:6px solid var(--tc)}
+.sayb h4{font-family:var(--M);font-weight:800;font-size:10.5px;letter-spacing:.16em;color:#6a7a96;margin-bottom:8px}
+.sayb p{font-size:21px;font-weight:600;line-height:1.5}
+.sayb p b{font-weight:800;color:#0a5f86}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
 .box h4{font-family:var(--M);font-weight:800;font-size:10.5px;letter-spacing:.16em;color:var(--mute);margin-bottom:8px}
-.cues{display:flex;flex-direction:column;gap:7px;counter-reset:c}
-.cue{display:flex;gap:10px;font-weight:700;font-size:16px;line-height:1.35}
-.cue::before{counter-increment:c;content:counter(c);font-family:var(--M);font-weight:800;font-size:12px;width:22px;height:22px;border-radius:6px;background:var(--tc);color:#04132a;display:grid;place-items:center;flex:none;margin-top:1px}
+.box p{font-weight:700;line-height:1.45}
 .job{border-color:#ffb54766;background:#ffb54714}
-.job p{font-weight:700;line-height:1.45}
-.say{border-left:3px solid var(--glow);padding-left:10px;font-weight:700;font-style:italic;line-height:1.45}
-details.box summary{font-family:var(--M);font-weight:800;font-size:11px;letter-spacing:.14em;color:var(--glow);cursor:pointer;list-style:none}
-details.box summary::-webkit-details-marker{display:none}
-details.box[open] summary{margin-bottom:10px}
-.pairs{display:flex;flex-direction:column;gap:9px}
-.pairs div{font-size:14.5px;line-height:1.4}
+.pairs{display:flex;flex-direction:column;gap:10px}
+.pairs div{font-size:15px;line-height:1.4}
 .pairs b{display:block;color:var(--amber);font-size:13px}
-.cardbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.cardbtns button{background:#fff;color:var(--ink);border-radius:10px;padding:10px 6px;font-weight:800;font-size:13px;border-top:4px solid var(--cc);opacity:.6}
-.cardbtns button.on{opacity:1;box-shadow:0 0 0 2px var(--cc)}
-.next-up{color:var(--mute);font-weight:700;font-size:14px}
-.next-up b{color:#fff}
-.ck-ctrl{position:fixed;left:0;right:0;bottom:0;background:#050d1cf2;border-top:1px solid var(--line);padding:10px 16px max(14px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 1fr 2.2fr;gap:8px;backdrop-filter:blur(6px)}
-.ck-ctrl button{border-radius:12px;padding:15px 6px;font-weight:800;font-size:14px;background:#ffffff14;border:1px solid var(--line)}
-.ck-ctrl .nx{background:var(--glow);color:#04132a;font-size:17px;border:0}
+.peek{color:var(--mute);font-weight:700;font-size:14px;line-height:1.4}
+.peek b{color:#fff}
+.ck-ctrl{position:fixed;left:0;right:0;bottom:0;background:#050d1cf2;border-top:1px solid var(--line);padding:10px 16px max(14px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 2.6fr;gap:10px;backdrop-filter:blur(6px)}
+.ck-ctrl button{border-radius:14px;padding:18px 6px;font-weight:800;font-size:15px;background:#ffffff14;border:1px solid var(--line)}
+.ck-ctrl .nx{background:var(--glow);color:#04132a;font-size:18px;border:0}
 .land{min-height:100vh;display:flex;flex-direction:column;gap:14px;padding:28px 18px;max-width:520px;margin:0 auto}
 .land h1{font-family:var(--D);font-weight:800;font-size:30px;line-height:1.1}
 .land p{color:var(--mute);font-weight:600;line-height:1.5}
@@ -185,14 +227,14 @@ details.box[open] summary{margin-bottom:10px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module">
 /* =========================================================
-   SETTINGS — edit these before the debate
+   SETTINGS
    ========================================================= */
 const CFG = {
   motion: "In a global crisis, leaders should communicate quickly rather than wait for complete information.",
   prop: {label:"PROPOSITION · FOR", names:"Ismail & Saif"},
   opp:  {label:"OPPOSITION · AGAINST", names:"Opposition team"},
-  video: "crisis-video.mp4",                 // upload your video to the repo with this exact name
-  game: "flight.html?host",                  // the competition page
+  video: "crisis-video.mp4",
+  game: "flight.html?host",
 };
 const firebaseConfig = {
   apiKey: "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8",
@@ -205,58 +247,111 @@ const firebaseConfig = {
 };
 const DB_ROOT = "tr";
 
+/* The path of our case. Shown on the projector during our turns so the audience can follow it. */
+const ROUTE = ["The question","Two clocks","① Silence","② Trust","③ Guidance","First message"];
+
 /* =========================================================
-   THE SEQUENCE — times in seconds. team: prop | opp | mod
-   Change durations or order here if the lecturer asks.
+   THE BEATS — one tap = one beat.
+   sec: section name · team: prop | opp | mod · who: speaker
+   r: position on ROUTE (our beats only) · v: what the projector shows
+   say: what the speaker says (**bold** = stress this word)
    ========================================================= */
-const STAGES = [
-  {type:"welcome", name:"Welcome"},
-  {type:"video",   name:"The Crisis Room video", job:"Ismail: keep the clicker. When the video ends, tap NEXT for the moderator."},
-  {type:"timed", team:"mod",  name:"Introduction by the moderator", who:"Moderator", dur:120,
-    job:"Stand ready. Saif: hold this phone and control NEXT. Ismail: cue cards in hand."},
-  {type:"timed", team:"prop", name:"Proposition opening", who:"Ismail", dur:120, clocks:true,
-    cues:["The video stopped at a question. Behind it: TWO CLOCKS","Clock 1: investigation, needs time. Clock 2: the public, needs guidance now","Define: verified facts · honest unknowns · next update. Not guessing.","Three reasons: information vacuum · trust · guidance","We don't ask leaders to know everything. We ask them to communicate responsibly."]},
-  {type:"timed", team:"opp",  name:"Opposition opening", who:"Opposition", dur:120,
-    job:"Ismail: write down THEIR definition of “complete information”. Saif: note their strongest example."},
-  {type:"timed", team:"prop", name:"Argument 1 · The cost of silence", who:"Ismail", dur:90, clocks:true,
-    cues:["Silence creates an information vacuum; others fill it","REAL CASE: July 2024 CrowdStrike outage. Most airlines back in ~1 day; Delta ~5 days, ~7,000 cancellations, US DOT investigation, public blame fight","CDC CERC: be first, be right, be credible","Stealing thunder (Arpan & Roskos-Ewoldsen, 2005) = inoculation theory, Ch. 4","Waiting doesn't stop communication. It removes the leader from it."],
-    say:"Saif will now explain how leaders can communicate early while keeping trust."},
-  {type:"timed", team:"prop", name:"Arguments 2 & 3 · Trust and guidance", who:"Saif", dur:120, clocks:true, cards:true,
-    cues:["Trust: van der Bles et al. (2020), PNAS. Stating uncertainty had only a small effect on trust.","Leaders can say what they don't know yet.","Action: confirm the outage, give instructions, announce the next update","CARDS: Known → Unknown → Next (tap below)","ACE in one line: appropriate, consistent, effective"],
-    say:"These three pieces of information are enough for a responsible first announcement."},
-  {type:"timed", team:"opp",  name:"Opposition main arguments", who:"Opposition", dur:210,
-    job:"Both: pick their TWO strongest points for Saif's rebuttal. Write the exact words they use."},
-  {type:"timed", team:"prop", name:"Proposition rebuttal", who:"Saif", dur:60,
-    cues:["Acknowledge: “Our respected opponents make an important point…”","Challenge their 2 strongest points by name","Evidence","Return: not quick vs accurate. Responsible early communication vs unnecessary silence."],
-    rebut:true},
-  {type:"timed", team:"opp",  name:"Opposition rebuttal", who:"Opposition", dur:60,
-    job:"Listen. Don't react. Note anything to answer in Q&A."},
-  {type:"timed", team:"mod",  name:"Questions and responses", who:"Both teams", dur:120,
-    cues:["Listen to the exact question","Answer directly, under 30 seconds","Valid risk? Acknowledge it, then give the safeguard"],
-    qa:true},
-  {type:"timed", team:"opp",  name:"Opposition closing", who:"Opposition", dur:60,
-    job:"Saif: last check of the closing cues. No new evidence in the closing."},
-  {type:"timed", team:"prop", name:"Proposition closing", who:"Saif", dur:60, clocks:true,
-    cues:["Three things: silence → vacuum · uncertainty → credibility · guidance before the final report","Common ground: accuracy matters, we agree","Leaders must do both","Communicate early. Share verified facts. Update continuously.","Both clocks start together. Only one waits for you.","Bridge: “Now it's your turn to answer the video's question.”"]},
-  {type:"game", name:"The Crisis Room competition", job:"Ismail: press the button on the projector (or tap NEXT here to show it). Saif: help classmates join."},
-  {type:"timed", team:"mod",  name:"Feedback and conclusion", who:"Lecturer", dur:120,
-    job:"Listen, thank the lecturer and the opposition."},
-  {type:"end", name:"Thank you"}
+const BEATS = [
+  {type:"welcome", sec:"Welcome", job:"Projector shows the motion. When the lecturer is ready, tap NEXT to play the video."},
+  {type:"video", sec:"The video", job:"Video is playing. When it ends, tap NEXT for the moderator."},
+
+  {sec:"Moderator", team:"mod", who:"Moderator", v:{t:"neutral", line:"Introduction"},
+    job:"Moderator introduces the debate. Ismail: get ready. Your first tap shows the two leaders from the video."},
+
+  /* ---------- OPENING · Ismail ---------- */
+  {sec:"Opening", team:"prop", who:"Ismail", r:0, v:{t:"leaders"},
+    say:"Good morning. The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
+  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
+    say:"Why? Because every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the public: passengers need to know what to do **right now**. Leader A watches only clock one."},
+  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"define"},
+    say:"Let us be clear about the motion. Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes."},
+  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"road"},
+    say:"We will prove this with three arguments. **One:** silence creates a vacuum. **Two:** honesty about uncertainty builds trust. **Three:** people need guidance before the final report. Thank you."},
+
+  {sec:"Opposition opening", team:"opp", who:"Opposition", v:{t:"neutral", line:"Opening statement"},
+    job:"Listen. Ismail: write down how THEY define “complete information”. Saif: note their strongest example."},
+
+  /* ---------- ARGUMENT 1 · Ismail ---------- */
+  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"vacuum"},
+    say:"Argument one: **silence is not neutral.** When an airline says nothing, passengers do not wait quietly. They fill the gap: were we hacked? Are all flights cancelled? Is it safe? The empty space is always filled by someone, just **not by the leader**."},
+  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"case"},
+    say:"This really happened. In **July 2024**, a faulty CrowdStrike update crashed computer systems worldwide. Most airlines recovered in about a day. Delta took about **five days** and cancelled around **7,000 flights**. Thousands of passengers said they could not get clear answers, and the US Department of Transportation opened an investigation."},
+  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"rule"},
+    say:"That is why the CDC crisis communication manual gives three rules: **be first, be right, be credible.** Notice: first does not replace right. A good leader does **both together**."},
+  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005)"},
+    say:"Research calls this **stealing thunder**: when an organisation reveals bad news itself, people see it as **more credible** than when they hear it from others first. So waiting does not stop communication. It only **removes the leader** from it. Saif will now show how to speak early and keep trust."},
+
+  /* ---------- ARGUMENTS 2 & 3 · Saif ---------- */
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:3, v:{t:"ask"},
+    say:"Our opponents will ask: **how can you speak when you don't know?** Our answer is simple: you say what you don't know. And research shows people accept that."},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:3, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
+    say:"Argument two: **honesty builds trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:4, v:{t:"guide"},
+    say:"Argument three: **people need guidance, not a final report.** A passenger at 6 a.m. needs to know: should I go to the airport? Can I rebook? When will I hear more? A first message can answer this **before the cause is known**."},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
+    say:"So what does a responsible first message look like? Three cards. **Known:** our booking system is down and flights are delayed."},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
+    say:"**Unknown:** the exact cause. We say it openly, and we do **not guess**."},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:3},
+    say:"**Next:** the next update in 30 minutes, **even if there is no news yet.**"},
+  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"message"},
+    say:"Put together, that is the message. **Nothing invented. Nothing hidden.** And people know what to do. That is Leader B, and that is what we mean by communicating quickly. Thank you."},
+
+  {sec:"Opposition arguments", team:"opp", who:"Opposition", v:{t:"neutral", line:"Main arguments"},
+    job:"Both: pick their TWO strongest points. Write their exact words. Saif will answer them in the rebuttal."},
+
+  /* ---------- REBUTTAL · Saif ---------- */
+  {sec:"Rebuttal", team:"prop", who:"Saif", r:5, v:{t:"vs"}, rebut:true,
+    say:"Thank you to our opponents. They made an important point about ___. But ___ (use a response card below). In the end, the real choice is not quick versus accurate. It is **responsible early communication** versus **unnecessary silence**."},
+
+  {sec:"Opposition rebuttal", team:"opp", who:"Opposition", v:{t:"neutral", line:"Rebuttal"},
+    job:"Listen. Don't react. Note anything to answer in the questions round."},
+
+  /* ---------- Q & A ---------- */
+  {sec:"Questions", team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & responses"}, rebut:true,
+    job:"When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard. Tap NEXT when it is our turn to ask."},
+  {sec:"Questions", team:"prop", who:"Ismail asks", v:{t:"fork"}, fork:true,
+    say:"If an airline knows its booking system is down but doesn't know the cause yet, should it **inform passengers now**, or **keep them waiting** until the investigation is complete?"},
+  {sec:"Questions", team:"prop", who:"Saif asks", v:{t:"message", q:true},
+    say:"If a statement contains **only confirmed facts** and says “cause under investigation”, **which part of it is misinformation?**"},
+
+  {sec:"Opposition closing", team:"opp", who:"Opposition", v:{t:"neutral", line:"Closing statement"},
+    job:"Saif: you close next. No new evidence in the closing."},
+
+  /* ---------- CLOSING · Saif ---------- */
+  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"recap"},
+    say:"To close, three things. **Silence** creates a vacuum. **Honesty** about uncertainty keeps trust. And people need **guidance** before the final report."},
+  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"agree"},
+    say:"We agree with our opponents on one thing: **accuracy matters.** But accuracy and speed are not enemies. A good leader shares what is verified **and** keeps investigating."},
+  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"clocks", line:true},
+    say:"Remember the two clocks. **Both clocks start together. Only one waits for you.**"},
+  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"final"},
+    say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you. And now, it is **your turn** to answer the video's question."},
+
+  {type:"game", sec:"Competition", job:"Ismail: click the button on the projector to open the game. Saif: help classmates join with their phones."},
+  {sec:"Feedback", team:"mod", who:"Lecturer", v:{t:"neutral", line:"Feedback & conclusion"},
+    job:"Listen. Thank the lecturer and the opposition."},
+  {type:"end", sec:"Thank you"}
 ];
-const TIMED = STAGES.map((s,i) => s.type === "timed" ? i : -1).filter(i => i >= 0);
 const REBUT = [
-  ["“Quick messages spread misinformation.”","That happens when uncertain claims are presented as facts. We separate what is confirmed from what is still unknown."],
-  ["“Waiting protects reputation.”","Accuracy protects reputation, but holding back verified information can also damage trust. Delta 2024."],
-  ["“Solve the problem before talking.”","Solving the crisis and informing people happen at the same time."],
-  ["“Saying ‘we don't know’ looks weak.”","Recognising uncertainty is honesty. PNAS 2020: only a small effect on trust."]
+  ["“Quick messages spread misinformation.”","Only when guesses are presented as facts. We separate what is confirmed from what is unknown."],
+  ["“Waiting protects reputation.”","Silence damaged reputation in 2024: Delta. Accuracy protects reputation, and so does being first."],
+  ["“Fix the problem first, then talk.”","Fixing and informing happen at the same time. Different people, same hour."],
+  ["“Saying ‘we don't know’ looks weak.”","It looks honest. PNAS 2020: trust hardly changed when uncertainty was shown clearly."],
+  ["“What if the first message is wrong?”","That is why we say UNKNOWN out loud. Correcting yourself is part of the plan, not a failure."]
 ];
-const QA = {
-  ismail:"If an airline knows its booking system is down but doesn't know the cause yet, should it inform passengers now, or keep them waiting until the investigation is complete?",
-  ifNow:"Then we agree complete information is not required before responsible communication begins.",
-  ifWait:"What should passengers do while no official information is available?",
-  saif:"If a statement contains only confirmed facts and says “cause under investigation”, which part of it is misinformation?"
-};
-const CARDS = [["KNOWN","Services disrupted","#2ec4a6"],["UNKNOWN","Exact cause","#ffb547"],["NEXT","Update in 30 minutes","#4fd1ff"]];
+const FORK = {now:"Then we agree: complete information is not needed before responsible communication begins.",
+              wait:"Then what should passengers do while no official information is available?"};
+const CARDS = [["KNOWN","Booking system down","Flights are delayed","#2ec4a6","✓"],["UNKNOWN","Exact cause","Under investigation","#ffb547","?"],["NEXT","Update in 30 min","Even if no news","#4fd1ff","→"]];
+
+/* sections in order (for the projector dots and the neutral sequence) */
+const SECS = []; BEATS.forEach(b => { if (!SECS.includes(b.sec)) SECS.push(b.sec); });
+const SPEECH = ["Moderator","Opening","Opposition opening","Argument 1","Arguments 2 & 3","Opposition arguments","Rebuttal","Opposition rebuttal","Questions","Opposition closing","Closing","Feedback"];
 
 /* =========================================================
    helpers + sync
@@ -265,16 +360,16 @@ const $ = s => document.querySelector(s);
 const app = $("#app");
 const P = new URLSearchParams(location.search);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 const svgI = p => `<svg class="i" viewBox="0 0 24 24">${p}</svg>`;
 const ARROW = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 const LOGO = `<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="12" fill="#0d1d3c" stroke="#4fd1ff" stroke-opacity=".5"/><circle cx="17" cy="24" r="9" fill="none" stroke="#ffb547" stroke-width="2.4"/><path d="M17 24v-5" stroke="#ffb547" stroke-width="2.4" stroke-linecap="round"/><circle cx="33" cy="24" r="9" fill="none" stroke="#ff3b4e" stroke-width="2.4"/><path d="M33 24l4 3" stroke="#ff3b4e" stroke-width="2.4" stroke-linecap="round"/></svg>`;
-const fmt = s => { const a = Math.abs(Math.round(s)); return (s < 0 ? "+" : "") + Math.floor(a/60) + ":" + String(a % 60).padStart(2,"0"); };
 const teamCol = t => t === "prop" ? "var(--glow)" : t === "opp" ? "var(--opp)" : "var(--mod)";
 const teamName = t => t === "prop" ? "PROPOSITION" : t === "opp" ? "OPPOSITION" : "DEBATE";
+const inSec = i => BEATS.map((b,k) => b.sec === BEATS[i].sec ? k : -1).filter(k => k >= 0);
 
-let fb = null, db = null, off = 0, code = null, ONLINE = false;
-const now = () => Date.now() + off;
-let S = {i:0, t0:0, paused:false, left:null, card:0};
+let fb = null, db = null, code = null, ONLINE = false;
+let S = {i:0, paired:false};
 const listeners = [];
 const bc = (() => { try { return new BroadcastChannel("crisis-debate"); } catch(e){ return null; } })();
 async function connect(c){
@@ -284,7 +379,6 @@ async function connect(c){
     const appMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
     fb = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
     db = fb.getDatabase(appMod.initializeApp(firebaseConfig));
-    fb.onValue(fb.ref(db, ".info/serverTimeOffset"), s => off = s.val() || 0);
     fb.onValue(fb.ref(db, `${DB_ROOT}/dbt_${code}`), s => { const v = s.val(); if (v){ S = {...S, ...v}; listeners.forEach(f => f()); } });
     ONLINE = true;
   } catch(e){ ONLINE = false; }
@@ -296,21 +390,76 @@ function commit(next){
   if (bc) bc.postMessage({code, s:S});
   if (ONLINE) fb.set(fb.ref(db, `${DB_ROOT}/dbt_${code}`), S).catch(() => {});
 }
-const st = () => STAGES[S.i];
-function remaining(){
-  const s = st(); if (!s.dur) return null;
-  if (S.paused) return S.left ?? s.dur;
-  return s.dur - (now() - (S.t0 || now())) / 1000;
+const go = i => commit({i: Math.max(0, Math.min(BEATS.length - 1, i))});
+const act = { next: () => go(S.i + 1), back: () => go(S.i - 1) };
+
+/* =========================================================
+   PROJECTOR VISUALS — one per beat
+   ========================================================= */
+function dial(kind, small){
+  const c = kind === "inv" ? "#ffb547" : "#ff3b4e";
+  const ticks = Array.from({length:12},(_,k)=>`<line x1="60" y1="10" x2="60" y2="${k%3?16:20}" stroke="${c}88" stroke-width="2" transform="rotate(${k*30} 60 60)"/>`).join("");
+  const hands = kind === "inv"
+    ? `<text x="60" y="86" text-anchor="middle" font-family="Sora" font-weight="800" font-size="22" fill="#ffb54766">?</text><line class="hand" x1="60" y1="60" x2="60" y2="24" stroke="#ffb547" stroke-width="4" stroke-linecap="round"/>`
+    : `<line class="hand2" x1="60" y1="60" x2="60" y2="30" stroke="#fff" stroke-width="4" stroke-linecap="round"/><line class="hand" x1="60" y1="66" x2="60" y2="16" stroke="#ff3b4e" stroke-width="2.5" stroke-linecap="round"/>`;
+  return `<div class="dial ${kind} u ${kind === "pub" ? "d2" : "d1"}"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="#081329" stroke="${c}" stroke-width="3"/>${ticks}${hands}<circle cx="60" cy="60" r="5" fill="${c}"/></svg>
+    <h5>${kind === "inv" ? "CLOCK 1 · INVESTIGATION" : "CLOCK 2 · THE PUBLIC"}</h5><p>${kind === "inv" ? "Finding the full cause takes time" : "People need guidance now"}</p></div>`;
 }
-const go = i => { i = Math.max(0, Math.min(STAGES.length - 1, i)); commit({i, t0:now(), paused:false, left:null, card:0}); };
-const act = {
-  next: () => go(S.i + 1),
-  back: () => go(S.i - 1),
-  restart: () => commit({t0:now(), paused:false, left:null}),
-  pause: () => { const s = st(); if (!s.dur) return; if (S.paused) commit({paused:false, t0: now() - (s.dur - (S.left ?? s.dur)) * 1000, left:null}); else commit({paused:true, left: remaining()}); },
-  card: n => commit({card: S.card >= n ? n - 1 : n})
-};
-const nextOf = i => STAGES[i + 1] || null;
+const RUM = [["Were we hacked?",6,8],["All flights cancelled?",62,4],["Is it safe to fly?",0,62],["How many days?",70,66],["Why no answer?",34,86],["Is it a cyber attack?",74,34]];
+function visual(b){
+  const v = b.v || {};
+  switch(v.t){
+    case "leaders": return `<div class="v"><div class="kick u"><i></i>THE VIDEO ASKED: WHAT WOULD YOU DO?</div>
+      <div class="leaders"><div class="ld a u d1"><small>LEADER A</small><p>“Wait until we know everything.”</p></div>
+      <div class="ld b u d2"><span class="stamp">WE STAND HERE</span><small>LEADER B</small><p>“Here is what we know. Next update in 30 minutes.”</p></div></div></div>`;
+    case "clocks": return `<div class="v"><div class="h u">Every crisis starts <em>two clocks</em>.</div><div class="clocks">${dial("inv")}${dial("pub")}</div>
+      ${v.line ? `<div class="h u d3" style="font-size:2.2em">Both start together. <s>Only one waits for you.</s></div>` : `<div class="sub u d3">Leader A watches only clock one.</div>`}</div>`;
+    case "define": return `<div class="v"><div class="h u">Communicate quickly <s>≠</s> guess</div>
+      <div class="eq"><div class="tile u d1" style="--cc:#2ec4a6"><i>✓</i><b>Verified facts</b><span>What we know for sure</span></div><div class="op u d2">+</div>
+      <div class="tile u d2" style="--cc:#ffb547"><i>?</i><b>Honest unknowns</b><span>What we are still checking</span></div><div class="op u d3">+</div>
+      <div class="tile u d3" style="--cc:#4fd1ff"><i>→</i><b>Next update</b><span>When people will hear more</span></div></div></div>`;
+    case "road": return `<div class="v"><div class="kick b u"><i></i>OUR CASE IN THREE STEPS</div>
+      <div class="eq">${[["1","Silence","creates a vacuum"],["2","Honesty","builds trust"],["3","Guidance","before the final report"]].map((x,k) => `<div class="tile u d${k+1}" style="--cc:var(--glow)"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join("")}</div></div>`;
+    case "vacuum": return `<div class="v"><div class="h u">Silence is <s>not neutral</s>.</div>
+      <div class="vac"><div class="bub">AIRLINE: …</div>${RUM.map((r,k) => `<div class="rum" style="left:${r[1]}%;top:${r[2]}%;animation-delay:${.6 + k*.45}s,${k*.3}s">${r[0]}</div>`).join("")}</div>
+      <div class="sub u d5">The gap is always filled. Just not by the leader.</div></div>`;
+    case "case": return `<div class="v"><div class="kick u"><i></i>REAL CASE · JULY 2024 · CROWDSTRIKE OUTAGE</div>
+      <div class="h u d1">Same failure. <em>Different recovery.</em></div>
+      <div class="bars"><div class="brow u d2"><small>Most airlines <span>· back in about a day</span></small><div class="btrack"><div class="bfill" style="width:20%;background:var(--ok);animation-delay:.9s">~1 day</div></div></div>
+      <div class="brow u d3"><small>Delta <span>· ~7,000 flights cancelled · US DOT investigation</span></small><div class="btrack"><div class="bfill" style="width:100%;background:var(--red);color:#fff;animation-delay:1.3s">~5 days</div></div></div></div>
+      <div class="src u d5">Passengers reported they could not get clear answers.</div></div>`;
+    case "rule": return `<div class="v"><div class="rule"><span class="u">Be first.</span><span class="u d2">Be right.</span><span class="u d3">Be credible.</span></div>
+      <div class="src u d4">CDC · Crisis & Emergency Risk Communication manual (2018)</div><div class="sub u d5">First does not replace right. Leaders do both.</div></div>`;
+    case "quote": return `<div class="v"><div class="quote u"><p>${v.q}</p><span class="src">${esc(v.s)}</span></div></div>`;
+    case "ask": return `<div class="v"><div class="bigq">?</div><div class="h u d2">“How can you speak when you don't know?”</div><div class="sub u d3">You say what you don't know.</div></div>`;
+    case "guide": return `<div class="v"><div class="h u">People need <em>guidance</em>, not a final report.</div>
+      <div class="eq">${[["🏠","Should I go to the airport?"],["🔁","Can I rebook?"],["🔔","When will I hear more?"]].map((x,k) => `<div class="tile u d${k+1}" style="--cc:var(--amber)"><i>${x[0]}</i><b>${x[1]}</b></div>`).join("")}</div>
+      <div class="sub u d4">All three can be answered before the cause is known.</div></div>`;
+    case "cards": return `<div class="v"><div class="h">A responsible first message</div>
+      <div class="eq">${CARDS.map((c,k) => `<div class="tile ${k < v.n ? (k === v.n - 1 ? "u" : "") : "dash"}" style="--cc:${c[3]}${k === v.n - 1 ? ";animation-name:pop" : ""}"><i>${c[4]}</i><b style="font-family:var(--M);font-size:1em;letter-spacing:.16em;color:${c[3]}">${c[0]}</b><b>${c[1]}</b><span>${c[2]}</span></div>`).join("")}</div></div>`;
+    case "message": return `<div class="v">${v.q ? `<div class="h u" style="font-size:2.6em">Which part is <s>misinformation</s>?</div>` : `<div class="kick b u"><i></i>THE FIRST MESSAGE · 20 MINUTES AFTER THE OUTAGE</div>`}
+      <div class="phone u d1"><div class="ph"><i>S</i>Skyvale Airways<span>now</span></div><div class="msg">
+        <div class="ln" style="--cc:#14957d"><b>KNOWN</b>Our booking system is down. Flights are delayed.</div>
+        <div class="ln" style="--cc:#c98610"><b>UNKNOWN</b>The cause is under investigation.</div>
+        <div class="ln" style="--cc:#0a7fb0"><b>NEXT</b>Please check this app. Next update at 10:30.</div></div></div>
+      ${v.q ? "" : `<div class="h u d3" style="font-size:2em">Nothing invented. <em>Nothing hidden.</em></div>`}</div>`;
+    case "vs": return `<div class="v"><div class="kick b u"><i></i>THE REAL CHOICE</div>
+      <div class="vs"><div class="x u d1">Quick vs accurate</div><b class="u d2">→</b><div class="y u d3">Responsible early communication vs unnecessary silence</div></div></div>`;
+    case "fork": return `<div class="v"><div class="kick u"><i></i>OUR QUESTION</div><div class="h u d1" style="font-size:2.6em">Booking system down. Cause unknown.</div>
+      <div class="fork"><div class="u d2">Inform passengers now</div><div class="u d3">Wait for the full investigation</div></div></div>`;
+    case "recap": return `<div class="v"><div class="kick b u"><i></i>WHAT WE SHOWED</div><div class="checks">
+      ${[["Silence","creates a vacuum"],["Honesty","keeps trust"],["Guidance","comes before the final report"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div></div>`;
+    case "agree": return `<div class="v"><div class="h u">Accuracy matters. <em>We agree.</em></div><div class="sub u d2" style="font-size:1.6em">Speed and accuracy are not enemies.<br>Share what is verified <b style="color:#fff">and</b> keep investigating.</div></div>`;
+    case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div></div>`;
+    case "neutral": {
+      const cur = SPEECH.indexOf(b.sec);
+      return `<div class="v neutral" style="--tc:${teamCol(b.team)}"><div class="kick u" style="color:${teamCol(b.team)}">${teamName(b.team)}</div>
+        <div class="who2 u d1">${esc(b.who)}</div><div class="sub u d2">${esc(v.line)}</div>
+        <div class="seq u d3">${SPEECH.map((s,k) => `<span class="${k === cur ? "cur" : k < cur ? "done" : ""}">${esc(s)}</span>`).join("")}</div></div>`;
+    }
+  }
+  return "";
+}
 
 /* =========================================================
    PROJECTOR
@@ -319,134 +468,102 @@ async function projector(){
   let c = (P.get("room") || "").toUpperCase();
   if (!/^[A-Z]{4}$/.test(c)) c = Array.from({length:4}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random()*24)]).join("");
   await connect(c);
-  if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; else commit({i:0, t0:now()}); }
-  let lastI = -1, armed = false;
+  if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; else commit({i:0}); }
+  let lastI = -1, lastPaired = null, armed = false;
   const ckUrl = location.origin + location.pathname + "?cockpit&room=" + code;
 
-  function frame(inner){
-    const s = st();
-    app.innerHTML = `<div class="scr">
-      <div class="bar"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE · COMMUNICATING &amp; NEGOTIATING</small></div></div>
-        <div class="motion"><b>Motion:</b> ${esc(CFG.motion)}<span class="chip ${ONLINE ? "on" : ""}">${ONLINE ? (S.paired ? "● COCKPIT LINKED" : "● COCKPIT " + code) : "LOCAL"}</span></div></div>
-      <div class="main">${inner}</div>
-      <div class="strip">${TIMED.map(i => `<div class="seg ${STAGES[i].team} ${i < S.i ? "done" : i === S.i ? "now" : ""}">${i === S.i ? `<i id="segfill"></i>` : ""}</div>`).join("")}</div>
-    </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This allows the video to play with sound. Then use the clicker, the arrow keys, or the cockpit on your phone.</p></div></div>`}`;
-    const a = $("#arm"); if (a) a.onclick = () => { armed = true; a.remove(); const v = $("#v"); if (v && st().type === "video") v.play().catch(() => {}); };
+  function routeHTML(b){
+    if (b.team !== "prop" || b.r == null) return `<div class="route"></div>`;
+    return `<div class="route">${ROUTE.map((x,k) => `${k ? `<div class="rline ${k <= b.r ? "done" : ""}"></div>` : ""}<div class="rt ${k < b.r ? "done" : k === b.r ? "cur" : ""}"><i>${k < b.r ? "✓" : ""}</i>${x}</div>`).join("")}</div>`;
   }
-  const clocksHTML = () => `<div class="clocks">
-      <div class="dial inv"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="#081329" stroke="#ffb547" stroke-width="3"/>${Array.from({length:12},(_,k)=>`<line x1="60" y1="10" x2="60" y2="${k%3?16:20}" stroke="#ffb54788" stroke-width="2" transform="rotate(${k*30} 60 60)"/>`).join("")}<text x="60" y="84" text-anchor="middle" font-family="Sora" font-weight="800" font-size="22" fill="#ffb54766">?</text><line class="hand" x1="60" y1="60" x2="60" y2="24" stroke="#ffb547" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="60" r="5" fill="#ffb547"/></svg><h5>CLOCK 1 · INVESTIGATION</h5><p>Finding the full cause takes time</p></div>
-      <div class="dial pub"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="#081329" stroke="#ff3b4e" stroke-width="3"/>${Array.from({length:12},(_,k)=>`<line x1="60" y1="10" x2="60" y2="${k%3?16:20}" stroke="#ff3b4e88" stroke-width="2" transform="rotate(${k*30} 60 60)"/>`).join("")}<line class="hand2" x1="60" y1="60" x2="60" y2="30" stroke="#fff" stroke-width="4" stroke-linecap="round"/><line class="hand" x1="60" y1="66" x2="60" y2="16" stroke="#ff3b4e" stroke-width="2.5" stroke-linecap="round"/><circle cx="60" cy="60" r="5" fill="#ff3b4e"/></svg><h5>CLOCK 2 · THE PUBLIC</h5><p>People need guidance now</p></div>
-    </div>`;
-  const cardsHTML = () => `<div class="cards">${CARDS.map((c,k) => `<div class="card ${S.card > k ? "show" : ""}" style="--cc:${c[2]}"><small>${c[0]}</small><b>${c[1]}</b></div>`).join("")}</div><p class="cardnote">A responsible first announcement, without inventing the missing answer.</p>`;
-  const listHTML = () => `<div class="neutral"><h4>DEBATE SEQUENCE</h4><div class="list">${TIMED.map(i => { const x = STAGES[i]; return `<div class="li ${i < S.i ? "done" : i === S.i ? "cur" : ""}" style="--tc:${teamCol(x.team)}"><i></i><span>${esc(x.name)}</span><span>${fmt(x.dur)}</span></div>`; }).join("")}</div></div>`;
-
+  function footHTML(b){
+    if (!b.team) return `<div class="foot"></div>`;
+    const ks = inSec(S.i);
+    return `<div class="foot" style="--tc:${teamCol(b.team)}"><div class="who"><span class="tag">${teamName(b.team)}</span>${esc(b.sec)} · <b>${esc(b.who)}</b></div>
+      ${ks.length > 1 ? `<div class="dots">${ks.map(k => `<i class="${k < S.i ? "done" : k === S.i ? "on" : ""}"></i>`).join("")}</div>` : ""}</div>`;
+  }
   function render(){
-    const s = st();
-    if (s.type === "welcome"){
-      frame(`<div class="welcome"><div>
+    const b = BEATS[S.i];
+    let inner = "";
+    if (b.type === "welcome"){
+      inner = `<div class="welcome"><div>
           <div class="kick"><i></i>TODAY'S DEBATE</div>
-          <div class="bigq">${esc(CFG.motion.replace(/\.$/,""))}<em>?</em></div>
+          <div class="h" style="margin-top:.4em">${esc(CFG.motion.replace(/\.$/,""))}<em>?</em></div>
           <div class="teams"><div class="team" style="--tc:var(--glow)"><small>${esc(CFG.prop.label)}</small><b>${esc(CFG.prop.names)}</b><span>Communicate early, with verified facts</span></div>
             <div class="team" style="--tc:var(--opp)"><small>${esc(CFG.opp.label)}</small><b>${esc(CFG.opp.names)}</b><span>Wait for complete information</span></div></div></div>
-        ${S.paired ? `<div class="pair"><div><small>COCKPIT</small><b style="font-size:1.6em;letter-spacing:.04em;color:#14957d">Connected ✓</b><p>The phone controls the debate. The pairing code is hidden.</p></div></div>` : `<div class="pair"><div id="qr"></div><div><small>COCKPIT FOR THE PROPOSITION TEAM</small><b>${code}</b><p>${ONLINE ? "Scan with the phone that will control the debate." : "Offline: control with the clicker or arrow keys."}</p></div></div>`}</div>`);
-      if (ONLINE && !S.paired) try { new QRCode($("#qr"), {text:ckUrl, width:200, height:200, colorDark:"#0a1730", colorLight:"#ffffff"}); } catch(e){}
-    } else if (s.type === "video"){
-      frame(`<div class="vid" id="vw"><video id="v" src="${esc(CFG.video)}" playsinline preload="auto"></video><div class="miss"><div>Video file not found: <b>${esc(CFG.video)}</b><br>Upload it to the same folder as this page, or play it from your laptop.</div></div></div>`);
-      const v = $("#v"); v.onerror = () => $("#vw")?.classList.add("missing");
-      if (armed) v.play().catch(() => {});
-    } else if (s.type === "timed"){
-      const ours = s.team === "prop";
-      const right = ours && s.cards ? cardsHTML() : ours && s.clocks ? clocksHTML() + `<div class="clockline">Both clocks start together. <span>Only one of them waits.</span></div>` : listHTML();
-      frame(`<div class="stage"><div class="now">
-          <span class="team-tag ${s.team === "mod" ? "mod" : ""}" style="--tc:${teamCol(s.team)}">${teamName(s.team)} · ${TIMED.indexOf(S.i) + 1} OF ${TIMED.length}</span>
-          <div class="sname">${esc(s.name)}</div>
-          <div class="speaker">Speaking: <b>${esc(s.who)}</b> · ${fmt(s.dur)}<span class="paused" id="pz" style="display:none">PAUSED</span></div>
-          <div class="clock" id="clk">${fmt(s.dur)}</div></div>
-        <div class="right">${right}</div></div>`);
-    } else if (s.type === "game"){
-      frame(`<div class="center"><div class="kick"><i></i>OUTSIDE THE ASSESSED DEBATE TIME</div><h1>The video asked:<br><em>what would you do?</em></h1><p>Now everyone answers it. Five questions, thirty seconds each.</p><button class="btn" id="gm">Start The Crisis Room ${svgI(ARROW)}</button></div>`);
-      $("#gm").onclick = () => window.open(CFG.game, "_blank");
-    } else {
-      frame(`<div class="center"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div><p>Thank you to our respected opponents and to our lecturer.</p></div>`);
-    }
-    lastI = S.i;
+        ${S.paired ? `<div class="pair"><div><small>COCKPIT</small><b style="font-size:1.6em;letter-spacing:.04em;color:#14957d">Connected ✓</b><p>The phone controls the debate.</p></div></div>`
+          : `<div class="pair"><div id="qr"></div><div><small>COCKPIT FOR THE PROPOSITION TEAM</small><b>${code}</b><p>${ONLINE ? "Scan with the phone that will control the debate." : "Offline: control with the clicker or arrow keys."}</p></div></div>`}</div>`;
+    } else if (b.type === "video"){
+      inner = `<div class="vid" id="vw"><video id="v" src="${esc(CFG.video)}" playsinline preload="auto"></video><div class="miss"><div>Video file not found: <b>${esc(CFG.video)}</b><br>Upload it to the same folder as this page, or play it from your laptop.</div></div></div>`;
+    } else if (b.type === "game"){
+      inner = `<div class="v"><div class="kick"><i></i>OUTSIDE THE ASSESSED DEBATE</div><div class="h">The video asked:<br><s>what would you do?</s></div><div class="sub">Now everyone answers it. Five questions, thirty seconds each.</div><button class="btn" id="gm">Start The Crisis Room ${svgI(ARROW)}</button></div>`;
+    } else if (b.type === "end"){
+      inner = `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div><div class="sub u d4">Thank you to our respected opponents and to our lecturer.</div></div>`;
+    } else inner = visual(b);
+
+    app.innerHTML = `<div class="scr">
+      <div class="bar"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE · COMMUNICATING &amp; NEGOTIATING</small></div></div>
+        <div class="motion"><b>Motion:</b> ${esc(CFG.motion)}<span class="chip ${ONLINE ? "on" : ""}">${ONLINE ? (S.paired ? "● LINKED" : "● " + code) : "LOCAL"}</span></div></div>
+      ${routeHTML(b)}<div class="main">${inner}</div>${footHTML(b)}
+    </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This lets the video play with sound. Then use your phone, the clicker or the arrow keys.</p></div></div>`}`;
+    const a = $("#arm"); if (a) a.onclick = () => { armed = true; a.remove(); const v = $("#v"); if (v) v.play().catch(() => {}); };
+    if (b.type === "welcome" && ONLINE && !S.paired) try { new QRCode($("#qr"), {text:ckUrl, width:200, height:200, colorDark:"#0a1730", colorLight:"#ffffff"}); } catch(e){}
+    if (b.type === "video"){ const v = $("#v"); v.onerror = () => $("#vw")?.classList.add("missing"); if (armed) v.play().catch(() => {}); }
+    if (b.type === "game") $("#gm").onclick = () => window.open(CFG.game, "_blank");
+    lastI = S.i; lastPaired = S.paired;
   }
-  let lastPaired = S.paired;
-  listeners.push(() => { if (S.i !== lastI || S.paired !== lastPaired){ lastPaired = S.paired; render(); } else if (st().cards) document.querySelectorAll(".card").forEach((el,k) => el.classList.toggle("show", S.card > k)); });
+  listeners.push(() => { if (S.i !== lastI || S.paired !== lastPaired) render(); });
   document.addEventListener("keydown", e => {
     if (["ArrowRight","PageDown"," ","Enter"].includes(e.key)){ e.preventDefault(); act.next(); }
     else if (["ArrowLeft","PageUp","Backspace"].includes(e.key)){ e.preventDefault(); act.back(); }
-    else if (e.key === "p" || e.key === "P") act.pause();
-    else if (e.key === "r" || e.key === "R") act.restart();
-    else if (/^[1-3]$/.test(e.key) && st().cards) act.card(+e.key);
   });
-  setInterval(() => {
-    const s = st(); if (s.type !== "timed") return;
-    const r = remaining(), el = $("#clk"); if (!el) return;
-    el.innerHTML = r >= 0 ? fmt(r) : `${fmt(r)}<small>OVER TIME</small>`;
-    el.className = "clock" + (r < 0 ? " over" : r <= 30 ? " warn" : "");
-    const f = $("#segfill"); if (f) f.style.width = Math.min(100, Math.max(0, (1 - r / s.dur) * 100)) + "%";
-    const pz = $("#pz"); if (pz) pz.style.display = S.paused ? "inline-block" : "none";
-  }, 200);
   render();
 }
 
 /* =========================================================
    COCKPIT (phone)
    ========================================================= */
+function peekText(b){
+  if (!b) return "";
+  if (b.say) return `<b>${esc(b.who)}:</b> ${esc(b.say.replace(/\*\*/g,"").split(/(?<=[.?!:])\s/)[0])}`;
+  return `<b>${esc(b.sec)}</b>${b.who ? " · " + esc(b.who) : ""}`;
+}
 async function cockpit(){
   const c = (P.get("room") || "").toUpperCase();
   if (!/^[A-Z]{4}$/.test(c)){
     app.innerHTML = `<div class="land"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE COCKPIT</small></div></div>
       <h1>Connect to the projector</h1><p>Type the 4-letter code shown on the projector's welcome screen.</p>
       <input class="inp" id="cc" maxlength="4" placeholder="ABCD"><button class="big" id="go" style="background:var(--glow);color:#04132a;border:0">Connect</button>
-      <p>No projector? <a href="?cockpit&room=SOLO&local" style="display:inline;padding:0;border:0;background:none;color:var(--glow)">Use the cockpit alone</a> as a personal timer for rehearsal.</p></div>`;
+      <p>No projector? <a href="?cockpit&room=SOLO&local" style="display:inline;padding:0;border:0;background:none;color:var(--glow)">Rehearse alone</a>.</p></div>`;
     $("#go").onclick = () => { const v = $("#cc").value.toUpperCase().replace(/[^A-Z]/g,""); if (v.length === 4) location.search = "?cockpit&room=" + v; };
     return;
   }
   await connect(c);
   if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; if (!S.paired) commit({paired:true}); }
-  let lastI = -1, buzzed30 = false, buzzed0 = false;
+  let lastI = -1;
   try { await navigator.wakeLock?.request("screen"); } catch(e){}
-  const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
 
   function render(){
-    const s = st(), nx = nextOf(S.i), col = s.team ? teamCol(s.team) : "var(--glow)";
-    const ours = s.team === "prop";
+    const b = BEATS[S.i], nx = BEATS[S.i + 1], col = b.team ? teamCol(b.team) : "var(--glow)";
+    const ks = inSec(S.i), pos = ks.indexOf(S.i);
     app.innerHTML = `<div class="ck" style="--tc:${col}">
-      <div class="ck-top"><b>Cockpit</b><span><i class="dot ${ONLINE ? "" : "off"}"></i>${ONLINE ? "LINKED · " + code : "SOLO"} · ${S.i + 1}/${STAGES.length}</span></div>
+      <div class="ck-top"><b>Cockpit</b><span><i class="dot ${ONLINE ? "" : "off"}"></i>${ONLINE ? "LINKED" : "SOLO"} · ${S.i + 1}/${BEATS.length}</span></div>
       <div class="ck-body">
-        <div class="ck-stage"><div><small>${s.type === "timed" ? teamName(s.team) : s.type.toUpperCase()}</small><h2>${esc(s.name)}</h2>${s.who ? `<p>Speaking: ${esc(s.who)}</p>` : ""}</div>${s.dur ? `<div class="ck-clock" id="ckc">${fmt(s.dur)}</div>` : ""}</div>
-        ${s.dur ? `<div class="ck-bar"><i id="ckb" style="width:0"></i></div>` : ""}
-        ${s.cues ? `<div class="box"><h4>${ours ? "CUE WORDS · DON'T READ, GLANCE" : "CUES"}</h4><div class="cues">${s.cues.map(c => `<div class="cue">${esc(c)}</div>`).join("")}</div></div>` : ""}
-        ${s.cards ? `<div class="box"><h4>SHOW THE CARDS ON THE PROJECTOR</h4><div class="cardbtns">${CARDS.map((c,k) => `<button data-c="${k+1}" class="${S.card > k ? "on" : ""}" style="--cc:${c[2]}">${c[0]}</button>`).join("")}</div></div>` : ""}
-        ${s.say ? `<div class="box"><h4>LINE TO SAY</h4><p class="say">“${esc(s.say)}”</p></div>` : ""}
-        ${s.job ? `<div class="box job"><h4>YOUR JOB NOW</h4><p>${esc(s.job)}</p></div>` : ""}
-        ${s.rebut ? `<details class="box" open><summary>▸ RESPONSE CARDS</summary><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></details>` : ""}
-        ${s.qa ? `<details class="box" open><summary>▸ OUR QUESTIONS</summary><div class="pairs">
-            <div><b>ISMAIL ASKS</b>${esc(QA.ismail)}</div><div><b>IF THEY SAY “NOW”</b>${esc(QA.ifNow)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(QA.ifWait)}</div><div><b>SAIF ASKS</b>${esc(QA.saif)}</div></div></details>
-          <details class="box"><summary>▸ RESPONSE CARDS</summary><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></details>` : ""}
-        ${nx ? `<div class="next-up">Up next: <b>${esc(nx.name)}</b>${nx.who ? " · " + esc(nx.who) : ""}${nx.dur ? " · " + fmt(nx.dur) : ""}</div>` : ""}
+        <div class="ck-head"><small>${b.team ? teamName(b.team) : "SESSION"}</small><h2>${esc(b.sec)}</h2>${b.who ? `<p>${esc(b.who)}${ks.length > 1 ? ` · beat ${pos + 1} of ${ks.length}` : ""}</p>` : ""}
+          ${ks.length > 1 ? `<div class="ck-dots">${ks.map(k => `<i class="${k < S.i ? "done" : k === S.i ? "on" : ""}"></i>`).join("")}</div>` : ""}</div>
+        ${b.say ? `<div class="sayb"><h4>SAY</h4><p>${md(b.say)}</p></div>` : ""}
+        ${b.fork ? `<div class="box"><div class="pairs"><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div></div></div>` : ""}
+        ${b.job ? `<div class="box job"><h4>YOUR JOB NOW</h4><p>${esc(b.job)}</p></div>` : ""}
+        ${b.rebut ? `<div class="box"><h4>RESPONSE CARDS</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
+        ${nx ? `<div class="peek">Next tap → ${peekText(nx)}</div>` : ""}
       </div>
-      <div class="ck-ctrl"><button id="bk">◀ Back</button><button id="pz">${S.paused ? "Resume" : "Pause"}</button><button id="rs">Restart</button><button class="nx" id="nx">${nx ? "NEXT ▶" : "Done"}</button></div>
+      <div class="ck-ctrl"><button id="bk">◀ Back</button><button class="nx" id="nx">${nx ? "NEXT ▶" : "Done"}</button></div>
     </div>`;
-    $("#bk").onclick = act.back; $("#pz").onclick = act.pause; $("#rs").onclick = act.restart; $("#nx").onclick = () => nx && act.next();
-    document.querySelectorAll(".cardbtns button").forEach(b => b.onclick = () => act.card(+b.dataset.c));
-    lastI = S.i; buzzed30 = false; buzzed0 = false;
+    $("#bk").onclick = act.back; $("#nx").onclick = () => nx && act.next();
+    window.scrollTo(0, 0);
+    lastI = S.i;
   }
-  listeners.push(() => {
-    if (S.i !== lastI) return render();
-    const p = $("#pz"); if (p) p.textContent = S.paused ? "Resume" : "Pause";
-    document.querySelectorAll(".cardbtns button").forEach((b,k) => b.classList.toggle("on", S.card > k));
-  });
-  setInterval(() => {
-    const s = st(); if (!s.dur) return;
-    const r = remaining(), el = $("#ckc"); if (!el) return;
-    el.textContent = fmt(r); el.className = "ck-clock" + (r < 0 ? " over" : r <= 30 ? " warn" : "");
-    const b = $("#ckb"); if (b) b.style.width = Math.min(100, Math.max(0, (1 - r / s.dur) * 100)) + "%";
-    if (!S.paused && r <= 30 && !buzzed30){ buzzed30 = true; buzz([120,80,120]); }
-    if (!S.paused && r <= 0 && !buzzed0){ buzzed0 = true; buzz([400,120,400]); }
-  }, 250);
+  listeners.push(() => { if (S.i !== lastI) render(); });
   render();
 }
 
@@ -457,8 +574,8 @@ if (P.has("cockpit")) cockpit();
 else if (P.has("screen")) projector();
 else {
   app.innerHTML = `<div class="land"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE GUIDE</small></div></div>
-    <h1>Which screen is this?</h1><p>Open the projector view on the laptop connected to the projector, and the cockpit on the phone that will control the debate.</p>
-    <a class="pri" href="?screen">Projector view</a><a href="?cockpit">Cockpit (phone)</a><a href="?cockpit&room=SOLO&local">Solo cockpit for rehearsal</a></div>`;
+    <h1>Which screen is this?</h1><p>Open the projector view on the laptop, and the cockpit on the phone that controls the debate.</p>
+    <a class="pri" href="?screen">Projector view</a><a href="?cockpit">Cockpit (phone)</a><a href="?cockpit&room=SOLO&local">Rehearse alone (phone)</a></div>`;
 }
 </script>
 </body>
