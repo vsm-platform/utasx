@@ -448,7 +448,7 @@ const teamCol = t => t === "prop" ? "var(--glow)" : t === "opp" ? "var(--opp)" :
 const teamName = t => t === "prop" ? "PROPOSITION" : t === "opp" ? "OPPOSITION" : "DEBATE";
 const inSec = i => BEATS.map((b,k) => b.sec === BEATS[i].sec ? k : -1).filter(k => k >= 0);
 
-let fb = null, db = null, code = null, ONLINE = false;
+let fb = null, db = null, code = null, ONLINE = false, NET = false;
 let S = {i:0, paired:false};
 const listeners = [];
 const bc = (() => { try { return new BroadcastChannel("crisis-debate"); } catch(e){ return null; } })();
@@ -466,7 +466,9 @@ async function connect(c){
     const appMod = await withTimeout(import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"), 7000);
     fb = await withTimeout(import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"), 7000);
     db = fb.getDatabase(appMod.initializeApp(firebaseConfig));
-    fb.onValue(fb.ref(db, `${DB_ROOT}/dbt_${code}`), s => { const v = s.val(); if (v){ S = {...S, ...v}; listeners.forEach(f => f()); } });
+    fb.onValue(fb.ref(db, `${DB_ROOT}/dbt_${code}`), s => { const v = s.val(); if (v){ S = {...S, ...v}; listeners.forEach(f => f()); } },
+      err => showError("Firebase refused to read the room (" + err.message + "). Check the database rules for “tr”."));
+    fb.onValue(fb.ref(db, ".info/connected"), s => { NET = !!s.val(); listeners.forEach(f => f()); });
     ONLINE = true;
   } catch(e){ ONLINE = false; }
 }
@@ -475,7 +477,7 @@ function commit(next){
   S = {...S, ...next};
   listeners.forEach(f => f());
   if (bc) bc.postMessage({code, s:S});
-  if (ONLINE) try { fb.set(fb.ref(db, `${DB_ROOT}/dbt_${code}`), S).catch(e => console.warn("Firebase write failed:", e)); } catch(e){}
+  if (ONLINE) try { fb.update(fb.ref(db, `${DB_ROOT}/dbt_${code}`), next).catch(e => showError("Firebase refused to save (" + e.message + "). Check the database rules for “tr”.")); } catch(e){}
 }
 const go = i => commit({i: Math.max(0, Math.min(BEATS.length - 1, i))});
 const act = { next: () => go(S.i + 1), back: () => go(S.i - 1) };
@@ -631,7 +633,7 @@ async function projector(){
 
     app.innerHTML = `<div class="scr">
       <div class="bar"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>LEADERSHIP &amp; INNOVATION · DEBATE</small></div></div>
-        <div class="motion"><b>Motion:</b> ${esc(CFG.motion)}<span class="chip ${ONLINE ? "on" : ""}">${ONLINE ? (S.paired ? "● LINKED" : "● " + code) : "LOCAL"}</span></div></div>
+        <div class="motion"><b>Motion:</b> ${esc(CFG.motion)}<span class="chip ${ONLINE && NET ? "on" : ""}">${!ONLINE ? "LOCAL" : !NET ? "○ CONNECTING…" : S.paired ? "● IPAD LINKED" : "● " + code}</span></div></div>
       ${routeHTML(b)}<div class="main">${inner}</div>${footHTML(b)}
     </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This lets the video play with sound. Then use your phone, the clicker or the arrow keys.</p>
       <button class="btn pickv" style="margin-top:1.4em;font-size:1em;background:var(--panel);box-shadow:none;border:1px solid var(--line)">${localVid ? "✓ Video ready: " + esc(localName) : "Choose the video from this laptop"}</button></div></div>`}<input type="file" id="vf" accept="video/*" hidden>`;
@@ -645,7 +647,8 @@ async function projector(){
     if (b.type === "game") $("#gm").onclick = () => window.open(CFG.game, "_blank");
     lastI = S.i; lastPaired = S.paired;
   }
-  listeners.push(() => { if (S.i !== lastI || S.paired !== lastPaired) render(); });
+  let lastNet = NET;
+  listeners.push(() => { if (S.i !== lastI || S.paired !== lastPaired || NET !== lastNet){ lastNet = NET; render(); } });
   document.addEventListener("keydown", e => {
     if (["ArrowRight","PageDown"," ","Enter"].includes(e.key)){ e.preventDefault(); act.next(); }
     else if (["ArrowLeft","PageUp","Backspace"].includes(e.key)){ e.preventDefault(); act.back(); }
@@ -673,7 +676,7 @@ async function cockpit(){
     return;
   }
   await connect(c);
-  if (ONLINE){ const ex = await readRoom(); if (ex) S = {...S, ...ex}; if (!S.paired) commit({paired:true}); }
+  if (ONLINE){ const ex = await readRoom(); if (ex) S = {...S, ...ex}; commit({paired:true}); }
   let lastI = -1;
   try { await navigator.wakeLock?.request("screen"); } catch(e){}
 
@@ -682,7 +685,7 @@ async function cockpit(){
     const ks = inSec(S.i), pos = ks.indexOf(S.i);
     const who = b.who ? `<span class="whotag">${esc(b.who)}</span>` : "";
     app.innerHTML = `<div class="ck" style="--tc:${col}">
-      <div class="ck-top"><span><i class="dot ${ONLINE ? "" : "off"}"></i>${ONLINE ? "LINKED" : "SOLO"}</span><span>${S.i + 1} / ${BEATS.length}</span></div>
+      <div class="ck-top"><span><i class="dot ${ONLINE && NET ? "" : "off"}"></i>${!ONLINE ? "SOLO (not linked)" : NET ? "ONLINE · ROOM " + code : "CONNECTING… taps will send when online"}</span><span>${S.i + 1} / ${BEATS.length}</span></div>
       <div class="ck-body">
         <div class="ck-head">${who}<h2>${esc(b.sec)}</h2></div>
         ${b.cue ? `<div class="sayb"><ul class="cl">${b.cue.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>` : b.say ? `<div class="sayb"><p>${md(b.say)}</p></div>` : ""}
@@ -697,7 +700,8 @@ async function cockpit(){
     window.scrollTo(0, 0);
     lastI = S.i;
   }
-  listeners.push(() => { if (S.i !== lastI) render(); });
+  let lastNet = NET;
+  listeners.push(() => { if (S.i !== lastI || NET !== lastNet){ lastNet = NET; render(); } });
   render();
 }
 
