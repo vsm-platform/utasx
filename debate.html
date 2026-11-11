@@ -198,6 +198,29 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .uni{display:inline-block;background:#fff;border-radius:1em;padding:.7em 1.1em;box-shadow:0 18px 40px -20px #000}
 .uni img{display:block;height:min(5.2em,10vh);width:auto}
 .course{margin-top:1em;line-height:1.35}.course b{display:block;font-family:var(--D);font-weight:800;font-size:1.35em;color:#fff}.course span{display:block;font-weight:700;font-size:1em;color:var(--glow)}
+
+/* hand-over line on the final slide */
+.handover{margin-top:1.6em;font-weight:700;font-size:1.35em;color:var(--mute)}
+.handover b{color:var(--opp)}
+
+/* subtle glint on main text boxes */
+@property --ga{syntax:"<angle>";inherits:false;initial-value:0deg}
+.glint{position:relative}
+.glint::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,206,110,.30) 50%,transparent 58%) no-repeat;background-size:300% 100%;background-position:150% 0;
+  animation:gsweep 8s ease-in-out infinite;animation-delay:var(--gd,1.4s)}
+.glint::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--ga),transparent 0 82%,rgba(255,200,90,.85) 90%,transparent 98%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  animation:gring 9s linear infinite;animation-delay:var(--gd,1.4s);opacity:.9}
+@keyframes gsweep{0%{background-position:150% 0}22%,100%{background-position:-50% 0}}
+@keyframes gring{to{--ga:360deg}}
+/* one gentle light pass over the university logo when the page opens */
+.uni{position:relative;overflow:hidden}
+.uni::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,206,110,.45) 50%,transparent 60%) no-repeat;background-size:300% 100%;background-position:150% 0;animation:gsweep1 2.4s 1s ease-in-out both}
+@keyframes gsweep1{to{background-position:-50% 0}}
+@media (prefers-reduced-motion:reduce){.glint::before,.glint::after,.uni::after{animation:none;display:none}}
+@media print{.glint::before,.glint::after,.uni::after{display:none}}
 /* ============ COCKPIT ============ */
 .ck{min-height:100vh;display:flex;flex-direction:column;font-size:16px;background:var(--night)}
 .ck-top{display:flex;justify-content:space-between;align-items:center;padding:max(12px,env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
@@ -239,6 +262,24 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .land a,.land button.big{display:block;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;font-weight:800;color:#fff;text-decoration:none}
 .land a.pri{background:var(--glow);color:#04132a;border:0}
 .inp{width:100%;border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:12px;padding:14px;font-family:var(--M);font-weight:800;font-size:22px;letter-spacing:.25em;text-transform:uppercase;outline:none}
+/* iPad-friendly cockpit */
+.ck-top{padding:max(10px,env(safe-area-inset-top)) 20px 8px}
+.ck-body{max-width:940px;padding:18px 22px 130px;gap:16px}
+.ck-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ck-head h2{font-size:clamp(22px,3vw,34px);margin:0}
+.whotag{font-family:var(--M);font-weight:800;font-size:clamp(12px,1.5vw,16px);letter-spacing:.12em;text-transform:uppercase;background:var(--tc);color:#04132a;padding:6px 12px;border-radius:8px}
+.sayb{padding:clamp(18px,2.6vw,30px) clamp(18px,3vw,34px)}
+.cl{gap:clamp(10px,1.6vw,18px)}
+.cl li{font-size:clamp(22px,3.3vw,38px);line-height:1.25;padding-left:clamp(22px,2.8vw,32px)}
+.cl li::before{width:clamp(9px,1.1vw,13px);height:clamp(9px,1.1vw,13px)}
+.job p{font-size:clamp(16px,2vw,22px)}
+.pairs div{font-size:clamp(15px,1.8vw,19px)}
+.peek{font-size:clamp(14px,1.8vw,20px)}
+.ck-ctrl{padding:12px 22px max(16px,env(safe-area-inset-bottom));max-width:100%}
+.ck-ctrl button{padding:clamp(18px,2.4vw,26px) 6px;font-size:clamp(15px,2vw,22px)}
+.ck-ctrl .nx{font-size:clamp(18px,2.5vw,28px)}
+@media (min-width:700px){.ck-ctrl{grid-template-columns:1fr 3fr;padding-left:max(22px,calc(50vw - 470px));padding-right:max(22px,calc(50vw - 470px))}}
+
 </style>
 </head>
 <body>
@@ -309,8 +350,8 @@ let BEATS = [
     say:"Some people will ask: **how can a leader act when they do not know?** A leadership model called **Cynefin** gives the answer. In a crisis, the situation is **chaotic**. In chaos, the leader must **act first** to create order. Then the leader can **sense and respond**. Waiting for complete information is the wrong model. A clear first message **is that first act**."},
   {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"Stating uncertainty caused only a <em>small</em> decrease in trust, and almost none when it was given as a clear range.", s:"van der Bles et al. (2020) · PNAS · five experiments · 5,780 people"},
     say:"Argument three: **honesty keeps trust.** In 2020, van der Bles and colleagues published a study in **PNAS**. They ran five experiments with almost **6,000 people**. They found that saying “we are not certain” caused only a **small drop** in trust. When the uncertainty was said clearly, there was **almost no drop**. People can accept honesty."},
-  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005) · CDC: be first, be right, be credible"},
-    say:"There is also a **reward for speaking first**. Research calls it **“stealing thunder.”** It means: share bad news **yourself** before others do. When an organisation does this, people see it as **more credible**. That is why the CDC rule is: **be first, be right, be credible.** Be first, but not first with rumours."},
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005) · US Centers for Disease Control and Prevention (CDC): be first, be right, be credible"},
+    say:"There is also a **reward for speaking first**. Research calls it **“stealing thunder.”** It means: share bad news **yourself** before others do. When an organisation does this, people see it as **more credible**. That is why the US **Centers for Disease Control and Prevention**, the CDC, has a rule: **be first, be right, be credible.** Be first, but not first with rumours."},
 
   /* ---------- THE MESSAGE · Saif ---------- */
   {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:3, all:true},
@@ -353,7 +394,7 @@ const CUES = [
   ["Check-in staff: no information", "Buck (Kellogg): leaders who wait lose teams", "Silence = leadership failure", "→ Over to Saif"],
   ["How can a leader act without knowing?", "Cynefin: crisis = chaos", "ACT first → sense → respond", "First message = first act"],
   ["ARG 3: honesty keeps trust", "PNAS 2020 · ~6,000 people", "“Not certain” → small drop", "Said clearly → almost none"],
-  ["Reward for speaking first", "Stealing thunder: share bad news yourself", "→ more credible", "CDC: first · right · credible"],
+  ["Reward for speaking first", "Stealing thunder: share bad news yourself", "→ more credible", "CDC (US health agency): first · right · credible"],
   ["Three cards", "KNOWN: system down · don't come unless confirmed", "UNKNOWN: the cause · don't guess", "NEXT: 30 min, even if no news"],
   ["+ HUMAN: stranded · we are sorry", "Ch. 4: logic + emotion", "Nothing invented · nothing hidden"],
   ["Oman · COVID-19 · 2020", "Supreme Committee did not wait", "Press conferences · decisions may change", "2023 study → built trust: honest & open"],
@@ -523,7 +564,8 @@ function visual(b){
       ${[["Public","silence feeds rumours"],["Team","uncertainty creates anxiety"],["Leader","trust goes to whoever speaks first"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div>
       <div class="seq u d4" style="font-size:1.25em">${[["A","Appropriate · honest"],["C","Consistent · with expert practice"],["E","Effective · people know what to do"]].map(x => `<span style="color:#fff"><b style="color:var(--glow)">${x[0]}</b> ${x[1]}</span>`).join("")}</div></div>`;
     case "agree": return `<div class="v"><div class="h u">Accuracy matters. <em>We agree.</em></div><div class="sub u d2" style="font-size:1.6em">Speed and accuracy are not enemies.<br>Share what is verified <b style="color:#fff">and</b> keep investigating.</div></div>`;
-    case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div></div>`;
+    case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div>
+      <div class="handover u" style="animation-delay:1.8s">Thank you. Our case is complete. <b>The floor is now yours, ${esc(CFG.opp.names)}.</b></div></div>`;
     case "format": return `<div class="v"><div class="kick b u"><i></i>HOW TODAY WORKS</div>
       <div class="eq">${PHASES.map((p,k) => `<div class="tile u d${k+1}" style="--cc:${p === OUR ? "var(--glow)" : p === OPP ? "var(--opp)" : p === GAME ? "var(--red)" : "var(--mod)"}"><i>${k+1}</i><b>${p}</b><span>${p === OUR ? "Ismail & Saif · for the motion" : p === DISC ? "Questions from both teams" : p === OPP ? "Against the motion" : "Everyone plays on their phone"}</span></div>`).join("")}</div></div>`;
     case "doubt": return `<div class="v"><div class="kick u"><i></i>THEY MAY SAY</div><div class="h u d1" style="font-size:2.8em;color:var(--mute)">${esc(v.q)}</div>
@@ -586,6 +628,7 @@ async function projector(){
       ${routeHTML(b)}<div class="main">${inner}</div>${footHTML(b)}
     </div>${armed ? "" : `<div class="arm" id="arm"><div><b>Click once to start</b><p>This lets the video play with sound. Then use your phone, the clicker or the arrow keys.</p>
       <button class="btn pickv" style="margin-top:1.4em;font-size:1em;background:var(--panel);box-shadow:none;border:1px solid var(--line)">${localVid ? "✓ Video ready: " + esc(localName) : "Choose the video from this laptop"}</button></div></div>`}<input type="file" id="vf" accept="video/*" hidden>`;
+    document.querySelectorAll(".main .quote, .main .tile:not(.dash), .main .ld.b, .main .phone").forEach((el, k) => { el.classList.add("glint"); el.style.setProperty("--gd", (1.6 + k * .7) + "s"); });
     const a = $("#arm"); if (a) a.onclick = () => { armed = true; a.remove(); const v = $("#v"); if (v) v.play().catch(() => {}); };
     if (b.type === "welcome" && ONLINE && !S.paired) try { new QRCode($("#qr"), {text:ckUrl, width:200, height:200, colorDark:"#0a1730", colorLight:"#ffffff"}); } catch(e){}
     const vf = $("#vf");
@@ -630,17 +673,16 @@ async function cockpit(){
   function render(){
     const b = BEATS[S.i], nx = BEATS[S.i + 1], col = b.team ? teamCol(b.team) : "var(--glow)";
     const ks = inSec(S.i), pos = ks.indexOf(S.i);
+    const who = b.who ? `<span class="whotag">${esc(b.who)}</span>` : "";
     app.innerHTML = `<div class="ck" style="--tc:${col}">
-      <div class="ck-top"><b>Cockpit</b><span><i class="dot ${ONLINE ? "" : "off"}"></i>${ONLINE ? "LINKED" : "SOLO"} · ${S.i + 1}/${BEATS.length}</span></div>
+      <div class="ck-top"><span><i class="dot ${ONLINE ? "" : "off"}"></i>${ONLINE ? "LINKED" : "SOLO"}</span><span>${S.i + 1} / ${BEATS.length}</span></div>
       <div class="ck-body">
-        <div class="ck-head"><small>${b.team ? teamName(b.team) : "SESSION"}</small><h2>${esc(b.sec)}</h2>${b.who ? `<p>${esc(b.who)}${ks.length > 1 ? ` · beat ${pos + 1} of ${ks.length}` : ""}</p>` : ""}
-          ${ks.length > 1 ? `<div class="ck-dots">${ks.map(k => `<i class="${k < S.i ? "done" : k === S.i ? "on" : ""}"></i>`).join("")}</div>` : ""}</div>
-        ${b.cue ? `<div class="sayb"><h4>REMIND ME</h4><ul class="cl">${b.cue.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>
-          <details class="box full"><summary>Full line</summary><p>${md(b.say)}</p></details>` : b.say ? `<div class="sayb"><h4>SAY</h4><p>${md(b.say)}</p></div>` : ""}
-        ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL ASKS</b>${esc(QS.ismail)}</div><div><b>SAIF ASKS</b>${esc(QS.saif)}</div><div><b>IF THEY AGREE</b>${esc(QS.agree)}</div><div><b>BACKUP QUESTION</b>${esc(QS.backup)}</div><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div></div></div>` : ""}
-        ${b.job ? `<div class="box job"><h4>YOUR JOB NOW</h4><p>${esc(b.job)}</p></div>` : ""}
-        ${b.rebut ? `<div class="box"><h4>RESPONSE CARDS</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
-        ${nx ? `<div class="peek">Next tap → ${peekText(nx)}</div>` : ""}
+        <div class="ck-head">${who}<h2>${esc(b.sec)}</h2></div>
+        ${b.cue ? `<div class="sayb"><ul class="cl">${b.cue.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>` : b.say ? `<div class="sayb"><p>${md(b.say)}</p></div>` : ""}
+        ${b.job ? `<div class="box job"><p>${esc(b.job)}</p></div>` : ""}
+        ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL</b>${esc(QS.ismail)}</div><div><b>SAIF</b>${esc(QS.saif)}</div><div><b>IF THEY AGREE</b>${esc(QS.agree)}</div></div></div>` : ""}
+        ${b.rebut ? `<div class="box"><h4>IF THEY SAY → WE ANSWER</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
+        ${nx ? `<div class="peek">Next → ${peekText(nx)}</div>` : ""}
       </div>
       <div class="ck-ctrl"><button id="bk">◀ Back</button><button class="nx" id="nx">${nx ? "NEXT ▶" : "Done"}</button></div>
     </div>`;
