@@ -52,7 +52,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 @keyframes tick{to{transform:translateX(-100%)}}
 .ticker i{font-style:normal;opacity:.65;margin:0 1.2em}
 
-.stage{display:grid;grid-template-columns:1fr 22em;grid-template-rows:1fr auto;gap:1.2vw;padding:0 2vw 1.6vh;min-height:0}
+.stage{display:grid;grid-template-columns:1fr 22em;grid-template-rows:minmax(0,1fr) auto;gap:1.2vw;padding:0 2vw 1.6vh;min-height:0}
 .wall{position:relative;border-radius:1.2em;overflow:hidden;background:var(--wall);border:1px solid #ffffff1c;min-height:0;box-shadow:0 30px 60px -30px #000}
 .wall>svg.map{position:absolute;inset:0;width:100%;height:100%}
 .wall .ov{position:absolute;z-index:2}
@@ -85,7 +85,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .nextsc.good b{color:var(--ok)}
 
 /* side status panel */
-.side{display:flex;flex-direction:column;gap:.8em;min-height:0}
+.side{display:flex;flex-direction:column;gap:.8em;min-height:0;font-size:min(1em,1.95vh);overflow:hidden}
 .tile{background:#0d1d3c;border:1px solid #ffffff1f;border-left:.3em solid var(--glow);border-radius:.8em;padding:.7em .9em;animation:fadeUp .5s both}
 .tile.red{border-left-color:var(--red)}
 .tile.amber{border-left-color:var(--amber)}
