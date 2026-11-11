@@ -161,6 +161,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .seq span.cur{background:var(--tc);color:#04132a;border-color:transparent}
 .seq span.done{opacity:.4}
 
+.welcome .teams{margin-top:min(1.4em,2.2vh)}.welcome .team{padding:min(1em,1.6vh) 1.2em}.welcome .course{margin-top:min(1em,1.6vh)}
 .welcome{width:100%;display:grid;grid-template-columns:1.25fr 1fr;gap:2.4vw;align-items:center;text-align:left}
 .teams{display:grid;grid-template-columns:1fr 1fr;gap:1em;margin-top:1.4em}
 .team{background:var(--panel);border:1px solid var(--line);border-top:.3em solid var(--tc);border-radius:1em;padding:1em 1.2em}
@@ -196,9 +197,9 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .agent{margin-left:.6em;display:flex;flex-direction:column;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:.4em;padding:.15em .4em}
 .agent small{font-size:.28em;font-weight:800;color:var(--amber);font-family:var(--B)}
 .uni{display:inline-flex;align-items:center;gap:.15em;background:#fff;border-radius:1em;padding:.7em 1.3em .7em 1.1em;box-shadow:0 18px 40px -20px #000;position:relative;overflow:hidden}
-.uni .ut{display:block;height:min(5.2em,10vh);width:auto;position:relative;z-index:4}
+.uni .ut{display:block;height:min(6.2em,12vh);width:auto;position:relative;z-index:4}
 /* the U mark only: soft rays, a breathing halo, a light that glides over the mark, and a gentle 3D tilt that follows the mouse */
-.um{position:relative;height:min(5.6em,10.8vh);aspect-ratio:232/316;perspective:600px;cursor:pointer}
+.um{position:relative;height:min(6.7em,13vh);aspect-ratio:232/316;perspective:600px;cursor:pointer}
 .um .mk{position:relative;z-index:3;height:100%;width:100%;display:block;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s ease-out;animation:mfloat 6s ease-in-out infinite}
 .um .rclip{position:absolute;top:-70%;bottom:-70%;left:-12%;right:-90%;overflow:hidden;z-index:1;pointer-events:none;
   -webkit-mask:linear-gradient(to right,transparent 0,#000 22%);mask:linear-gradient(to right,transparent 0,#000 22%)}
@@ -211,6 +212,25 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
   -webkit-mask:var(--mk) center/100% 100% no-repeat;mask:var(--mk) center/100% 100% no-repeat;
   background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.85) 50%,transparent 62%) no-repeat;background-size:300% 100%;background-position:150% 0;animation:mshine 5s 1.2s ease-in-out infinite}
 .um.burst .rays{animation-duration:3s}.um.burst .halo{animation:hburst .9s ease-out}
+
+/* ---- logo effect options (U mark only) ---- */
+.um .fx{display:none}
+.fx-rays .rays{background:repeating-conic-gradient(from 0deg,rgba(243,140,40,.55) 0 5deg,transparent 5deg 15deg,rgba(60,90,170,.40) 15deg 20deg,transparent 20deg 30deg)!important;animation-duration:22s!important}
+.fx-rays .halo{background:radial-gradient(closest-side,rgba(243,140,40,.45),rgba(60,90,170,.18) 55%,transparent 75%)!important}
+.fx-orbit .rays,.fx-rings .rays,.fx-sparkle .rays,.fx-none .rays,.fx-none .halo,.fx-none .shine{display:none}
+.fx-orbit .orb{display:block;position:absolute;left:50%;top:50%;width:165%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:1.5px dashed rgba(60,90,170,.25);z-index:2;animation:spin 5s linear infinite;pointer-events:none}
+.fx-orbit .orb.o2{width:125%;border-color:rgba(243,140,40,.25);animation-duration:3.4s;animation-direction:reverse}
+.orb::before{content:"";position:absolute;left:50%;top:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#f38c28;box-shadow:0 0 10px 4px rgba(243,140,40,.7),-14px 4px 0 -3px rgba(243,140,40,.45),-26px 10px 0 -4px rgba(243,140,40,.25)}
+.orb.o2::before{background:#3c5aaa;box-shadow:0 0 10px 4px rgba(60,90,170,.6),14px 4px 0 -3px rgba(60,90,170,.4),26px 10px 0 -4px rgba(60,90,170,.2)}
+.fx-rings .ring{display:block;position:absolute;left:30.7%;top:50%;width:46%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:3px solid rgba(243,140,40,.8);animation:ringout 2.7s ease-out infinite;opacity:0}
+.fx-rings .ring.r2{border-color:rgba(60,90,170,.75);animation-delay:.9s}.fx-rings .ring.r3{animation-delay:1.8s}
+@keyframes ringout{0%{scale:.55;opacity:.9}100%{scale:2.4;opacity:0}}
+.fx-sparkle .shine{background:linear-gradient(115deg,transparent 36%,#fff 50%,transparent 64%) no-repeat!important;background-size:300% 100%!important;animation-duration:3.2s!important}
+.fx-sparkle .spk{display:block;position:absolute;z-index:5;color:#f5a623;font-size:1.1em;line-height:1;pointer-events:none;text-shadow:0 0 8px rgba(245,166,35,.8);animation:twinkle 2.4s ease-in-out infinite;opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;scale:.3;rotate:0deg}45%{opacity:1;scale:1;rotate:45deg}60%{opacity:.9}}
+.logos{min-height:100vh;padding:4vh 4vw;display:grid;grid-template-columns:1fr 1fr;gap:4vh 4vw;align-content:center;font-size:clamp(14px,1.2vw,28px);background:linear-gradient(180deg,#081329,#040a16)}
+.logos figure{display:flex;flex-direction:column;align-items:flex-start;gap:1em}
+.logos figcaption{font-family:var(--D);font-weight:800;font-size:1.4em}.logos figcaption span{display:block;font-family:var(--B);font-weight:600;font-size:.62em;color:var(--mute);margin-top:.2em}
 @keyframes mfloat{0%,100%{translate:0 0}50%{translate:0 -3%}}
 @keyframes hpulse{0%,100%{opacity:.55;scale:.92}50%{opacity:1;scale:1.06}}
 @keyframes hburst{0%{opacity:1;scale:.9}40%{opacity:1;scale:1.35}100%{opacity:.6;scale:1}}
@@ -311,6 +331,7 @@ const CFG = {
   opp:  {label:"OPPOSITION · AGAINST", names:"Ahmed & Mohammed"},
   video: "crisis-video.mp4",
   game: "flight.html?host",
+  logoFx: "rings",               // logo effect: "rays" · "orbit" · "rings" · "sparkle" · "none"  (see all four: debate.html?logos)
   course: "Leadership and Innovation · Communicating and Negotiating in the dynamic global world",
 };
 const firebaseConfig = {
@@ -607,6 +628,14 @@ function visual(b){
   return "";
 }
 
+/* UTAS logo: the text stays still, only the U mark carries the effect */
+function uniLogo(fx, id){
+  const spk = [[-6,8],[92,-4],[104,58],[70,96],[-10,70],[40,-12]].map((p,k) => `<i class="fx spk" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${k * .4}s">✦</i>`).join("");
+  return `<div class="uni"><img class="ut" src="${UTAS_TEXT}" alt="University of Technology and Applied Sciences, Ibra"><div class="um fx-${fx}" ${id ? `id="${id}"` : ""} style="--mk:url('${UTAS_MARK}')">
+    <div class="rclip"><i class="rays"></i><i class="fx ring"></i><i class="fx ring r2"></i><i class="fx ring r3"></i></div><i class="halo"></i>
+    <i class="fx orb"></i><i class="fx orb o2"></i><img class="mk" src="${UTAS_MARK}" alt=""><i class="shine"></i>${spk}</div></div>`;
+}
+
 /* =========================================================
    PROJECTOR
    ========================================================= */
@@ -633,10 +662,10 @@ async function projector(){
     let inner = "";
     if (b.type === "welcome"){
       inner = `<div class="welcome"><div>
-          <div class="uni"><img class="ut" src="${UTAS_TEXT}" alt="University of Technology and Applied Sciences, Ibra"><div class="um" id="um" style="--mk:url('${UTAS_MARK}')"><div class="rclip"><i class="rays"></i></div><i class="halo"></i><img class="mk" src="${UTAS_MARK}" alt=""><i class="shine"></i></div></div>
+          ${uniLogo(CFG.logoFx, "um")}
           <div class="course">${CFG.course.split(" · ").map((x,k) => k ? `<span>${esc(x)}</span>` : `<b>${esc(x)}</b>`).join("")}</div>
           <div class="kick" style="margin-top:1.2em"><i></i>TODAY'S DEBATE</div>
-          <div class="h" style="margin-top:.3em;font-size:3em">${esc(CFG.motion.replace(/\.$/,""))}<em>?</em></div>
+          <div class="h" style="margin-top:.3em;font-size:min(3em,5.6vh)">${esc(CFG.motion.replace(/\.$/,""))}<em>?</em></div>
           <div class="teams"><div class="team" style="--tc:var(--glow)"><small>${esc(CFG.prop.label)}</small><b>${esc(CFG.prop.names)}</b><span>Communicate early, with verified facts</span></div>
             <div class="team" style="--tc:var(--opp)"><small>${esc(CFG.opp.label)}</small><b>${esc(CFG.opp.names)}</b><span>Wait for complete information</span></div></div></div>
         ${S.paired ? `<div class="pair"><div><small>COCKPIT</small><b style="font-size:1.6em;letter-spacing:.04em;color:#14957d">Connected ✓</b><p>The phone controls the debate.</p></div></div>`
@@ -741,6 +770,7 @@ window.addEventListener("error", e => showError(e.message || "script error"));
 window.addEventListener("unhandledrejection", e => showError(String(e.reason?.message || e.reason)));
 if (P.has("cockpit")) cockpit().catch(e => showError(e.message));
 else if (P.has("screen")) projector().catch(e => showError(e.message));
+else if (P.has("logos")) app.innerHTML = `<div class="logos">${[["rays","A · Sunburst rays","Orange and blue rays turn behind the U"],["orbit","B · Orbit","Two glowing dots circle the U, like satellites"],["rings","C · Signal rings","Rings pulse out from the U, like a broadcast (fits “communicate early”)"],["sparkle","D · Shine & sparkles","A bright light glides over the U, small stars twinkle"]].map(x => `<figure><figcaption>${x[1]}<span>${x[2]}</span></figcaption>${uniLogo(x[0])}</figure>`).join("")}</div>`;
 else {
   app.innerHTML = `<div class="land"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE GUIDE</small></div></div>
     <h1>Which screen is this?</h1><p>Open the projector view on the laptop, and the cockpit on the phone that controls the debate.</p>
