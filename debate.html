@@ -311,8 +311,8 @@ let BEATS = [
     say:"**Next:** the next update in 30 minutes, **even if there is no news yet.**"},
   {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"message"},
     say:"And one **human** line: we know many of you are stranded, and **we are sorry.** Chapter 4 reminds us that persuasion needs logic **and** emotion. **Nothing invented. Nothing hidden.** And people feel seen."},
-  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"global"},
-    say:"This is not just an airline idea. **November 2008**: the global economy is collapsing, and the new US president-elect faces reporters with no clear answers. As Professor Buck describes it, Obama's message was essentially: **here is what we know, here is what we don't know, and here is what we need to do in the meantime.** The same three cards, in a **global crisis**."},
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"oman"},
+    say:"And this is not only an airline idea. We all lived it. In **2020**, when COVID-19 reached Oman, **nobody** had complete information. The **Supreme Committee** did not wait. It held regular press conferences, shared what was known, and told people that decisions could change. A 2023 study in the **Journal of Risk Research** by **Al-Rubai'ey and Al-Sharafi** analysed these press conferences and found they **built credibility**, because they followed Seeger's principles of **honesty, candour and openness**."},
 
   /* ---------- THEIR DOUBTS · Saif · inoculation theory, Chapter 4 ---------- */
   {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“We have nothing to say yet.”", a:"Leaders overestimate what others already know. This is the <em>illusion of transparency</em>.", s:"Gilovich, Savitsky & Medvec (1998) · Journal of Personality and Social Psychology"},
@@ -345,7 +345,8 @@ const REBUT = [
   ["“Telling people early creates panic.”","UCL 2016: uncertainty itself causes the most stress. Clear information reduces anxiety."],
   ["“Saying ‘we don't know’ looks weak.”","PNAS 2020: trust hardly changed when uncertainty was shown clearly."],
   ["“What if the first message is wrong?”","That is why we say UNKNOWN out loud. Correcting is part of the plan, not a failure."],
-  ["“An airline is not a global crisis.”","CrowdStrike crashed systems worldwide. And Obama used the same three cards in the 2008 global financial crisis."]
+  ["“An airline is not a global crisis.”","COVID-19: Oman's Supreme Committee communicated early and regularly, and built credibility (Al-Rubai'ey & Al-Sharafi, 2023). CrowdStrike was also worldwide."],
+  ["“Give a real leader who did this.”","2008 global financial crisis: Obama — here's what we know, what we don't know, what we do meanwhile (as described by Prof. Buck, Kellogg)."]
 ];
 const QS = {ismail:"If an airline knows its booking system is down but doesn't know the cause yet, should it inform passengers now, or keep them waiting until the investigation is complete?",
             saif:"If a statement contains only confirmed facts and says “cause under investigation”, which part of it is misinformation?"};
@@ -465,6 +466,9 @@ function visual(b){
         <div class="ln" style="--cc:#c98610"><b>UNKNOWN</b>“…here is what we don't know…”</div>
         <div class="ln" style="--cc:#0a7fb0"><b>NEXT</b>“…and here is what we need to do in the meantime.”</div></div></div>
       <div class="src u d4">President-elect Obama's press conference, as described by Prof. Michelle Buck, Kellogg (paraphrase)</div></div>`;
+    case "oman": return `<div class="v"><div class="kick u"><i></i>CLOSER TO HOME · OMAN · COVID-19 · 2020</div><div class="h u d1">Oman did not wait for <em>complete information</em>.</div>
+      <div class="eq">${[["🎙️","Regular press conferences","The Supreme Committee spoke early","#4fd1ff"],["?","Honest about change","“Decisions may be revised”","#ffb547"],["✓","Credibility built","Honesty, candour, openness","#2ec4a6"]].map((x,k) => `<div class="tile u d${k+2}" style="--cc:${x[3]}"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join("")}</div>
+      <div class="src u d5">Al-Rubai'ey & Al-Sharafi (2023) · Ethos in COVID-19 crisis communication: evidence from Oman · Journal of Risk Research</div></div>`;
     case "message": return `<div class="v">${v.q ? `<div class="h u" style="font-size:2.6em">Which part is <s>misinformation</s>?</div>` : `<div class="kick b u"><i></i>THE FIRST MESSAGE · 20 MINUTES AFTER THE OUTAGE</div>`}
       <div class="phone u d1"><div class="ph"><i>S</i>Skyvale Airways<span>now</span></div><div class="msg">
         <div class="ln" style="--cc:#14957d"><b>KNOWN</b>Our booking system is down. Please don't come to the airport unless your flight is confirmed.</div>
