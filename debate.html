@@ -452,12 +452,19 @@ let fb = null, db = null, code = null, ONLINE = false;
 let S = {i:0, paired:false};
 const listeners = [];
 const bc = (() => { try { return new BroadcastChannel("crisis-debate"); } catch(e){ return null; } })();
+/* never let the network block the screen: every Firebase step has a time limit */
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error("timeout")), ms))]);
+async function readRoom(){
+  if (!ONLINE) return null;
+  try { const ex = await withTimeout(fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)), 4000); return ex.exists() ? ex.val() : null; }
+  catch(e){ console.warn("Firebase read failed:", e); return null; }
+}
 async function connect(c){
   code = c;
   if (P.has("local")) return;
   try {
-    const appMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-    fb = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
+    const appMod = await withTimeout(import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"), 7000);
+    fb = await withTimeout(import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"), 7000);
     db = fb.getDatabase(appMod.initializeApp(firebaseConfig));
     fb.onValue(fb.ref(db, `${DB_ROOT}/dbt_${code}`), s => { const v = s.val(); if (v){ S = {...S, ...v}; listeners.forEach(f => f()); } });
     ONLINE = true;
@@ -468,7 +475,7 @@ function commit(next){
   S = {...S, ...next};
   listeners.forEach(f => f());
   if (bc) bc.postMessage({code, s:S});
-  if (ONLINE) fb.set(fb.ref(db, `${DB_ROOT}/dbt_${code}`), S).catch(() => {});
+  if (ONLINE) try { fb.set(fb.ref(db, `${DB_ROOT}/dbt_${code}`), S).catch(e => console.warn("Firebase write failed:", e)); } catch(e){}
 }
 const go = i => commit({i: Math.max(0, Math.min(BEATS.length - 1, i))});
 const act = { next: () => go(S.i + 1), back: () => go(S.i - 1) };
@@ -587,7 +594,7 @@ async function projector(){
   let c = (P.get("room") || "").toUpperCase();
   if (!/^[A-Z]{4}$/.test(c)) c = Array.from({length:4}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random()*24)]).join("");
   await connect(c);
-  if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; else commit({i:0}); }
+  if (ONLINE){ const ex = await readRoom(); if (ex) S = {...S, ...ex}; else commit({i:0}); }
   let lastI = -1, lastPaired = null, armed = false, localVid = null, localName = "";
   const ckUrl = location.origin + location.pathname + "?cockpit&room=" + code;
 
@@ -666,7 +673,7 @@ async function cockpit(){
     return;
   }
   await connect(c);
-  if (ONLINE){ const ex = await fb.get(fb.ref(db, `${DB_ROOT}/dbt_${code}`)); if (ex.exists()) S = {...S, ...ex.val()}; if (!S.paired) commit({paired:true}); }
+  if (ONLINE){ const ex = await readRoom(); if (ex) S = {...S, ...ex}; if (!S.paired) commit({paired:true}); }
   let lastI = -1;
   try { await navigator.wakeLock?.request("screen"); } catch(e){}
 
@@ -697,8 +704,15 @@ async function cockpit(){
 /* =========================================================
    START
    ========================================================= */
-if (P.has("cockpit")) cockpit();
-else if (P.has("screen")) projector();
+function showError(msg){
+  let d = document.getElementById("errbox");
+  if (!d){ d = document.createElement("div"); d.id = "errbox"; d.style.cssText = "position:fixed;left:12px;bottom:12px;z-index:99;max-width:520px;background:#ff3b4e;color:#fff;font:600 13px/1.4 system-ui;padding:10px 14px;border-radius:10px"; document.body.appendChild(d); }
+  d.textContent = "Problem: " + msg + " — send a photo of this message.";
+}
+window.addEventListener("error", e => showError(e.message || "script error"));
+window.addEventListener("unhandledrejection", e => showError(String(e.reason?.message || e.reason)));
+if (P.has("cockpit")) cockpit().catch(e => showError(e.message));
+else if (P.has("screen")) projector().catch(e => showError(e.message));
 else {
   app.innerHTML = `<div class="land"><div class="logo">${LOGO}<div><b>THE CRISIS ROOM</b><small>DEBATE GUIDE</small></div></div>
     <h1>Which screen is this?</h1><p>Open the projector view on the laptop, and the cockpit on the phone that controls the debate.</p>

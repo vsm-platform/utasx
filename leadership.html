@@ -97,7 +97,7 @@ body.v-screen{font-size:clamp(10px,.7vw + .25vh,30px);padding-block:1.1em}
 .panel h2{margin:0 0 .6em;font-family:var(--display);font-weight:700;font-size:1.25em;letter-spacing:-.01em;display:flex;align-items:center;gap:.5em}
 .panel h2 small{font-family:var(--body);font-weight:600;font-size:.62em;color:var(--ink-3);margin-left:auto;letter-spacing:0}
 .map{flex:1;min-height:0;display:grid;place-items:center;position:relative}
-.map svg{width:100%;height:100%;max-height:100%;display:block;overflow:visible}
+.map svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
 .map .links line{stroke:#CDD4E8;stroke-width:2;stroke-dasharray:2 10;stroke-linecap:round;animation:flow 5s linear infinite}
 @keyframes flow{to{stroke-dashoffset:-120}}
 .map .parts circle{transform-box:fill-box;animation:drift2 var(--d) ease-in-out infinite alternate}
