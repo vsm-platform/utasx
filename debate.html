@@ -184,6 +184,17 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .arm b{font-family:var(--D);font-size:2.2em;font-weight:800;display:block;margin-bottom:.4em}
 .arm p{color:var(--mute);font-weight:700}
 
+.fx{display:flex;align-items:center;gap:.4em;font-family:var(--D);font-weight:800;font-size:3.6em;flex-wrap:wrap;justify-content:center}
+.fx b{color:var(--mute)} .fx .amb{color:var(--red);animation:up .7s .95s both,blink 1.2s 2.2s 3}
+.rums{display:flex;gap:.7em;flex-wrap:wrap;justify-content:center}
+.rum2{background:#ff3b4e1f;border:1px solid #ff3b4e88;color:#ffd0d5;font-weight:800;font-size:1.1em;padding:.45em .9em;border-radius:.8em;animation:pop .5s both}
+.curve{width:min(40em,90%);height:auto}
+.curve .cv{stroke-dasharray:900;stroke-dashoffset:900;animation:draw 1.6s .6s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.desk{display:flex;align-items:flex-end;gap:.5em;font-size:2.6em}
+.desk>span{animation:pop .5s both}
+.agent{margin-left:.6em;display:flex;flex-direction:column;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:.4em;padding:.15em .4em}
+.agent small{font-size:.28em;font-weight:800;color:var(--amber);font-family:var(--B)}
 /* ============ COCKPIT ============ */
 .ck{min-height:100vh;display:flex;flex-direction:column;font-size:16px;background:var(--night)}
 .ck-top{display:flex;justify-content:space-between;align-items:center;padding:max(12px,env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
@@ -247,74 +258,79 @@ const firebaseConfig = {
 };
 const DB_ROOT = "tr";
 
-const ROUTE = ["The question","Two clocks","① Silence","② Trust","③ Guidance","First message","Their doubts"];
+const ROUTE = ["The question","Two clocks","① Rumours","② Anxiety","③ Trust","The message","Their doubts"];
 
 /* =========================================================
    THE BEATS — one tap = one beat.
    sec: section name · team: prop | opp | mod · who: speaker
    r: position on ROUTE (our beats only) · v: what the projector shows
    say: what the speaker says (**bold** = stress this word)
-   Our case = about 21 beats ≈ 10 minutes at ~25–30 seconds per beat.
+   Our case ≈ 1,000 words ≈ 8–9 minutes at a calm pace.
    ========================================================= */
-const OUR = "Our case", DISC = "Discussion", OPP = "Opposition case", GAME = "Competition";
+const OUR = "Our case", DISC = "Discussion", GAME = "Competition";
 let BEATS = [
   {type:"welcome", sec:"Welcome", job:"Projector shows the motion. When the lecturer is ready, tap NEXT to play the video."},
   {type:"video", sec:"The video", job:"Video is playing. When it ends, tap NEXT."},
 
-  /* ---------- OUR CASE · 10 minutes ---------- */
+  /* ---------- OPENING · Ismail ---------- */
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:0, v:{t:"leaders"},
     say:"Good morning, Dr. Reshma and colleagues. We are Ismail and Saif, and we support the motion. The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
-    say:"Why? Because every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the public: passengers need to know what to do **right now**. Leader A watches only clock one."},
+    say:"Every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the people: they need to know what to do **right now**. Leader A watches only clock one."},
   {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"define"},
-    say:"Let us be clear about the motion. Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes. Crisis research agrees. **Seeger (2006)** asked a panel of crisis experts for best practices. One of them: **accept uncertainty**, and say “we do not yet have all the facts”. In his words: **waiting until all uncertainty is reduced usually means the warning is simply too late.**"},
-  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"road"},
-    say:"We will prove this with three arguments. **One:** silence creates a vacuum. **Two:** honesty about uncertainty builds trust. **Three:** people need guidance before the final report."},
+    say:"Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes. Crisis experts agree. **Seeger (2006)** brought together a panel of crisis experts, and one of their best practices is: accept uncertainty. In his words: **waiting until all uncertainty is reduced usually means the warning is simply too late.**"},
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"levels"},
+    say:"We will show that silence fails at **three levels**. It fails **the public**, because silence feeds rumours. It fails **the team**, because uncertainty creates anxiety. And it fails **the leader**, because trust goes to whoever speaks first."},
 
-  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"vacuum"},
-    say:"Argument one: **silence is not neutral.** When an airline says nothing, passengers do not wait quietly. They fill the gap: were we hacked? Are all flights cancelled? Is it safe? The empty space is always filled by someone, just **not by the leader**."},
-  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"case"},
-    say:"This really happened. In **July 2024**, a faulty CrowdStrike update crashed computer systems worldwide. Most airlines recovered in about a day. Delta took about **five days** and cancelled around **7,000 flights**. Thousands of passengers said they could not get clear answers, and the US Department of Transportation opened an investigation."},
-  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"rule"},
-    say:"That is why the CDC crisis communication manual gives three rules: **be first, be right, be credible.** Notice: first does not replace right. A good leader does **both together**."},
-  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005)"},
-    say:"Research calls this **stealing thunder**: when an organisation reveals bad news itself, people see it as **more credible** than when they hear it from others first. So waiting does not stop communication. It only **removes the leader** from it. Saif will now show how to speak early and keep trust."},
+  /* ---------- ARGUMENT 1 · RUMOURS · Ismail ---------- */
+  {sec:"① The public", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"formula"},
+    say:"Argument one: **silence feeds rumours.** In 1947, the psychologists **Allport and Postman** gave a famous formula: **rumour equals importance times ambiguity.** In a crisis, importance is high, and no leader can change that. The only thing a leader controls is **ambiguity**. And silence pushes ambiguity to the maximum: were we hacked? Is it safe? How many days?"},
+  {sec:"① The public", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"case"},
+    say:"This really happened. In **July 2024**, a faulty CrowdStrike update crashed computer systems **worldwide**. Most airlines recovered in about a day. Delta took about **five days** and cancelled around **7,000 flights**. Thousands of passengers said they could not get clear answers, and the US Department of Transportation opened an investigation."},
 
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:3, v:{t:"ask"},
-    say:"Some will ask: **how can you speak when you don't know?** Our answer is simple: you say what you don't know. And research shows people accept that."},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:3, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
-    say:"Argument two: **honesty builds trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"guide"},
-    say:"Argument three: **people need guidance, not a final report.** A passenger at 6 a.m. needs to know: should I go to the airport? Can I rebook? When will I hear more? A first message can answer this **before the cause is known**. Seeger's expert panel calls this **messages of self-efficacy**: telling people what they can do to protect themselves."},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
-    say:"So what does a responsible first message look like? Three cards. **Known:** our booking system is down and flights are delayed."},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
+  /* ---------- ARGUMENT 2 · ANXIETY · Ismail ---------- */
+  {sec:"② The team", phase:OUR, team:"prop", who:"Ismail", r:3, v:{t:"stress"},
+    say:"Argument two: **uncertainty hurts more than bad news.** In 2016, researchers at University College London published a study in **Nature Communications**. Volunteers faced a possible small electric shock. Stress was **highest** not when the shock was certain, but when it was **fifty-fifty**. As the researchers said: **it is the uncertainty that makes us anxious.**"},
+  {sec:"② The team", phase:OUR, team:"prop", who:"Ismail", r:3, v:{t:"team"},
+    say:"Now think of the airline's **own people**: the staff at the check-in desk, facing angry passengers, with **no information** themselves. Professor **Michelle Buck** of Kellogg School of Management warns that leaders who wait for clarity **lose their teams to anxiety and speculation.** So silence is not only a communication problem. **It is a leadership failure.** Saif will now show how leaders keep trust."},
+
+  /* ---------- ARGUMENT 3 · TRUST · Saif ---------- */
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"ask"},
+    say:"Some will ask: **how can a leader speak when they don't know?** Our answer is simple: you say what you don't know. And the research shows people accept that."},
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
+    say:"Argument three: **honesty keeps trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
+  {sec:"③ The leader", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005) · CDC: be first, be right, be credible"},
+    say:"And there is a reward for speaking first. Research calls it **stealing thunder**: when an organisation reveals bad news **itself**, people judge it as **more credible** than when they hear it from others first. That is why the CDC's crisis rule is: **be first, be right, be credible.**"},
+
+  /* ---------- THE MESSAGE · Saif ---------- */
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
+    say:"So what does a responsible first message look like? Three cards. **Known:** our booking system is down. Do not come to the airport unless your flight is confirmed."},
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
     say:"**Unknown:** the exact cause. We say it openly, and we do **not guess**."},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:3},
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:3},
     say:"**Next:** the next update in 30 minutes, **even if there is no news yet.**"},
-  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"message"},
-    say:"Put together, that is the message. **Nothing invented. Nothing hidden.** And people know what to do. That is Leader B, and that is what we mean by communicating quickly."},
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"message"},
+    say:"And one **human** line: we know many of you are stranded, and **we are sorry.** Chapter 4 reminds us that persuasion needs logic **and** emotion. **Nothing invented. Nothing hidden.** And people feel seen."},
+  {sec:"The message", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"global"},
+    say:"This is not just an airline idea. **November 2008**: the global economy is collapsing, and the new US president-elect faces reporters with no clear answers. As Professor Buck describes it, Obama's message was essentially: **here is what we know, here is what we don't know, and here is what we need to do in the meantime.** The same three cards, in a **global crisis**."},
 
-  /* we speak first, so we answer their doubts BEFORE they raise them (inoculation, Ch. 4) */
-  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“Quick messages spread misinformation.”", a:"Only when guesses are presented as facts. We separate <em>known</em> from <em>unknown</em>."},
-    say:"Our opponents will speak after us, so let us answer their doubts now. They may say: **quick messages spread misinformation.** That happens only when guesses are presented as facts. Our message separates what is **known** from what is **unknown**."},
-  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“What if the first message is wrong?”", a:"That is why we say <em>unknown</em> out loud. Correcting is part of the plan."},
-    say:"They may also ask: **what if the first message is wrong?** That is exactly why we say “unknown” out loud and promise the next update. **Correcting yourself is part of the plan**, not a failure. Now, to close."},
+  /* ---------- THEIR DOUBTS · Saif · inoculation theory, Chapter 4 ---------- */
+  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“We have nothing to say yet.”", a:"Leaders overestimate what others already know. This is the <em>illusion of transparency</em>.", s:"Gilovich, Savitsky & Medvec (1998) · Journal of Personality and Social Psychology"},
+    say:"Our opponents speak after us, so we will answer their doubts now. Chapter 4 calls this **inoculation theory**. They may say: **we have nothing to say yet.** Psychologists call this the **illusion of transparency**: we overestimate how much others already know. People waiting do not know who is deciding, or when they will hear more. **There is always something to say.**"},
+  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“Quick messages spread misinformation.”", a:"Only when guesses are presented as facts. We say <em>unknown</em> out loud, and correct as we learn."},
+    say:"They may also say: **quick messages spread misinformation.** That happens only when guesses are presented as facts. We separate **known** from **unknown**. And if something changes, the next update corrects it. **Correcting is part of the plan.**"},
 
+  /* ---------- CLOSING · Saif ---------- */
   {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"recap"},
-    say:"To close: **silence** creates a vacuum, **honesty** keeps trust, and people need **guidance** before the final report. We agree that **accuracy matters**, but speed and accuracy are not enemies. A good leader shares what is verified **and** keeps investigating."},
+    say:"To close: silence fails at three levels. It feeds **rumours** in the public, **anxiety** in the team, and it gives away the leader's **trust**. We agree that **accuracy matters**, and early communication protects it. In Reardon's **ACE** terms from Chapter 4, it is **appropriate**, because it is honest. It is **consistent** with what crisis experts recommend. And it is **effective**, because people know what to do."},
   {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"clocks", line:true},
     say:"Remember the two clocks. **Both clocks start together. Only one waits for you.**"},
   {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"final"}, job:"After “Thank you”, our part is finished. Do NOT tap NEXT. Keep this tab open while the opposition presents. When they finish, tap NEXT for the discussion.",
     say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you."},
 
   /* ---------- after our closing: the opposition presents (this page stays on our final screen). Then discussion. ---------- */
-  {sec:DISC, phase:DISC, team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & discussion"}, rebut:true,
-    job:"Use this when the discussion starts (after the opposition, or whenever Dr. Reshma opens it). If there is no discussion, tap NEXT three times to reach the competition. When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard. Tap NEXT when it is our turn to ask."},
-  {sec:DISC, phase:DISC, team:"prop", who:"Ismail asks", v:{t:"fork"}, fork:true,
-    say:"If an airline knows its booking system is down but doesn't know the cause yet, should it **inform passengers now**, or **keep them waiting** until the investigation is complete?"},
-  {sec:DISC, phase:DISC, team:"prop", who:"Saif asks", v:{t:"message", q:true},
-    say:"If a statement contains **only confirmed facts** and says “cause under investigation”, **which part of it is misinformation?**"},
+  {sec:DISC, phase:DISC, team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & discussion"}, rebut:true, qs:true,
+    job:"Use this when the discussion starts. If there is no discussion, tap NEXT for the competition. When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard."},
 
   {type:"game", sec:GAME, phase:GAME, job:"Ismail: click the button on the projector to open the game. Saif: help classmates join with their phones."},
   {type:"end", sec:"Thank you"}
@@ -323,15 +339,19 @@ const PHASES = BEATS.map(b => b.phase).filter((p,k,a) => p && a.indexOf(p) === k
 
 const REBUT = [
   ["“Wait until you have all the facts.”","Seeger (2006): waiting until all uncertainty is reduced usually means the warning is too late."],
-  ["“Quick messages spread misinformation.”","Only when guesses are presented as facts. We separate what is confirmed from what is unknown."],
-  ["“Waiting protects reputation.”","Silence damaged reputation in 2024: Delta. Accuracy protects reputation, and so does being first."],
-  ["“Fix the problem first, then talk.”","Fixing and informing happen at the same time. Different people, same hour."],
-  ["“Saying ‘we don't know’ looks weak.”","It looks honest. PNAS 2020: trust hardly changed when uncertainty was shown clearly."],
-  ["“What if the first message is wrong?”","That is why we say UNKNOWN out loud. Correcting yourself is part of the plan, not a failure."]
+  ["“We have nothing to say yet.”","Illusion of transparency (Gilovich et al., 1998). People don't know who is deciding or when they'll hear more."],
+  ["“Quick messages spread misinformation.”","Rumour = importance × ambiguity (Allport & Postman). Silence raises ambiguity, so silence spreads MORE rumours."],
+  ["“Waiting protects reputation.”","Stealing thunder (2005): revealing bad news yourself increases credibility. Delta 2024 shows the opposite."],
+  ["“Telling people early creates panic.”","UCL 2016: uncertainty itself causes the most stress. Clear information reduces anxiety."],
+  ["“Saying ‘we don't know’ looks weak.”","PNAS 2020: trust hardly changed when uncertainty was shown clearly."],
+  ["“What if the first message is wrong?”","That is why we say UNKNOWN out loud. Correcting is part of the plan, not a failure."],
+  ["“An airline is not a global crisis.”","CrowdStrike crashed systems worldwide. And Obama used the same three cards in the 2008 global financial crisis."]
 ];
+const QS = {ismail:"If an airline knows its booking system is down but doesn't know the cause yet, should it inform passengers now, or keep them waiting until the investigation is complete?",
+            saif:"If a statement contains only confirmed facts and says “cause under investigation”, which part of it is misinformation?"};
 const FORK = {now:"Then we agree: complete information is not needed before responsible communication begins.",
               wait:"Then what should passengers do while no official information is available?"};
-const CARDS = [["KNOWN","Booking system down","Flights are delayed","#2ec4a6","✓"],["UNKNOWN","Exact cause","Under investigation","#ffb547","?"],["NEXT","Update in 30 min","Even if no news","#4fd1ff","→"]];
+const CARDS = [["KNOWN","Booking system down","Don't come unless confirmed","#2ec4a6","✓"],["UNKNOWN","Exact cause","Under investigation","#ffb547","?"],["NEXT","Update in 30 min","Even if no news","#4fd1ff","→"]];
 
 /* sections in order (for the projector dots and the neutral sequence) */
 const SECS = []; BEATS.forEach(b => { if (!SECS.includes(b.sec)) SECS.push(b.sec); });
@@ -421,24 +441,51 @@ function visual(b){
       <div class="sub u d4">All three can be answered before the cause is known.</div></div>`;
     case "cards": return `<div class="v"><div class="h">A responsible first message</div>
       <div class="eq">${CARDS.map((c,k) => `<div class="tile ${k < v.n ? (k === v.n - 1 ? "u" : "") : "dash"}" style="--cc:${c[3]}${k === v.n - 1 ? ";animation-name:pop" : ""}"><i>${c[4]}</i><b style="font-family:var(--M);font-size:1em;letter-spacing:.16em;color:${c[3]}">${c[0]}</b><b>${c[1]}</b><span>${c[2]}</span></div>`).join("")}</div></div>`;
+    case "levels": return `<div class="v"><div class="kick b u"><i></i>OUR CASE</div><div class="h u d1">Silence fails at <em>three levels</em>.</div>
+      <div class="eq">${[["1","The public","Silence feeds rumours","#ff3b4e"],["2","The team","Uncertainty creates anxiety","#ffb547"],["3","The leader","Trust goes to whoever speaks first","#4fd1ff"]].map((x,k) => `<div class="tile u d${k+2}" style="--cc:${x[3]}"><i>${x[0]}</i><b>${x[1]}</b><span>${x[2]}</span></div>`).join("")}</div></div>`;
+    case "formula": return `<div class="v"><div class="kick u"><i></i>THE PSYCHOLOGY OF RUMOUR</div>
+      <div class="fx"><span class="u d1">Rumour</span><b class="u d1">=</b><span class="u d2">Importance</span><b class="u d2">×</b><span class="u d3 amb">Ambiguity</span></div>
+      <div class="src u d3">Allport & Postman (1947) · The Psychology of Rumor</div>
+      <div class="rums">${["Were we hacked?","Is it safe?","How many days?","All flights cancelled?"].map((r,k) => `<span class="rum2" style="animation-delay:${1.6 + k*.35}s">${r}</span>`).join("")}</div>
+      <div class="sub u d5">A leader cannot reduce importance. A leader <b style="color:#fff">controls ambiguity</b>. Silence maximises it.</div></div>`;
+    case "stress": return `<div class="v"><div class="kick u"><i></i>UCL · NATURE COMMUNICATIONS · 2016</div><div class="h u d1">Uncertainty hurts more than <em>bad news</em>.</div>
+      <svg class="curve u d2" viewBox="0 0 600 250"><line x1="40" y1="210" x2="580" y2="210" stroke="#ffffff44" stroke-width="2"/><line x1="40" y1="20" x2="40" y2="210" stroke="#ffffff44" stroke-width="2"/>
+        <path class="cv" d="M50 190 C 180 190, 220 40, 310 40 S 440 190, 570 190" fill="none" stroke="#ffb547" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="310" cy="40" r="10" fill="#ff3b4e"/><text x="310" y="22" text-anchor="middle" fill="#fff" font-family="Sora" font-weight="800" font-size="20">NOT KNOWING · 50/50</text>
+        <circle cx="50" cy="190" r="8" fill="#2ec4a6"/><circle cx="570" cy="190" r="8" fill="#2ec4a6"/>
+        <text x="50" y="238" fill="#8fa3c6" font-family="Manrope" font-weight="700" font-size="16">Sure: no shock</text><text x="570" y="238" text-anchor="end" fill="#8fa3c6" font-family="Manrope" font-weight="700" font-size="16">Sure: shock</text>
+        <text x="20" y="120" fill="#8fa3c6" font-family="Manrope" font-weight="700" font-size="16" transform="rotate(-90 20 120)" text-anchor="middle">STRESS</text></svg>
+      <div class="quote u d4" style="padding:.8em 1.4em"><p style="font-size:1.4em">“It's the uncertainty that makes us anxious.”</p><span class="src" style="margin-top:.4em">de Berker et al. (2016) · 45 volunteers · stress measured by pupils & sweat</span></div></div>`;
+    case "team": return `<div class="v"><div class="kick u"><i></i>THE TEAM IS WAITING TOO</div><div class="h u d1">The check-in desk has <s>no answers</s> either.</div>
+      <div class="desk u d2">${["😟","😠","😟","😠","😟"].map((e,k) => `<span style="animation-delay:${.8 + k*.15}s">${e}</span>`).join("")}<div class="agent">🧑‍💼<small>“I don't know anything yet…”</small></div></div>
+      <div class="quote u d4" style="padding:.9em 1.4em"><p style="font-size:1.35em">Leaders who wait for clarity <em>lose their teams</em> to anxiety and speculation.</p><span class="src" style="margin-top:.4em">Prof. Michelle Buck · Kellogg School of Management (paraphrased)</span></div></div>`;
+    case "global": return `<div class="v"><div class="kick u"><i></i>NOVEMBER 2008 · GLOBAL FINANCIAL CRISIS</div><div class="h u d1">Same three cards. <em>Global scale.</em></div>
+      <div class="phone u d2" style="max-width:46em"><div class="msg">
+        <div class="ln" style="--cc:#14957d"><b>KNOWN</b>“Here is what we know…”</div>
+        <div class="ln" style="--cc:#c98610"><b>UNKNOWN</b>“…here is what we don't know…”</div>
+        <div class="ln" style="--cc:#0a7fb0"><b>NEXT</b>“…and here is what we need to do in the meantime.”</div></div></div>
+      <div class="src u d4">President-elect Obama's press conference, as described by Prof. Michelle Buck, Kellogg (paraphrase)</div></div>`;
     case "message": return `<div class="v">${v.q ? `<div class="h u" style="font-size:2.6em">Which part is <s>misinformation</s>?</div>` : `<div class="kick b u"><i></i>THE FIRST MESSAGE · 20 MINUTES AFTER THE OUTAGE</div>`}
       <div class="phone u d1"><div class="ph"><i>S</i>Skyvale Airways<span>now</span></div><div class="msg">
-        <div class="ln" style="--cc:#14957d"><b>KNOWN</b>Our booking system is down. Flights are delayed.</div>
+        <div class="ln" style="--cc:#14957d"><b>KNOWN</b>Our booking system is down. Please don't come to the airport unless your flight is confirmed.</div>
         <div class="ln" style="--cc:#c98610"><b>UNKNOWN</b>The cause is under investigation.</div>
-        <div class="ln" style="--cc:#0a7fb0"><b>NEXT</b>Please check this app. Next update at 10:30.</div></div></div>
+        <div class="ln" style="--cc:#0a7fb0"><b>NEXT</b>Next update at 10:30, even if there is no news.</div>
+        <div class="ln" style="--cc:#d7263d"><b>HUMAN</b>We know many of you are stranded. We are sorry.</div></div></div>
       ${v.q ? "" : `<div class="h u d3" style="font-size:2em">Nothing invented. <em>Nothing hidden.</em></div>`}</div>`;
     case "vs": return `<div class="v"><div class="kick b u"><i></i>THE REAL CHOICE</div>
       <div class="vs"><div class="x u d1">Quick vs accurate</div><b class="u d2">→</b><div class="y u d3">Responsible early communication vs unnecessary silence</div></div></div>`;
     case "fork": return `<div class="v"><div class="kick u"><i></i>OUR QUESTION</div><div class="h u d1" style="font-size:2.6em">Booking system down. Cause unknown.</div>
       <div class="fork"><div class="u d2">Inform passengers now</div><div class="u d3">Wait for the full investigation</div></div></div>`;
-    case "recap": return `<div class="v"><div class="kick b u"><i></i>WHAT WE SHOWED</div><div class="checks">
-      ${[["Silence","creates a vacuum"],["Honesty","keeps trust"],["Guidance","comes before the final report"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div></div>`;
+    case "recap": return `<div class="v"><div class="kick b u"><i></i>SILENCE FAILS AT THREE LEVELS</div><div class="checks">
+      ${[["Public","silence feeds rumours"],["Team","uncertainty creates anxiety"],["Leader","trust goes to whoever speaks first"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div>
+      <div class="seq u d4" style="font-size:1.25em">${[["A","Appropriate · honest"],["C","Consistent · with expert practice"],["E","Effective · people know what to do"]].map(x => `<span style="color:#fff"><b style="color:var(--glow)">${x[0]}</b> ${x[1]}</span>`).join("")}</div>
+      <div class="src u d5">Reardon's ACE theory · Chapter 4</div></div>`;
     case "agree": return `<div class="v"><div class="h u">Accuracy matters. <em>We agree.</em></div><div class="sub u d2" style="font-size:1.6em">Speed and accuracy are not enemies.<br>Share what is verified <b style="color:#fff">and</b> keep investigating.</div></div>`;
     case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div></div>`;
     case "format": return `<div class="v"><div class="kick b u"><i></i>HOW TODAY WORKS</div>
       <div class="eq">${PHASES.map((p,k) => `<div class="tile u d${k+1}" style="--cc:${p === OUR ? "var(--glow)" : p === OPP ? "var(--opp)" : p === GAME ? "var(--red)" : "var(--mod)"}"><i>${k+1}</i><b>${p}</b><span>${p === OUR ? "Ismail & Saif · for the motion" : p === DISC ? "Questions from both teams" : p === OPP ? "Against the motion" : "Everyone plays on their phone"}</span></div>`).join("")}</div></div>`;
     case "doubt": return `<div class="v"><div class="kick u"><i></i>THEY MAY SAY</div><div class="h u d1" style="font-size:2.8em;color:var(--mute)">${esc(v.q)}</div>
-      <div class="quote u d3" style="border-left-color:var(--ok)"><p>${v.a}</p></div></div>`;
+      <div class="quote u d3" style="border-left-color:var(--ok)"><p>${v.a}</p>${v.s ? `<span class="src">${esc(v.s)}</span>` : ""}</div></div>`;
     case "neutral": {
       const cur = PHASES.indexOf(b.phase);
       return `<div class="v neutral" style="--tc:${teamCol(b.team)}"><div class="kick u" style="color:${teamCol(b.team)}">${teamName(b.team)}</div>
@@ -484,7 +531,7 @@ async function projector(){
     } else if (b.type === "video"){
       inner = `<div class="vid" id="vw"><video id="v" src="${localVid || esc(CFG.video)}" playsinline preload="auto"></video><div class="miss"><div>Video not found online.<br><br><button class="btn pickv" style="font-size:1em">Choose the video from this laptop</button></div></div></div>`;
     } else if (b.type === "game"){
-      inner = `<div class="v"><div class="kick"><i></i>OUTSIDE THE ASSESSED DEBATE</div><div class="h">The video asked:<br><s>what would you do?</s></div><div class="sub">Now everyone answers it. Five questions, thirty seconds each.</div><button class="btn" id="gm">Start The Crisis Room ${svgI(ARROW)}</button></div>`;
+      inner = `<div class="v"><div class="kick"><i></i>THE CRISIS ROOM · YOUR TURN</div><div class="h">The video asked:<br><s>what would you do?</s></div><div class="sub">Now everyone answers it. Five questions, thirty seconds each.</div><button class="btn" id="gm">Start The Crisis Room ${svgI(ARROW)}</button></div>`;
     } else if (b.type === "end"){
       inner = `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div><div class="sub u d4">Thank you to our respected opponents and to our lecturer.</div></div>`;
     } else inner = visual(b);
@@ -544,7 +591,7 @@ async function cockpit(){
         <div class="ck-head"><small>${b.team ? teamName(b.team) : "SESSION"}</small><h2>${esc(b.sec)}</h2>${b.who ? `<p>${esc(b.who)}${ks.length > 1 ? ` · beat ${pos + 1} of ${ks.length}` : ""}</p>` : ""}
           ${ks.length > 1 ? `<div class="ck-dots">${ks.map(k => `<i class="${k < S.i ? "done" : k === S.i ? "on" : ""}"></i>`).join("")}</div>` : ""}</div>
         ${b.say ? `<div class="sayb"><h4>SAY</h4><p>${md(b.say)}</p></div>` : ""}
-        ${b.fork ? `<div class="box"><div class="pairs"><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div></div></div>` : ""}
+        ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL ASKS</b>${esc(QS.ismail)}</div><div><b>IF THEY SAY “NOW”</b>${esc(FORK.now)}</div><div><b>IF THEY SAY “WAIT”</b>${esc(FORK.wait)}</div><div><b>SAIF ASKS</b>${esc(QS.saif)}</div></div></div>` : ""}
         ${b.job ? `<div class="box job"><h4>YOUR JOB NOW</h4><p>${esc(b.job)}</p></div>` : ""}
         ${b.rebut ? `<div class="box"><h4>RESPONSE CARDS</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
         ${nx ? `<div class="peek">Next tap → ${peekText(nx)}</div>` : ""}
