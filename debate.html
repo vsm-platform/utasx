@@ -235,6 +235,7 @@ const CFG = {
   opp:  {label:"OPPOSITION · AGAINST", names:"Opposition team"},
   video: "crisis-video.mp4",
   game: "flight.html?host",
+  gameAt: "end",                 // "end" = after the opposition · "afterOurs" = right after the discussion
 };
 const firebaseConfig = {
   apiKey: "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8",
@@ -247,97 +248,88 @@ const firebaseConfig = {
 };
 const DB_ROOT = "tr";
 
-/* The path of our case. Shown on the projector during our turns so the audience can follow it. */
-const ROUTE = ["The question","Two clocks","① Silence","② Trust","③ Guidance","First message"];
+const ROUTE = ["The question","Two clocks","① Silence","② Trust","③ Guidance","First message","Their doubts"];
 
 /* =========================================================
    THE BEATS — one tap = one beat.
    sec: section name · team: prop | opp | mod · who: speaker
    r: position on ROUTE (our beats only) · v: what the projector shows
    say: what the speaker says (**bold** = stress this word)
+   Our case = about 21 beats ≈ 10 minutes at ~25–30 seconds per beat.
    ========================================================= */
-const BEATS = [
+const OUR = "Our case", DISC = "Discussion", OPP = "Opposition case", GAME = "Competition";
+let BEATS = [
   {type:"welcome", sec:"Welcome", job:"Projector shows the motion. When the lecturer is ready, tap NEXT to play the video."},
-  {type:"video", sec:"The video", job:"Video is playing. When it ends, tap NEXT for the moderator."},
+  {type:"video", sec:"The video", job:"Video is playing. When it ends, tap NEXT."},
 
-  {sec:"Moderator", team:"mod", who:"Moderator", v:{t:"neutral", line:"Introduction"},
-    job:"Moderator introduces the debate. Ismail: get ready. Your first tap shows the two leaders from the video."},
-
-  /* ---------- OPENING · Ismail ---------- */
-  {sec:"Opening", team:"prop", who:"Ismail", r:0, v:{t:"leaders"},
-    say:"Good morning. The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
-  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
+  /* ---------- OUR CASE · 10 minutes ---------- */
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", v:{t:"format"},
+    say:"Good morning, Dr. Reshma and colleagues. We are Ismail and Saif, and we support the motion. Here is how today works: **we present our case**, then we **discuss together**, then our opponents present theirs."},
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:0, v:{t:"leaders"},
+    say:"The video ended with a question: **what would you do?** Leader A said: wait until we know everything. Leader B said: here is what we know, **next update in 30 minutes**. Today, we stand with Leader B."},
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"clocks"},
     say:"Why? Because every crisis starts **two clocks** at the same time. Clock one is the investigation: finding the full cause takes hours, sometimes days. Clock two is the public: passengers need to know what to do **right now**. Leader A watches only clock one."},
-  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"define"},
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"define"},
     say:"Let us be clear about the motion. Communicating quickly does **not** mean guessing. It means three things: share what is **verified**, say honestly what is **still unknown**, and tell people **when the next update** comes."},
-  {sec:"Opening", team:"prop", who:"Ismail", r:1, v:{t:"road"},
-    say:"We will prove this with three arguments. **One:** silence creates a vacuum. **Two:** honesty about uncertainty builds trust. **Three:** people need guidance before the final report. Thank you."},
+  {sec:"Opening", phase:OUR, team:"prop", who:"Ismail", r:1, v:{t:"road"},
+    say:"We will prove this with three arguments. **One:** silence creates a vacuum. **Two:** honesty about uncertainty builds trust. **Three:** people need guidance before the final report."},
 
-  {sec:"Opposition opening", team:"opp", who:"Opposition", v:{t:"neutral", line:"Opening statement"},
-    job:"Listen. Ismail: write down how THEY define “complete information”. Saif: note their strongest example."},
-
-  /* ---------- ARGUMENT 1 · Ismail ---------- */
-  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"vacuum"},
+  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"vacuum"},
     say:"Argument one: **silence is not neutral.** When an airline says nothing, passengers do not wait quietly. They fill the gap: were we hacked? Are all flights cancelled? Is it safe? The empty space is always filled by someone, just **not by the leader**."},
-  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"case"},
+  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"case"},
     say:"This really happened. In **July 2024**, a faulty CrowdStrike update crashed computer systems worldwide. Most airlines recovered in about a day. Delta took about **five days** and cancelled around **7,000 flights**. Thousands of passengers said they could not get clear answers, and the US Department of Transportation opened an investigation."},
-  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"rule"},
+  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"rule"},
     say:"That is why the CDC crisis communication manual gives three rules: **be first, be right, be credible.** Notice: first does not replace right. A good leader does **both together**."},
-  {sec:"Argument 1", team:"prop", who:"Ismail", r:2, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005)"},
+  {sec:"Argument 1", phase:OUR, team:"prop", who:"Ismail", r:2, v:{t:"quote", q:"When an organisation reveals bad news <em>itself</em>, people judge it as <em>more credible</em>.", s:"“Stealing thunder” · Arpan & Roskos-Ewoldsen (2005)"},
     say:"Research calls this **stealing thunder**: when an organisation reveals bad news itself, people see it as **more credible** than when they hear it from others first. So waiting does not stop communication. It only **removes the leader** from it. Saif will now show how to speak early and keep trust."},
 
-  /* ---------- ARGUMENTS 2 & 3 · Saif ---------- */
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:3, v:{t:"ask"},
-    say:"Our opponents will ask: **how can you speak when you don't know?** Our answer is simple: you say what you don't know. And research shows people accept that."},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:3, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:3, v:{t:"ask"},
+    say:"Some will ask: **how can you speak when you don't know?** Our answer is simple: you say what you don't know. And research shows people accept that."},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:3, v:{t:"quote", q:"When uncertainty was shown clearly, trust in the numbers and the source <em>hardly changed</em>.", s:"van der Bles et al. (2020) · PNAS · experiments with thousands of people"},
     say:"Argument two: **honesty builds trust.** In 2020, a study in **PNAS** by van der Bles and colleagues tested this with thousands of people. When uncertainty was shown clearly, trust **hardly changed**. People can handle honesty."},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:4, v:{t:"guide"},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:4, v:{t:"guide"},
     say:"Argument three: **people need guidance, not a final report.** A passenger at 6 a.m. needs to know: should I go to the airport? Can I rebook? When will I hear more? A first message can answer this **before the cause is known**."},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:1},
     say:"So what does a responsible first message look like? Three cards. **Known:** our booking system is down and flights are delayed."},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:2},
     say:"**Unknown:** the exact cause. We say it openly, and we do **not guess**."},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"cards", n:3},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"cards", n:3},
     say:"**Next:** the next update in 30 minutes, **even if there is no news yet.**"},
-  {sec:"Arguments 2 & 3", team:"prop", who:"Saif", r:5, v:{t:"message"},
-    say:"Put together, that is the message. **Nothing invented. Nothing hidden.** And people know what to do. That is Leader B, and that is what we mean by communicating quickly. Thank you."},
+  {sec:"Arguments 2 & 3", phase:OUR, team:"prop", who:"Saif", r:5, v:{t:"message"},
+    say:"Put together, that is the message. **Nothing invented. Nothing hidden.** And people know what to do. That is Leader B, and that is what we mean by communicating quickly."},
 
-  {sec:"Opposition arguments", team:"opp", who:"Opposition", v:{t:"neutral", line:"Main arguments"},
-    job:"Both: pick their TWO strongest points. Write their exact words. Saif will answer them in the rebuttal."},
+  /* we speak first, so we answer their doubts BEFORE they raise them (inoculation, Ch. 4) */
+  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“Quick messages spread misinformation.”", a:"Only when guesses are presented as facts. We separate <em>known</em> from <em>unknown</em>."},
+    say:"Our opponents will speak after us, so let us answer their doubts now. They may say: **quick messages spread misinformation.** That happens only when guesses are presented as facts. Our message separates what is **known** from what is **unknown**."},
+  {sec:"Their doubts", phase:OUR, team:"prop", who:"Saif", r:6, v:{t:"doubt", q:"“What if the first message is wrong?”", a:"That is why we say <em>unknown</em> out loud. Correcting is part of the plan."},
+    say:"They may also ask: **what if the first message is wrong?** That is exactly why we say “unknown” out loud and promise the next update. **Correcting yourself is part of the plan**, not a failure. Now, to close."},
 
-  /* ---------- REBUTTAL · Saif ---------- */
-  {sec:"Rebuttal", team:"prop", who:"Saif", r:5, v:{t:"vs"}, rebut:true,
-    say:"Thank you to our opponents. They made an important point about ___. But ___ (use a response card below). In the end, the real choice is not quick versus accurate. It is **responsible early communication** versus **unnecessary silence**."},
+  {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"recap"},
+    say:"To close: **silence** creates a vacuum, **honesty** keeps trust, and people need **guidance** before the final report. We agree that **accuracy matters**, but speed and accuracy are not enemies. A good leader shares what is verified **and** keeps investigating."},
+  {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"clocks", line:true},
+    say:"Remember the two clocks. **Both clocks start together. Only one waits for you.**"},
+  {sec:"Closing", phase:OUR, team:"prop", who:"Saif", r:7, v:{t:"final"},
+    say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you. We are happy to take your questions."},
 
-  {sec:"Opposition rebuttal", team:"opp", who:"Opposition", v:{t:"neutral", line:"Rebuttal"},
-    job:"Listen. Don't react. Note anything to answer in the questions round."},
-
-  /* ---------- Q & A ---------- */
-  {sec:"Questions", team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & responses"}, rebut:true,
+  /* ---------- DISCUSSION · about 5 minutes ---------- */
+  {sec:DISC, phase:DISC, team:"mod", who:"Both teams", v:{t:"neutral", line:"Questions & discussion"}, rebut:true,
     job:"When they ask: listen to the exact question, answer in under 30 seconds. Valid risk? Agree, then give the safeguard. Tap NEXT when it is our turn to ask."},
-  {sec:"Questions", team:"prop", who:"Ismail asks", v:{t:"fork"}, fork:true,
+  {sec:DISC, phase:DISC, team:"prop", who:"Ismail asks", v:{t:"fork"}, fork:true,
     say:"If an airline knows its booking system is down but doesn't know the cause yet, should it **inform passengers now**, or **keep them waiting** until the investigation is complete?"},
-  {sec:"Questions", team:"prop", who:"Saif asks", v:{t:"message", q:true},
+  {sec:DISC, phase:DISC, team:"prop", who:"Saif asks", v:{t:"message", q:true},
     say:"If a statement contains **only confirmed facts** and says “cause under investigation”, **which part of it is misinformation?**"},
 
-  {sec:"Opposition closing", team:"opp", who:"Opposition", v:{t:"neutral", line:"Closing statement"},
-    job:"Saif: you close next. No new evidence in the closing."},
+  /* ---------- OPPOSITION · 10 minutes ---------- */
+  {sec:OPP, phase:OPP, team:"opp", who:"Opposition", v:{t:"neutral", line:"Their case against the motion"},
+    job:"Listen and write their strongest points in their exact words. If the lecturer allows a final reply, use the response cards below.", rebut:true},
 
-  /* ---------- CLOSING · Saif ---------- */
-  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"recap"},
-    say:"To close, three things. **Silence** creates a vacuum. **Honesty** about uncertainty keeps trust. And people need **guidance** before the final report."},
-  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"agree"},
-    say:"We agree with our opponents on one thing: **accuracy matters.** But accuracy and speed are not enemies. A good leader shares what is verified **and** keeps investigating."},
-  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"clocks", line:true},
-    say:"Remember the two clocks. **Both clocks start together. Only one waits for you.**"},
-  {sec:"Closing", team:"prop", who:"Saif", r:6, v:{t:"final"},
-    say:"Our message is simple: **communicate early, share verified facts, update continuously.** Thank you. And now, it is **your turn** to answer the video's question."},
-
-  {type:"game", sec:"Competition", job:"Ismail: click the button on the projector to open the game. Saif: help classmates join with their phones."},
-  {sec:"Feedback", team:"mod", who:"Lecturer", v:{t:"neutral", line:"Feedback & conclusion"},
-    job:"Listen. Thank the lecturer and the opposition."},
+  {type:"game", sec:GAME, phase:GAME, job:"Ismail: click the button on the projector to open the game. Saif: help classmates join with their phones."},
   {type:"end", sec:"Thank you"}
 ];
+/* Where the competition goes: "end" (after the opposition) or "afterOurs" (after the discussion) */
+if (CFG.gameAt === "afterOurs"){ const g = BEATS.findIndex(b => b.type === "game"); const [gb] = BEATS.splice(g, 1); BEATS.splice(BEATS.findIndex(b => b.phase === OPP), 0, gb); }
+const PHASES = BEATS.map(b => b.phase).filter((p,k,a) => p && a.indexOf(p) === k);
+
 const REBUT = [
   ["“Quick messages spread misinformation.”","Only when guesses are presented as facts. We separate what is confirmed from what is unknown."],
   ["“Waiting protects reputation.”","Silence damaged reputation in 2024: Delta. Accuracy protects reputation, and so does being first."],
@@ -351,7 +343,6 @@ const CARDS = [["KNOWN","Booking system down","Flights are delayed","#2ec4a6","�
 
 /* sections in order (for the projector dots and the neutral sequence) */
 const SECS = []; BEATS.forEach(b => { if (!SECS.includes(b.sec)) SECS.push(b.sec); });
-const SPEECH = ["Moderator","Opening","Opposition opening","Argument 1","Arguments 2 & 3","Opposition arguments","Rebuttal","Opposition rebuttal","Questions","Opposition closing","Closing","Feedback"];
 
 /* =========================================================
    helpers + sync
@@ -451,11 +442,15 @@ function visual(b){
       ${[["Silence","creates a vacuum"],["Honesty","keeps trust"],["Guidance","comes before the final report"]].map((x,k) => `<div class="ck1 u d${k+1}"><i>✓</i>${x[0]} <span>${x[1]}</span></div>`).join("")}</div></div>`;
     case "agree": return `<div class="v"><div class="h u">Accuracy matters. <em>We agree.</em></div><div class="sub u d2" style="font-size:1.6em">Speed and accuracy are not enemies.<br>Share what is verified <b style="color:#fff">and</b> keep investigating.</div></div>`;
     case "final": return `<div class="v"><div class="final3"><span>Communicate early.</span><span>Share verified facts.</span><span>Update continuously.</span></div></div>`;
+    case "format": return `<div class="v"><div class="kick b u"><i></i>HOW TODAY WORKS</div>
+      <div class="eq">${PHASES.map((p,k) => `<div class="tile u d${k+1}" style="--cc:${p === OUR ? "var(--glow)" : p === OPP ? "var(--opp)" : p === GAME ? "var(--red)" : "var(--mod)"}"><i>${k+1}</i><b>${p}</b><span>${p === OUR ? "Ismail & Saif · for the motion" : p === DISC ? "Questions from both teams" : p === OPP ? "Against the motion" : "Everyone plays on their phone"}</span></div>`).join("")}</div></div>`;
+    case "doubt": return `<div class="v"><div class="kick u"><i></i>THEY MAY SAY</div><div class="h u d1" style="font-size:2.8em;color:var(--mute)">${esc(v.q)}</div>
+      <div class="quote u d3" style="border-left-color:var(--ok)"><p>${v.a}</p></div></div>`;
     case "neutral": {
-      const cur = SPEECH.indexOf(b.sec);
+      const cur = PHASES.indexOf(b.phase);
       return `<div class="v neutral" style="--tc:${teamCol(b.team)}"><div class="kick u" style="color:${teamCol(b.team)}">${teamName(b.team)}</div>
         <div class="who2 u d1">${esc(b.who)}</div><div class="sub u d2">${esc(v.line)}</div>
-        <div class="seq u d3">${SPEECH.map((s,k) => `<span class="${k === cur ? "cur" : k < cur ? "done" : ""}">${esc(s)}</span>`).join("")}</div></div>`;
+        <div class="seq u d3">${PHASES.map((s,k) => `<span class="${k === cur ? "cur" : k < cur ? "done" : ""}">${esc(s)}</span>`).join("")}</div></div>`;
     }
   }
   return "";
