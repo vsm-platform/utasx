@@ -316,6 +316,25 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .ck-ctrl .nx{font-size:clamp(18px,2.5vw,28px)}
 @media (min-width:700px){.ck-ctrl{grid-template-columns:1fr 3fr;padding-left:max(22px,calc(50vw - 470px));padding-right:max(22px,calc(50vw - 470px))}}
 
+
+/* bigger reminder card, swipe and details */
+html,body{overscroll-behavior-x:none}
+.ck{touch-action:pan-y}
+.ck-prog{height:4px;background:#ffffff14}.ck-prog i{display:block;height:100%;background:var(--tc);transition:width .3s}
+.sayb.big{padding:clamp(22px,3.4vw,40px) clamp(22px,3.6vw,44px);border-left-width:8px;min-height:38vh;display:flex;align-items:center}
+.sayb.big .cl{gap:clamp(14px,2.2vw,26px)}
+.sayb.big .cl li{font-size:clamp(26px,4.3vw,48px);line-height:1.22;padding-left:clamp(26px,3.4vw,40px)}
+.sayb.big .cl li::before{width:clamp(11px,1.4vw,16px);height:clamp(11px,1.4vw,16px);top:.45em}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip2{background:#ffffff0f;border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-weight:700;font-size:clamp(14px,1.8vw,19px);line-height:1.3}
+.chip2 em{display:block;font-style:normal;font-family:var(--M);font-weight:800;font-size:10.5px;letter-spacing:.16em;color:var(--mute);margin-bottom:2px}
+.chip2.tip{border-color:#ffb54766;background:#ffb54714}.chip2.tip em{color:var(--amber)}
+.hand{background:var(--glow);color:#04132a;font-weight:800;border-radius:12px;padding:12px 16px;font-size:clamp(15px,2vw,21px)}
+.ck-ctrl{grid-template-columns:1fr auto 1.6fr!important;align-items:center}
+.ck-ctrl .hint{color:var(--mute);font-weight:700;font-size:clamp(12px,1.5vw,16px);text-align:center;white-space:nowrap}.ck-ctrl .hint b{color:#fff}
+.swipe-in-r{animation:inR .28s ease-out}.swipe-in-l{animation:inL .28s ease-out}
+@keyframes inR{from{transform:translateX(40px);opacity:.2}to{transform:none;opacity:1}}
+@keyframes inL{from{transform:translateX(-40px);opacity:.2}to{transform:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -443,7 +462,22 @@ const CUES = [
   ["Two clocks", "Both start together", "Only one waits for you"],
   ["Communicate early", "Share verified facts", "Update continuously", "Thank you → STOP"]
 ];
-{ let ci = 0; BEATS.forEach(b => { if (b.say) b.cue = CUES[ci++]; }); }
+const EVID = [
+  "Our video · Leader A vs Leader B", "Framing: investigation vs people", "WHO (2005) · Seeger (2006)", "Roadmap of the 3 arguments",
+  "Allport & Postman (1947)", "CrowdStrike · Delta · July 2024", "de Berker et al. (2016) · UCL · 45 volunteers", "Prof. Michelle Buck · Kellogg",
+  "Snowden & Boone (2007) · Harvard Business Review", "van der Bles et al. (2020) · PNAS · 5,780 people", "Arpan & Roskos-Ewoldsen (2005) · CDC",
+  "Cards appear by themselves", "Chapter 4: logic + emotion", "Al-Rubai'ey & Al-Sharafi (2023) · Journal of Risk Research",
+  "Inoculation (Ch. 4) · Gilovich (1998)", "Known vs unknown", "Reardon's ACE (Ch. 4)", "Back to the opening idea", "Our final message"];
+const TIPS = [
+  "Smile, look at Dr. Reshma first", "Point to each clock on the screen", "Slow down on the WHO quote", "Count 1-2-3 on your fingers",
+  "Point to the word Ambiguity", "Say the numbers slowly", "Pause after “fifty-fifty”", "Turn to Saif on the last line",
+  "Use your hands: act → sense → respond", "Stress “small drop”", "Pause after “stealing thunder”",
+  "Let each card appear as you say it", "Say “we are sorry” softly", "“We all lived it” — look at the class",
+  "Calm voice, not attacking", "End strong: “part of the plan”", "Slow, clear, three levels", "Pause before the last line", "Stop after “Thank you”"];
+{ let ci = 0; BEATS.forEach(b => { if (b.say){ b.cue = CUES[ci]; b.ev = EVID[ci]; b.tip = TIPS[ci]; ci++; } }); }
+const SCREEN_NAME = {leaders:"Leader A vs Leader B", clocks:"Two clocks", define:"Quickly ≠ guess + WHO quote", levels:"Three levels", formula:"Rumour formula",
+  case:"CrowdStrike bars", stress:"Stress curve", team:"Check-in desk", cynefin:"Act → sense → respond", quote:"Research quote", cards:"Three cards",
+  message:"Airline message", oman:"Oman COVID-19", doubt:"“They may say…”", recap:"Three levels + ACE", final:"Final lines + hand-over", neutral:"Neutral screen", vs:"The real choice"};
 const PHASES = BEATS.map(b => b.phase).filter((p,k,a) => p && a.indexOf(p) === k);
 
 const REBUT = [
@@ -733,26 +767,47 @@ async function cockpit(){
   let lastI = -1;
   try { await navigator.wakeLock?.request("screen"); } catch(e){}
 
+  let dir = 0;   // 1 = moved forward, -1 = moved back (for the slide-in direction)
   function render(){
     const b = BEATS[S.i], nx = BEATS[S.i + 1], col = b.team ? teamCol(b.team) : "var(--glow)";
-    const ks = inSec(S.i), pos = ks.indexOf(S.i);
     const who = b.who ? `<span class="whotag">${esc(b.who)}</span>` : "";
+    const screen = b.v ? (SCREEN_NAME[b.v.t] || "") : b.type === "video" ? "The video, full screen" : b.type === "game" ? "Competition start button" : b.type === "welcome" ? "Motion, teams and QR" : "";
+    const handover = nx && nx.who && b.who && nx.who !== b.who && nx.team === "prop" && b.team === "prop";
     app.innerHTML = `<div class="ck" style="--tc:${col}">
       <div class="ck-top"><span><i class="dot ${ONLINE && NET ? "" : "off"}"></i>${!ONLINE ? "SOLO (not linked)" : NET ? "ONLINE · ROOM " + code : "CONNECTING… taps will send when online"}</span><span>${S.i + 1} / ${BEATS.length}</span></div>
-      <div class="ck-body">
+      <div class="ck-prog"><i style="width:${(S.i / (BEATS.length - 1) * 100).toFixed(1)}%"></i></div>
+      <div class="ck-body swipe-${dir > 0 ? "in-r" : dir < 0 ? "in-l" : "none"}">
         <div class="ck-head">${who}<h2>${esc(b.sec)}</h2></div>
-        ${b.cue ? `<div class="sayb"><ul class="cl">${b.cue.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>` : b.say ? `<div class="sayb"><p>${md(b.say)}</p></div>` : ""}
+        ${b.cue ? `<div class="sayb big"><ul class="cl">${b.cue.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>` : b.say ? `<div class="sayb big"><p>${md(b.say)}</p></div>` : ""}
+        ${b.cue || screen ? `<div class="chips">${screen ? `<span class="chip2"><em>ON SCREEN</em>${esc(screen)}</span>` : ""}${b.ev ? `<span class="chip2"><em>EVIDENCE</em>${esc(b.ev)}</span>` : ""}${b.tip ? `<span class="chip2 tip"><em>TIP</em>${esc(b.tip)}</span>` : ""}</div>` : ""}
         ${b.job ? `<div class="box job"><p>${esc(b.job)}</p></div>` : ""}
         ${b.qs ? `<div class="box"><h4>OUR QUESTIONS</h4><div class="pairs"><div><b>ISMAIL</b>${esc(QS.ismail)}</div><div><b>SAIF</b>${esc(QS.saif)}</div><div><b>IF THEY AGREE</b>${esc(QS.agree)}</div></div></div>` : ""}
         ${b.rebut ? `<div class="box"><h4>IF THEY SAY → WE ANSWER</h4><div class="pairs">${REBUT.map(r => `<div><b>${esc(r[0])}</b>${esc(r[1])}</div>`).join("")}</div></div>` : ""}
+        ${handover ? `<div class="hand">Next: <b>${esc(nx.who)}</b> speaks. Hand over with eye contact.</div>` : ""}
         ${nx ? `<div class="peek">Next → ${peekText(nx)}</div>` : ""}
       </div>
-      <div class="ck-ctrl"><button id="bk">◀ Back</button><button class="nx" id="nx">${nx ? "NEXT ▶" : "Done"}</button></div>
+      <div class="ck-ctrl"><button id="bk">◀ Back</button><div class="hint">Swipe <b>←</b> next · <b>→</b> back</div><button class="nx" id="nx">${nx ? "NEXT ▶" : "Done"}</button></div>
     </div>`;
-    $("#bk").onclick = act.back; $("#nx").onclick = () => nx && act.next();
+    $("#bk").onclick = () => go2(-1); $("#nx").onclick = () => nx && go2(1);
     window.scrollTo(0, 0);
     lastI = S.i;
   }
+  function go2(d){
+    if (d > 0 && S.i >= BEATS.length - 1) return;
+    if (d < 0 && S.i <= 0) return;
+    dir = d; try { navigator.vibrate?.(15); } catch(e){}
+    d > 0 ? act.next() : act.back();
+  }
+  /* swipe: finger moves right-to-left = next, left-to-right = back. Vertical scrolling still works. */
+  let sx = 0, sy = 0, st = 0, tracking = false;
+  document.addEventListener("touchstart", e => { if (e.touches.length !== 1) return; tracking = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, {passive:true});
+  document.addEventListener("touchend", e => {
+    if (!tracking) return; tracking = false;
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - st < 900){ dx < 0 ? go2(1) : go2(-1); }
+  }, {passive:true});
+  /* if the browser's own "back" swipe fires, stay on the page and treat it as Back */
+  try { history.pushState({ck:1}, ""); addEventListener("popstate", () => { history.pushState({ck:1}, ""); go2(-1); }); } catch(e){}
   let lastNet = NET;
   listeners.push(() => { if (S.i !== lastI || NET !== lastNet){ lastNet = NET; render(); } });
   render();
