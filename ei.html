@@ -939,6 +939,25 @@ function cardPage(me, R) {
       <div class="bx" style="margin-top:8px"><b style="color:#FFB067">Grow next · ${WA.name}</b>${WA.bands[bandOf(R.s[R.weak])].tips[0]}</div></div>
   </div><div class="cd-f"><span>The Leader Within · ${esc(CONFIG.place)} · ${esc(CONFIG.lecturer)}'s class</span><em>Know yourself. Lead others.</em><span>Goleman's five-area EI model</span></div></div>`;
 }
+/* iPhone/Safari: html2canvas draws SVG images at the wrong size, so turn every SVG image into a PNG first */
+async function rasterSVGs(root) {
+  const imgs = $$("img", root).filter(i => i.src.startsWith("data:image/svg+xml"));
+  await Promise.all(imgs.map(img => new Promise(done => {
+    const r = img.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    const k = 3, src = new Image();
+    src.onload = () => {
+      try {
+        const c = document.createElement("canvas"); c.width = w * k; c.height = h * k;
+        c.getContext("2d").drawImage(src, 0, 0, w * k, h * k);
+        img.style.width = w + "px"; img.style.height = h + "px";
+        img.onload = () => done(); img.onerror = () => done();
+        img.src = c.toDataURL("image/png");
+      } catch (e) { console.warn(e); done(); }
+    };
+    src.onerror = () => done();
+    src.src = img.src;
+  })));
+}
 async function makePDF(html, orientation, filename, btn) {
   const label = btn ? btn.innerHTML : ""; if (btn) { btn.disabled = true; btn.textContent = "Preparing your PDF…"; }
   let holder;
@@ -948,6 +967,7 @@ async function makePDF(html, orientation, filename, btn) {
     try { await document.fonts.ready; } catch {}
     holder = document.createElement("div"); holder.className = "pdfhold"; holder.innerHTML = html; document.body.appendChild(holder);
     await Promise.all($$("img", holder).map(i => i.decode ? i.decode().catch(() => {}) : null));
+    await rasterSVGs(holder);
     const pages = $$(".pg", holder), land = orientation === "landscape";
     const pdf = new window.jspdf.jsPDF({orientation, unit: "mm", format: "a4", compress: true});
     for (let k = 0; k < pages.length; k++) {
