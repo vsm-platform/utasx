@@ -515,8 +515,6 @@ const CONFIG = {
   lecturer: "Dr. Reshma",
   place: "UTAS Ibra",
   adminPin: "2026",                         // PIN for #admin and #report
-  sections: ["Section 1", "Section 2", "Section 3", "Section 4"],   // shown as buttons on the join screen ([] = free text)
-  programmes: ["Diploma", "Advanced Diploma", "Bachelor", "Postgraduate"],
   root: "ei",                               // Firebase root for this app
   // Same Firebase project as crisis.html. Set firebase to null to force demo mode.
   firebase: {
@@ -819,7 +817,7 @@ function demoAnswers() {
 }
 function demoPerson(i, leader, done) {
   const [name, g] = DEMO_NAMES[i % DEMO_NAMES.length];
-  const p = {leader, name, sid: "2" + (3 + i % 3) + String(10000 + Math.floor(Math.random() * 89999)), section: CONFIG.sections.length ? CONFIG.sections[i % CONFIG.sections.length] : "Section " + (1 + i % 3), gender: g === "F" ? "Female" : "Male", prog: CONFIG.programmes[Math.random() < .55 ? 2 : Math.random() < .6 ? 0 : 1], p: 0, done: false};
+  const p = {leader, name, gender: g === "F" ? "Female" : "Male", p: 0, done: false};
   if (done) { const a = demoAnswers(), R = scoreOf(a); Object.assign(p, {answers: a, s: R.s, overall: R.overall, band: R.band, done: true, p: 25, ts: Date.now() - (40 - i) * 45e3}); }
   return p;
 }
@@ -859,8 +857,7 @@ function reportPages(me, R) {
     <div class="cv-t">Your Emotional<br><em>Intelligence</em> Report</div>
     <div class="cv-n">${esc(me.name)}</div>
     <div class="cv-meta">
-      <div><span>Leader number</span><b>Leader ${me.leader}</b></div><div><span>Student ID</span><b>${esc(me.sid)}</b></div>
-      <div><span>Section</span><b>${esc(me.section)}</b></div><div><span>Programme</span><b>${esc(me.prog)}</b></div>
+      <div><span>Leader number</span><b>Leader ${me.leader}</b></div><div><span>Date</span><b>${esc(dateStr(me.ts || Date.now()))}</b></div>
     </div>
     <div class="cv-ring"><img src="${ringCover}" alt=""><div class="rv"><b>${R.overall}%</b><small>Overall EI</small></div></div>
     <div class="cv-band"><span class="pill" style="background:${B.color};font-size:14px;padding:7px 18px">${B.name}</span></div>
@@ -933,7 +930,7 @@ function cardPage(me, R) {
   const B = BANDS[R.band], SA = AREAS[R.strong], WA = AREAS[R.weak];
   return `<div class="pg land card"><div class="cd">
     <div class="l"><img class="lg" src="${LOGO_DARK}" alt=""><div class="k">EI Profile Card</div><div class="nm">${esc(me.name)}</div>
-      <div class="mt">Leader ${me.leader} · ID ${esc(me.sid)}<br>${esc(me.section)} · ${esc(me.prog)}<br>${esc(dateStr(me.ts || Date.now()))}</div>
+      <div class="mt">Leader ${me.leader}<br>${esc(dateStr(me.ts || Date.now()))}</div>
       <div class="rg"><img src="${svgURL(ringSVG(R.overall, B.color, {size: 200, sw: 14, track: "rgba(255,255,255,.14)", ticks: true, id: "cr"}))}" alt=""><div class="rv"><b>${R.overall}%</b><small>Overall EI</small></div></div>
       <div style="margin-top:12px;width:200px;text-align:center"><span class="pill" style="background:${B.color};font-size:12.5px;padding:6px 16px">${B.name}</span></div></div>
     <div class="m"><img src="${svgURL(radarSVG(R.s, {dark: true, id: "cdr", fs: 28}))}" alt=""></div>
@@ -1156,14 +1153,11 @@ function Play(be) {
   function join() {
     screen = "join";
     const chipsF = (name, list) => `<div class="chips" data-f="${name}">${list.map(v => `<button type="button" data-v="${esc(v)}">${esc(v)}</button>`).join("")}</div>`;
-    const el = go(`<div class="kick">Step 1 of 2</div><h1 class="ph-h1" style="font-size:2.2rem">Tell us <em>who</em> you are</h1>
+    const el = go(`<div class="kick">Before you begin</div><h1 class="ph-h1" style="font-size:2.2rem">Tell us <em>who</em> you are</h1>
       <p class="lead" style="margin-bottom:1rem">On the big screen you will appear only as a <b>Leader number</b>. Your name is seen by your lecturer only.</p>
       <form class="form" id="jf" autocomplete="off">
         <div class="fld"><label for="f-n">Full name</label><input id="f-n" maxlength="60" autocomplete="name" placeholder="e.g. Maryam Al Habsi"></div>
-        <div class="fld"><label for="f-i">Student ID</label><input id="f-i" maxlength="20" inputmode="numeric" placeholder="e.g. 23S1234"></div>
-        <div class="fld"><label>Section</label>${CONFIG.sections.length ? chipsF("section", CONFIG.sections) : `<input id="f-s" maxlength="30" placeholder="e.g. Section 2">`}</div>
         <div class="fld"><label>Gender</label>${chipsF("gender", ["Male", "Female"])}</div>
-        <div class="fld"><label>Programme level</label>${chipsF("prog", CONFIG.programmes)}</div>
         <div class="err" id="je"></div>
         <button class="btn wide" id="jb">Get my leader number</button>
       </form>`);
@@ -1171,17 +1165,16 @@ function Play(be) {
     $$(".chips", el).forEach(c => c.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; $$("button", c).forEach(x => x.classList.toggle("on", x === b)); val[c.dataset.f] = b.dataset.v; }));
     $("#jf", el).onsubmit = async e => {
       e.preventDefault();
-      const name = $("#f-n", el).value.trim().replace(/\s+/g, " "), sid = $("#f-i", el).value.trim();
-      const section = CONFIG.sections.length ? val.section : ($("#f-s", el)?.value.trim() || "");
-      const err = !name || name.length < 3 ? "Please write your full name." : !sid ? "Please write your student ID." : !section ? "Please choose your section." : !val.gender ? "Please choose your gender." : !val.prog ? "Please choose your programme level." : !S.open ? "The survey is closed right now." : "";
+      const name = $("#f-n", el).value.trim().replace(/\s+/g, " ");
+      const err = !name || name.length < 3 ? "Please write your full name." : !val.gender ? "Please choose your gender." : !S.open ? "The survey is closed right now." : "";
       if (err) { $("#je", el).textContent = err; return; }
       const b = $("#jb", el); b.disabled = true; b.textContent = "Joining…";
       try {
         const leader = await be.nextLeader();
         const id = "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-        const rec = {leader, name, sid, section, gender: val.gender, prog: val.prog, p: 0, done: false, joinedAt: be.TS};
+        const rec = {leader, name, gender: val.gender, p: 0, done: false, joinedAt: be.TS};
         await be.put(id, rec);
-        me = {id, leader, name, sid, section, gender: val.gender, prog: val.prog, answers: [], ch: [], done: false};
+        me = {id, leader, name, gender: val.gender, answers: [], ch: [], done: false};
         save(); watchMe(); leaderReveal();
       } catch (x) { console.warn(x); $("#je", el).textContent = "Could not connect. Check your internet and try again."; b.disabled = false; b.textContent = "Get my leader number"; }
     };
@@ -1333,8 +1326,8 @@ function Admin(be, demo) {
           <button class="btn danger" id="aReset">Reset everything</button></div>
           <p class="note">Reset deletes all answers and restarts Leader numbers from 1. Download the CSV first.</p></div>
       </div>
-      <div class="gl" style="padding:16px 18px 6px"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap"><h3 style="margin:0;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);flex:1">Participants</h3><input class="search" id="aQ" placeholder="Search name, ID, leader…"></div>
-        <div class="tblw" style="max-height:62vh"><table class="t"><thead><tr><th>Leader</th><th>Name</th><th>Student ID</th><th>Section</th><th>Gender</th><th>Programme</th><th>Status</th>${AREAS.map(a => `<th class="n" title="${a.name}">${a.name.replace("Self-", "S-")}</th>`).join("")}<th class="n">Overall</th><th>Level</th><th></th></tr></thead><tbody id="aT"></tbody></table></div></div>
+      <div class="gl" style="padding:16px 18px 6px"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap"><h3 style="margin:0;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);flex:1">Participants</h3><input class="search" id="aQ" placeholder="Search name or leader…"></div>
+        <div class="tblw" style="max-height:62vh"><table class="t"><thead><tr><th>Leader</th><th>Name</th><th>Gender</th><th>Status</th>${AREAS.map(a => `<th class="n" title="${a.name}">${a.name.replace("Self-", "S-")}</th>`).join("")}<th class="n">Overall</th><th>Level</th><th></th></tr></thead><tbody id="aT"></tbody></table></div></div>
     </div>`;
     let D = null;
     const openRep = () => window.open(baseURL() + "#report", "_blank");
@@ -1347,8 +1340,8 @@ function Admin(be, demo) {
     $("#aT").onclick = async e => { const b = e.target.closest(".x"); if (!b) return; const p = D.all.find(x => x.id === b.dataset.id); if (p && confirm(`Delete Leader ${p.leader} (${p.name})?`)) await be.remove(p.id); };
     function draw() {
       if (!D) return; const q = $("#aQ").value.trim().toLowerCase();
-      const rows = D.all.slice().sort((a, b) => b.leader - a.leader).filter(p => !q || [p.name, p.sid, "leader " + p.leader, p.section, p.prog].join(" ").toLowerCase().includes(q));
-      $("#aT").innerHTML = rows.map(p => `<tr><td><b>Leader ${p.leader}</b></td><td>${esc(p.name)}</td><td>${esc(p.sid)}</td><td>${esc(p.section)}</td><td>${esc(p.gender)}</td><td>${esc(p.prog)}</td><td>${p.done ? `<span style="color:var(--pro);font-weight:700">Completed</span>` : `<span style="color:var(--mut)">${p.p || 0}/25</span>`}</td>${AREAS.map((a, i) => `<td class="n">${p.done ? p.s[i] + "%" : "–"}</td>`).join("")}<td class="n"><b>${p.done ? p.overall + "%" : "–"}</b></td><td>${p.done ? `<span class="bp" style="--c:${BANDS[p.band].color}">${BANDS[p.band].short}</span>` : ""}</td><td><button class="x" data-id="${esc(p.id)}" title="Delete">✕</button></td></tr>`).join("") || `<tr><td colspan="15" style="text-align:center;color:var(--mut);padding:30px">No participants yet.</td></tr>`;
+      const rows = D.all.slice().sort((a, b) => b.leader - a.leader).filter(p => !q || [p.name, "leader " + p.leader, p.gender].join(" ").toLowerCase().includes(q));
+      $("#aT").innerHTML = rows.map(p => `<tr><td><b>Leader ${p.leader}</b></td><td>${esc(p.name)}</td><td>${esc(p.gender)}</td><td>${p.done ? `<span style="color:var(--pro);font-weight:700">Completed</span>` : `<span style="color:var(--mut)">${p.p || 0}/25</span>`}</td>${AREAS.map((a, i) => `<td class="n">${p.done ? p.s[i] + "%" : "–"}</td>`).join("")}<td class="n"><b>${p.done ? p.overall + "%" : "–"}</b></td><td>${p.done ? `<span class="bp" style="--c:${BANDS[p.band].color}">${BANDS[p.band].short}</span>` : ""}</td><td><button class="x" data-id="${esc(p.id)}" title="Delete">✕</button></td></tr>`).join("") || `<tr><td colspan="12" style="text-align:center;color:var(--mut);padding:30px">No participants yet.</td></tr>`;
     }
     be.subscribe(st => {
       D = derive(st);
@@ -1360,9 +1353,9 @@ function Admin(be, demo) {
   });
 }
 function downloadCSV(D) {
-  const head = ["Leader", "Name", "Student ID", "Section", "Gender", "Programme", "Status", "Completed at", ...AREAS.map(a => a.name + " %"), "Overall %", "Level", "Strongest area", "Weakest area", ...ITEMS.map((_, i) => `Q${i + 1} (${AREAS[Math.floor(i / 5)].name})`)];
+  const head = ["Leader", "Name", "Gender", "Status", "Completed at", ...AREAS.map(a => a.name + " %"), "Overall %", "Level", "Strongest area", "Weakest area", ...ITEMS.map((_, i) => `Q${i + 1} (${AREAS[Math.floor(i / 5)].name})`)];
   const q = v => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-  const rows = D.all.map(p => [p.leader, p.name, p.sid, p.section, p.gender, p.prog, p.done ? "Completed" : `In progress (${p.p || 0}/25)`, p.done && p.ts ? new Date(p.ts).toLocaleString("en-GB") : "", ...AREAS.map((_, i) => p.done ? p.s[i] : ""), p.done ? p.overall : "", p.done ? BANDS[p.band].name : "", p.done ? AREAS[p.strong].name : "", p.done ? AREAS[p.weak].name : "", ...ITEMS.map((_, i) => p.answers[i] || "")]);
+  const rows = D.all.map(p => [p.leader, p.name, p.gender, p.done ? "Completed" : `In progress (${p.p || 0}/25)`, p.done && p.ts ? new Date(p.ts).toLocaleString("en-GB") : "", ...AREAS.map((_, i) => p.done ? p.s[i] : ""), p.done ? p.overall : "", p.done ? BANDS[p.band].name : "", p.done ? AREAS[p.strong].name : "", p.done ? AREAS[p.weak].name : "", ...ITEMS.map((_, i) => p.answers[i] || "")]);
   const csv = "﻿" + [head, ...rows].map(r => r.map(q).join(",")).join("\r\n") + "\r\n\r\nAnswer codes: 1 = Rarely, 2 = Sometimes, 3 = Always. Area % = (sum of 5 items - 5) / 10 x 100.";
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], {type: "text/csv;charset=utf-8"}));
   a.download = `EI-class-results-${new Date().toISOString().slice(0, 10)}.csv`; document.body.appendChild(a); a.click(); a.remove();
@@ -1407,13 +1400,13 @@ function drawReport(D) {
       <div class="rp-t"><table class="rt"><thead><tr><th>#</th><th>Area</th><th>Statement</th><th class="n">Rarely</th><th class="n">Sometimes</th><th class="n">Always</th><th class="n">Mean</th></tr></thead><tbody>
       ${items.map(x => `<tr class="${low.includes(x.i) ? "low" : ""}"><td>${x.i + 1}</td><td style="white-space:nowrap"><span class="dot" style="background:${AREAS[Math.floor(x.i / 5)].color}"></span>${AREAS[Math.floor(x.i / 5)].name}</td><td>${esc(x.t)}</td>${[1, 2, 3].map(v => `<td class="n">${n ? Math.round(x.c[v] / n * 100) + "%" : "–"}</td>`).join("")}<td class="n"><b>${x.m == null ? "–" : x.m.toFixed(2)}</b></td></tr>`).join("")}
       </tbody></table></div></div>
-    <div class="rp long"><h2>Group comparisons</h2><p class="sub">Average area scores by section, gender and programme level. Treat small groups (n &lt; 5) with care.</p>
-      ${groups("section", "Section")}${groups("gender", "Gender")}${groups("prog", "Programme")}</div>
+    <div class="rp long"><h2>Comparison by gender</h2><p class="sub">Average area scores for female and male students. Treat small groups (n &lt; 5) with care.</p>
+      ${groups("gender", "Gender")}</div>
     <div class="rp"><h2>Suggested class focus</h2><p class="sub">Based on the class's two lowest areas.</p>
       ${n ? `<div class="tipcol">${[W, W2].map(a => `<div style="border-top:4px solid ${a.color}"><h4>${a.name} · ${r0(D.avg[AREAS.indexOf(a)])}%</h4><p style="margin:0 0 8px;color:#3A4166;font-size:.9rem">${a.desc}</p><ul>${a.bands.hold.tips.map(t => `<li>${t}</li>`).join("")}<li><b>Class challenge:</b> ${a.ch}</li></ul></div>`).join("")}</div>` : `<p class="sub">No completed responses yet.</p>`}</div>
     <div class="rp long"><h2>Individual results</h2><p class="sub">Confidential — for the lecturer only. Students appear on the big screen only as Leader numbers.</p>
-      <div class="rp-t"><table class="rt"><thead><tr><th>Leader</th><th>Name</th><th>Student ID</th><th>Section</th><th>Gender</th><th>Programme</th>${AREAS.map(a => `<th class="n">${a.name}</th>`).join("")}<th class="n">Overall</th><th>Level</th><th>Growth area</th></tr></thead><tbody>
-      ${done.map(p => `<tr><td><b>${p.leader}</b></td><td>${esc(p.name)}</td><td>${esc(p.sid)}</td><td>${esc(p.section)}</td><td>${esc(p.gender)}</td><td>${esc(p.prog)}</td>${AREAS.map((a, i) => `<td class="n" style="color:${p.s[i] < 50 ? "#D43F57" : "inherit"}">${p.s[i]}</td>`).join("")}<td class="n"><b>${p.overall}%</b></td><td>${bandTxt(p.band)}</td><td>${AREAS[p.weak].name}</td></tr>`).join("") || `<tr><td colspan="14">No completed responses yet.</td></tr>`}
+      <div class="rp-t"><table class="rt"><thead><tr><th>Leader</th><th>Name</th><th>Gender</th>${AREAS.map(a => `<th class="n">${a.name}</th>`).join("")}<th class="n">Overall</th><th>Level</th><th>Growth area</th></tr></thead><tbody>
+      ${done.map(p => `<tr><td><b>${p.leader}</b></td><td>${esc(p.name)}</td><td>${esc(p.gender)}</td>${AREAS.map((a, i) => `<td class="n" style="color:${p.s[i] < 50 ? "#D43F57" : "inherit"}">${p.s[i]}</td>`).join("")}<td class="n"><b>${p.overall}%</b></td><td>${bandTxt(p.band)}</td><td>${AREAS[p.weak].name}</td></tr>`).join("") || `<tr><td colspan="11">No completed responses yet.</td></tr>`}
       </tbody></table></div>
       ${D.inprog.length ? `<p class="sub" style="margin-top:10px">Not finished (${D.inprog.length}): ${D.inprog.map(p => `Leader ${p.leader} – ${esc(p.name)} (${p.p || 0}/25)`).join("; ")}</p>` : ""}</div>
     <div class="rp"><h2>Method</h2><div class="meth">Instrument: 25 self-report statements provided by ${esc(CONFIG.lecturer)} (based on the TSW Training UK Emotional Intelligence Test), five per area of Daniel Goleman's model: Self-Awareness (Q1–5), Self-Regulation (Q6–10), Self-Motivation (Q11–15), Empathy (Q16–20) and Social Skills (Q21–25). Response scale: Rarely (1), Sometimes (2), Always (3). Area score = (sum of 5 items − 5) ÷ 10 × 100. Overall EI = mean of the five area scores. Levels: Pro ≥ 75%, Hold Your Own 50–74%, Work To Do &lt; 50%. This is a self-assessment for learning and development, not a clinical measure. Results were collected live on ${esc(dateStr())}.</div></div>`;
