@@ -322,8 +322,8 @@ html,body{overscroll-behavior-x:none}
 .ck{touch-action:pan-y}
 .ck-prog{height:4px;background:#ffffff14}.ck-prog i{display:block;height:100%;background:var(--tc);transition:width .3s}
 .sayb.big{padding:clamp(22px,3.4vw,40px) clamp(22px,3.6vw,44px);border-left-width:8px;min-height:38vh;display:flex;align-items:center}
-.sayb.big .cl{gap:clamp(14px,2.2vw,26px)}
-.sayb.big .cl li{font-size:clamp(26px,4.3vw,48px);line-height:1.22;padding-left:clamp(26px,3.4vw,40px)}
+.sayb.big .cl{gap:clamp(10px,1.6vw,18px)}
+.sayb.big .cl li{font-size:clamp(21px,3.3vw,36px);line-height:1.25;padding-left:clamp(24px,3vw,36px)}
 .sayb.big .cl li::before{width:clamp(11px,1.4vw,16px);height:clamp(11px,1.4vw,16px);top:.45em}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
 .chip2{background:#ffffff0f;border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-weight:700;font-size:clamp(14px,1.8vw,19px);line-height:1.3}
@@ -442,25 +442,25 @@ let BEATS = [
 ];
 /* Phone reminders: one list per spoken beat, in order. The full line is still on the phone under "Full line". */
 const CUES = [
-  ["Greet · Ismail & Saif · we support", "Video: what would you do?", "A: wait · B: what we know + 30 min", "We stand with Leader B"],
-  ["Two clocks", "Clock 1: investigation → days", "Clock 2: people → NOW", "Leader A watches only clock 1"],
-  ["Quickly ≠ guessing", "Verified · Unknown · Next update", "WHO: no info is no reason to delay", "Seeger: wait = too late"],
-  ["Silence fails at 3 levels", "Public → rumours", "Team → anxiety", "Leader → trust"],
-  ["ARG 1: silence feeds rumours", "Allport & Postman 1947", "Rumour = importance × ambiguity", "Leader reduces ambiguity · silence grows it"],
-  ["July 2024 CrowdStrike, worldwide", "Most airlines ~1 day", "Delta ~5 days · ~7,000 flights", "No clear answers → US investigation"],
-  ["ARG 2: not knowing hurts more", "UCL 2016 · Nature Communications", "Stress highest when NOT knowing", "“The uncertainty makes us anxious”"],
-  ["Check-in staff: no information", "Buck (Kellogg): leaders who wait lose teams", "Silence = leadership failure", "→ Over to Saif"],
-  ["How can a leader act without knowing?", "Cynefin: crisis = chaos", "ACT first → sense → respond", "First message = first act"],
-  ["ARG 3: honesty keeps trust", "PNAS 2020 · ~6,000 people", "“Not certain” → small drop", "Said clearly → almost none"],
-  ["Reward for speaking first", "Stealing thunder: share bad news yourself", "→ more credible", "CDC (US health agency): first · right · credible"],
-  ["Three cards", "KNOWN: system down · don't come unless confirmed", "UNKNOWN: the cause · don't guess", "NEXT: 30 min, even if no news"],
-  ["+ HUMAN: stranded · we are sorry", "Ch. 4: logic + emotion", "Nothing invented · nothing hidden"],
-  ["Oman · COVID-19 · 2020", "Supreme Committee did not wait", "Press conferences · decisions may change", "2023 study → built trust: honest & open"],
-  ["They speak after us → inoculation", "“Nothing to say yet”", "Who decides? When next?", "Always something to say"],
-  ["“Quick = false information”", "Only when guesses = facts", "Known vs unknown", "Correction is part of the plan"],
-  ["3 levels: rumours · anxiety · trust", "Accuracy matters: we agree", "ACE: appropriate · consistent · effective"],
-  ["Two clocks", "Both start together", "Only one waits for you"],
-  ["Communicate early", "Share verified facts", "Update continuously", "Thank you → STOP"]
+  ["Good morning, Dr. Reshma and colleagues", "We are Ismail and Saif · we SUPPORT the motion", "The video ended with: what would you do?", "Leader A: wait until we know everything", "Leader B: here is what we know · next update in 30 min", "Today we stand with Leader B"],
+  ["Every crisis starts TWO clocks at the same time", "Clock 1 = investigation · full cause takes hours or days", "Clock 2 = the people · need to know what to do NOW", "Leader A watches only clock 1"],
+  ["Quickly does NOT mean guessing", "3 things: verified facts · what is still unknown · when the next update comes", "Not only our opinion:", "WHO: lack of information is NOT a reason to delay", "WHO: benefits of early warning > the risks", "Seeger: wait until certain → warning comes too late"],
+  ["Silence fails at THREE levels", "1 · The public → silence feeds rumours", "2 · The team → uncertainty creates anxiety", "3 · The leader → trust goes to whoever speaks first"],
+  ["ARG 1: silence feeds rumours", "1947 · psychologists Allport & Postman", "Rumour = importance × ambiguity", "Ambiguity = unclear information", "Importance is always high · leader can't change it", "Leader CAN reduce ambiguity · silence makes it bigger", "Hacked? Is it safe? How many days?"],
+  ["This really happened · July 2024", "Faulty CrowdStrike update crashed systems around the world", "Most airlines recovered in about ONE day", "Delta: about FIVE days · ~7,000 flights cancelled", "Passengers: no clear answers", "US Department of Transportation opened an investigation"],
+  ["ARG 2: not knowing hurts more than bad news", "2016 · University College London · Nature Communications", "Volunteers faced a possible small electric shock", "Stress HIGHEST when they did not know (50/50)", "Lower when they knew for sure", "“It is the uncertainty that makes us anxious”"],
+  ["Think of the airline's OWN staff at the check-in desk", "Angry passengers in front · NO information", "Prof. Michelle Buck · Kellogg School of Management:", "leaders who wait for clarity LOSE their teams to anxiety & rumours", "Not only a communication problem → a LEADERSHIP failure", "→ “Now Saif will show how leaders keep trust”"],
+  ["Some will ask: how can a leader act without knowing?", "Leadership model: CYNEFIN (Snowden & Boone, HBR)", "A crisis = a CHAOTIC situation", "In chaos: ACT first to create order", "Then SENSE and RESPOND", "Waiting for complete info = wrong model", "A clear first message IS that first act"],
+  ["ARG 3: honesty keeps trust", "2020 · van der Bles et al. · PNAS", "5 experiments · almost 6,000 people", "Saying “we are not certain” → only a SMALL drop in trust", "Said clearly → almost NO drop", "People can accept honesty"],
+  ["A REWARD for speaking first", "Research: “stealing thunder” (Arpan, 2005)", "Share bad news YOURSELF before others do", "→ people see you as MORE credible", "US Centers for Disease Control and Prevention (CDC):", "be first · be right · be credible", "First — but not first with rumours"],
+  ["What does a good first message look like? Three cards:", "KNOWN: booking system is down", "Do not come to the airport unless your flight is confirmed", "UNKNOWN: the exact cause · we say it openly · we do NOT guess", "NEXT: update in 30 minutes · even if there is no news"],
+  ["+ one HUMAN line:", "“We know many of you are stranded, and we are sorry”", "Chapter 4: persuasion needs logic AND emotion", "Nothing invented · nothing hidden", "People feel seen"],
+  ["Not only an airline idea · we all lived it", "2020 · COVID-19 came to Oman · no one had complete info", "The Supreme Committee did NOT wait", "Regular press conferences · shared what was known", "Told people decisions could change", "2023 study (Al-Rubai'ey & Al-Sharafi): built trust", "Because they were honest and open"],
+  ["Opponents speak after us → we answer their doubts NOW", "Chapter 4 calls this INOCULATION", "They may say: “We have nothing to say yet”", "But people waiting don't know WHO is deciding", "or WHEN they will hear more", "→ There is always something to say"],
+  ["They may say: quick messages spread false information", "Only when GUESSES are presented as FACTS", "We separate KNOWN from UNKNOWN", "If something changes → we correct it in the next update", "Correction is PART OF THE PLAN, not a failure"],
+  ["To close: silence fails at three levels", "Rumours in the public · anxiety in the team · lost trust for the leader", "We agree: accuracy matters", "Early communication PROTECTS accuracy", "Reardon's ACE:", "Appropriate (honest) · Consistent (crisis advice) · Effective (people know what to do)"],
+  ["Remember the two clocks", "“Both clocks start together.”", "“Only one waits for you.”"],
+  ["Communicate early", "Share verified facts", "Update continuously", "“Thank you.”", "→ STOP · do not tap · opposition's turn"]
 ];
 const EVID = [
   "Our video · Leader A vs Leader B", "Framing: investigation vs people", "WHO (2005) · Seeger (2006)", "Roadmap of the 3 arguments",
