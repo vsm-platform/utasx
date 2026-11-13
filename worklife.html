@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Al Shifa 3+ and Your Work Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F7F5;--card:#fff;--ink:#14312B;--soft:#5B736D;--line:#DCE7E2;--pri:#0E7C66;--pri2:#0A5E4E;--tint:#E3F3EE;--hi:#1E9E6A;--av:#D99A00;--lo:#D9603B;--r:18px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px 120px}
+header.top{position:sticky;top:0;z-index:5;background:rgba(243,247,245,.94);backdrop-filter:blur(6px);padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.top-in{max-width:680px;margin:0 auto}
+.top-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--soft);font-weight:700}
+.bar{height:8px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri),#35B58F);border-radius:99px;transition:width .4s}
+h1{font-size:30px;line-height:1.15;margin:28px 0 8px;font-weight:800;letter-spacing:-.3px}
+h2{font-size:23px;margin:26px 0 4px;font-weight:800}
+.lead{color:var(--soft);margin:0 0 18px}
+.hero{background:linear-gradient(150deg,#0E7C66,#0A5E4E);color:#fff;border-radius:24px;padding:26px 22px;margin-top:20px}
+.hero h1{margin:6px 0 10px;color:#fff}
+.hero p{margin:0;opacity:.93}
+.tag{display:inline-block;background:rgba(255,255,255,.18);padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.fact{background:var(--card);border-radius:var(--r);padding:14px 8px;text-align:center;border:1px solid var(--line)}
+.fact b{display:block;font-size:20px;color:var(--pri)}
+.fact span{font-size:13px;color:var(--soft);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px;margin:12px 0;transition:border-color .2s,box-shadow .2s}
+.card.miss{border-color:var(--lo);box-shadow:0 0 0 3px rgba(217,96,59,.15)}
+.card.done{border-color:#BFE0D5}
+.q{font-weight:700;margin:0 0 12px}
+.q small{display:block;font-weight:600;color:var(--soft);font-size:14px;margin-top:2px}
+.num{display:inline-block;min-width:26px;height:26px;line-height:26px;text-align:center;background:var(--tint);color:var(--pri2);border-radius:99px;font-size:13px;font-weight:800;margin-right:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts label{flex:1 1 auto}
+.opts.col label{flex:1 1 100%}
+.opts input,.lik input{position:absolute;opacity:0;pointer-events:none}
+.opts span{display:block;padding:12px 14px;border:2px solid var(--line);border-radius:14px;font-weight:700;text-align:center;cursor:pointer;min-height:48px;transition:all .15s}
+.opts.col span{text-align:left}
+.opts input:checked+span{background:var(--pri);border-color:var(--pri);color:#fff}
+.opts input:focus-visible+span,.lik input:focus-visible+span{outline:3px solid #7FD1BA;outline-offset:2px}
+.lik{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lik label{cursor:pointer;text-align:center}
+.lik span{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 2px 8px;border:2px solid var(--line);border-radius:14px;font-size:11.5px;line-height:1.15;font-weight:700;color:var(--soft);min-height:74px;transition:all .15s}
+.lik span::before{content:"";width:22px;height:22px;border-radius:50%;border:2px solid #B9CCC5;background:#fff;flex:none}
+.lik input:checked+span{border-color:var(--pri);background:var(--tint);color:var(--pri2)}
+.lik input:checked+span::before{background:var(--pri);border-color:var(--pri);box-shadow:inset 0 0 0 4px #fff}
+.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:12px 16px;z-index:6}
+.nav-in{max-width:680px;margin:0 auto;display:flex;gap:10px}
+button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20px;cursor:pointer;min-height:52px}
+.btn{background:var(--pri);color:#fff;flex:1}
+.btn:active{background:var(--pri2)}
+.btn[disabled]{opacity:.6}
+.ghost{background:var(--tint);color:var(--pri2)}
+.link{background:none;color:var(--soft);padding:10px;font-weight:700;text-decoration:underline;min-height:0}
+.note{font-size:14px;color:var(--soft)}
+.warn{color:var(--lo);font-weight:700;font-size:15px;margin:8px 0 0;min-height:22px}
+.consent{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px;margin:14px 0}
+.consent p{margin:0 0 10px}
+.hide{display:none!important}
+/* results */
+.overall{border-radius:24px;padding:24px 20px;color:#fff;margin-top:18px}
+.overall .big{font-size:34px;font-weight:800;line-height:1.1;margin:6px 0}
+.overall p{margin:6px 0 0;opacity:.95}
+.b-hi{background:linear-gradient(150deg,#1E9E6A,#147A52)}
+.b-av{background:linear-gradient(150deg,#D99A00,#B07A00)}
+.b-lo{background:linear-gradient(150deg,#D9603B,#B44A29)}
+.chip{display:inline-block;padding:3px 11px;border-radius:99px;font-size:13px;font-weight:800;color:#fff;white-space:nowrap}
+.c-hi{background:var(--hi)}.c-av{background:var(--av)}.c-lo{background:var(--lo)}
+.res-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.res-h b{font-size:17px}
+.meter{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 8px}
+.meter i{display:block;height:100%;border-radius:99px;width:0;transition:width .9s}
+.sc{font-size:14px;color:var(--soft);font-weight:700}
+.exp{font-size:15px;margin:4px 0 0}
+.copy{font-size:12.5px;color:var(--soft);margin-top:18px}
+.fld{display:block;width:100%;font:inherit;padding:14px;border:2px solid var(--line);border-radius:14px;margin:6px 0 12px;background:#fff}
+.fld:focus{outline:3px solid #7FD1BA;border-color:var(--pri)}
+.tbl{width:100%;border-collapse:collapse;font-size:15px}.tbl td{padding:7px 4px;border-bottom:1px solid var(--line)}.tbl td:last-child{text-align:right;font-weight:800}
+@media (min-width:560px){.lik span{font-size:13px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top hide" id="top"><div class="top-in">
+  <div class="top-row"><span id="stepName"></span><span id="stepNum"></span></div>
+  <div class="bar"><i id="barFill"></i></div>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="nav hide" id="nav"><div class="nav-in">
+  <button class="ghost" id="back" type="button">Back</button>
+  <button class="btn" id="next" type="button">Continue</button>
+</div></div>
+
+<script>
+/* ---------- settings ---------- */
+const DB_URL = "https://utasx-f7719-default-rtdb.europe-west1.firebasedatabase.app";
+const DB_PATH = "wq";
+const KEY = "wq_v1";
+const ADMIN_USER = "admin@worklife-survey.app"; // fixed admin account; the PIN is its password in Firebase Authentication
+const API_KEY = "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8"; // public web key of the Firebase project (not a password)
+
+/* ---------- content ---------- */
+const AG = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+const A = [
+ {id:"A1",t:"Gender",o:["Male","Female"]},
+ {id:"A2",t:"Age group",o:["Under 30","30–39","40–49","50 or above"]},
+ {id:"A3",t:"Job category",col:1,o:["Doctors","Dentist","Staff Nurse","Pharmacists and Assistant Pharmacist","Physiotherapists","Laboratory Technicians","Dental Technician","Dietician","Other paramedical health professionals"]},
+ {id:"A4",t:"Years of experience",o:["Less than 5","5–9","10–19","20 or more"]},
+ {id:"A5",t:"Workplace",o:["Hospital","Health center","Directorate office"]},
+ {id:"A6",t:"Nationality",o:["Omani","Non-Omani"]}
+];
+const B = [
+ {id:"B1",t:"How often do you use Al Shifa 3+ in your work?",col:1,o:["A few times a month","A few times a week","Daily","Several times a day","Throughout the working day"]},
+ {id:"B2",t:"On a typical working day, how many hours do you use Al Shifa 3+?",col:1,o:["Less than 1 hour","1–2 hours","3–4 hours","5–6 hours","More than 6 hours"]},
+ {id:"B3",t:"Which parts of Al Shifa 3+ do you use?",h:"Select all that apply",multi:1,col:1,o:["Registration / appointments","Outpatient or inpatient clinical records","Pharmacy","Laboratory","Radiology","Reports / statistics"]},
+ {id:"B4",t:"How much does your daily work depend on Al Shifa 3+?",o:["Not at all","Slightly","Moderately","Very much","Completely"]},
+ {id:"B5",t:"Besides Al Shifa 3+, which other digital tools do you use for your work?",h:"Select all that apply",multi:1,col:1,none:"None",o:["Email","WhatsApp / Teams or similar","Microsoft Office (Word, Excel, PowerPoint)","AI tools (for example ChatGPT, Gemini, ..etc)","PubMed or other online databases","None"]}
+];
+const PU = ["Using Al Shifa 3+ enables me to accomplish my tasks more quickly.","Using Al Shifa 3+ improves my job performance.","Using Al Shifa 3+ increases my productivity.","Using Al Shifa 3+ enhances my effectiveness on the job.","Using Al Shifa 3+ makes it easier to do my job.","I find Al Shifa 3+ useful in my job."];
+const PE = ["Learning to operate Al Shifa 3+ was easy for me.","I find it easy to get Al Shifa 3+ to do what I want it to do.","My interaction with Al Shifa 3+ is clear and understandable.","I find Al Shifa 3+ flexible to interact with.","It was easy for me to become skillful at using Al Shifa 3+.","I find Al Shifa 3+ easy to use."];
+/* Work-Related Quality of Life Scale. Copyright (c) 2008 QoWL Ltd. Used with permission. Wording and order unchanged. */
+const WQ = ["I have a clear set of goals and aims to enable me to do my job","I feel able to voice opinions and influence changes in my area of work","I have the opportunity to use my abilities at work","I feel well at the moment","My employer provides adequate facilities and flexibility for me to fit work in around my family life","My current working hours / patterns suit my personal circumstances","I often feel under pressure at work","When I have done a good job it is acknowledged by my line manager","Recently, I have been feeling unhappy and depressed","I am satisfied with my life","I am encouraged to develop new skills","I am involved in decisions that affect me in my own area of work","My employer provides me with what I need to do my job effectively","My line manager actively promotes flexible working hours / patterns","In most ways my life is close to ideal","I work in a safe environment","Generally things work out well for me","I am satisfied with the career opportunities available for me here","I often feel excessive levels of stress at work","I am satisfied with the training I receive in order to perform my present job","Recently, I have been feeling reasonably happy all things considered","The working conditions are satisfactory","I am involved in decisions that affect members of the public in my own area of work","I am satisfied with the overall quality of my working life"];
+
+const STEPS = [
+ {name:"Welcome"},
+ {name:"About you",title:"A little about you",lead:"Six quick taps. Nothing here can identify you.",kind:"opt",items:A},
+ {name:"Your use",title:"How you use Al Shifa 3+",lead:"Think about a normal working week.",kind:"opt",items:B},
+ {name:"Usefulness",title:"Is Al Shifa 3+ useful to you?",lead:"Choose how far you agree with each statement.",kind:"lik",pre:"PU",items:PU,from:0},
+ {name:"Ease of use",title:"Is Al Shifa 3+ easy to use?",lead:"Your honest first reaction is the best answer.",kind:"lik",pre:"PE",items:PE,from:0},
+ {name:"Work life 1/3",title:"Your working life",lead:"This is not a test. Please go with your first reaction.",kind:"lik",pre:"W",items:WQ.slice(0,8),from:0},
+ {name:"Work life 2/3",title:"Your working life",lead:"You are more than halfway. Keep going.",kind:"lik",pre:"W",items:WQ.slice(8,16),from:8},
+ {name:"Work life 3/3",title:"Your working life",lead:"Last page. Your results are next.",kind:"lik",pre:"W",items:WQ.slice(16,24),from:16}
+];
+
+/* ---------- scoring (WRQoL User Manual, 2nd ed.) ---------- */
+const FACT = {
+ JCS:{n:"Job and career satisfaction",i:[1,3,8,11,18,20],lo:19,hi:23,d:"How satisfied you are with your job and career: clear goals, recognition, training and opportunities."},
+ GWB:{n:"General well-being",i:[4,9,10,15,17,21],lo:20,hi:24,d:"How you feel in yourself and about life in general."},
+ HWI:{n:"Home–work balance",i:[5,6,14],lo:9,hi:12,d:"How well your work fits around your home and family life."},
+ SAW:{n:"Stress at work",i:[7,19],lo:4,hi:6,d:"How much pressure and stress you feel at work. A higher result here means less stress."},
+ CAW:{n:"Control at work",i:[2,12,23],lo:8,hi:11,d:"How much say you have in decisions that affect your work."},
+ WCS:{n:"Working conditions",i:[13,16,22],lo:9,hi:12,d:"Whether you have the resources, safety and conditions you need to do your job."}
+};
+const REV = [7,9,19];
+function band(v,lo,hi){return v<=lo?"lo":(v>=hi?"hi":"av")}
+function score(ans){
+  const w=k=>{const v=ans["W"+k];return REV.includes(k)?6-v:v};
+  const out={f:{}};let total=0;
+  for(const k in FACT){const f=FACT[k];const sum=f.i.reduce((s,i)=>s+w(i),0);total+=sum;
+    out.f[k]={sum,mean:+(sum/f.i.length).toFixed(2),band:band(sum,f.lo,f.hi)}}
+  out.total=total;out.totalBand=band(total,71,83);
+  out.wrqol=+(Object.values(out.f).reduce((s,x)=>s+x.mean,0)/6).toFixed(2);
+  const m=p=>+([1,2,3,4,5,6].reduce((s,i)=>s+ans[p+i],0)/6).toFixed(2);
+  out.pu=m("PU");out.pe=m("PE");
+  return out;
+}
+const tamBand=v=>v<2.5?"lo":(v>3.5?"hi":"av");
+const BL={hi:"Higher",av:"Average",lo:"Lower"};
+const BMSG={hi:"This is a strength for you right now.",av:"Similar to most staff in the reference group.",lo:"This area may deserve some attention. Think about what would help, and who could support you."};
+
+/* ---------- state ---------- */
+let S={step:0,ans:{},sent:false,res:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.ans)S=s}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const app=$("app");
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ---------- render ---------- */
+function render(){
+  window.scrollTo(0,0);
+  if(S.sent&&S.res)return results();
+  if(S.step===0)return welcome();
+  const st=STEPS[S.step];
+  $("top").classList.remove("hide");$("nav").classList.remove("hide");
+  $("stepName").textContent=st.name;$("stepNum").textContent="Step "+S.step+" of "+(STEPS.length-1);
+  $("barFill").style.width=((S.step-1)/(STEPS.length-1)*100+4)+"%";
+  $("next").textContent=S.step===STEPS.length-1?"See my results":"Continue";
+  let h=`<h2>${st.title}</h2><p class="lead">${st.lead}</p>`;
+  if(st.kind==="opt")st.items.forEach(q=>{
+    const cur=S.ans[q.id];
+    h+=`<div class="card" data-q="${q.id}"><p class="q">${esc(q.t)}${q.h?`<small>${q.h}</small>`:""}</p><div class="opts ${q.col?"col":""}">`+
+      q.o.map((o,i)=>{const on=q.multi?(cur||[]).includes(i):cur===i;
+        return `<label><input type="${q.multi?"checkbox":"radio"}" name="${q.id}" value="${i}" ${on?"checked":""}><span>${esc(o)}</span></label>`}).join("")+`</div></div>`;
+  });
+  else st.items.forEach((t,k)=>{
+    const id=st.pre+(st.from+k+1),cur=S.ans[id];
+    h+=`<div class="card" data-q="${id}"><p class="q"><span class="num">${st.from+k+1}</span>${esc(t)}</p><div class="lik">`+
+      AG.map((a,i)=>`<label><input type="radio" name="${id}" value="${i+1}" ${cur===i+1?"checked":""}><span>${a}</span></label>`).join("")+`</div></div>`;
+  });
+  h+=`<p class="warn" id="warn" role="alert"></p>`;
+  if(st.pre==="W")h+=`<p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
+  app.innerHTML=h;mark();
+}
+function mark(){app.querySelectorAll(".card[data-q]").forEach(c=>c.classList.toggle("done",answered(c.dataset.q)))}
+function answered(id){const v=S.ans[id];return Array.isArray(v)?v.length>0:v!==undefined}
+
+app.addEventListener("change",e=>{
+  const el=e.target;if(!el.name)return;
+  const q=[...A,...B].find(x=>x.id===el.name);
+  if(q&&q.multi){
+    const boxes=[...app.querySelectorAll(`input[name="${q.id}"]`)];
+    if(q.none){const ni=q.o.indexOf(q.none);
+      if(+el.value===ni&&el.checked)boxes.forEach(b=>{if(+b.value!==ni)b.checked=false});
+      else if(el.checked)boxes[ni].checked=false}
+    S.ans[q.id]=boxes.filter(b=>b.checked).map(b=>+b.value);
+  }else{
+    S.ans[el.name]=+el.value;
+    const card=el.closest(".card"),nx=card.nextElementSibling;
+    if(nx&&nx.classList.contains("card")&&!answered(nx.dataset.q))setTimeout(()=>nx.scrollIntoView({block:"center"}),180);
+  }
+  el.closest(".card").classList.remove("miss");$("warn").textContent="";save();mark();
+});
+
+$("back").onclick=()=>{S.step=Math.max(0,S.step-1);save();render()};
+$("next").onclick=()=>{
+  const miss=[...app.querySelectorAll(".card[data-q]")].filter(c=>!answered(c.dataset.q));
+  if(miss.length){miss.forEach(c=>c.classList.add("miss"));
+    $("warn").textContent=miss.length===1?"One question still needs an answer.":miss.length+" questions still need an answer.";
+    miss[0].scrollIntoView({block:"center"});return}
+  if(S.step<STEPS.length-1){S.step++;save();render()}else submit();
+};
+
+function welcome(){
+  $("top").classList.add("hide");$("nav").classList.add("hide");
+  const resume=Object.keys(S.ans).length>0;
+  app.innerHTML=`
+  <div class="hero"><span class="tag">General Directorate of Health Services, North Al Sharqiyah</span>
+   <h1>Al Shifa 3+ and your work life</h1>
+   <p>Tell us how you find Al Shifa 3+ and how working life feels for you. At the end you get your own personal results, straight away.</p></div>
+  <div class="facts"><div class="fact"><b>10 min</b><span>to complete</span></div><div class="fact"><b>Anonymous</b><span>no name asked</span></div><div class="fact"><b>Your results</b><span>at the end</span></div></div>
+  <div class="consent"><h2 style="margin-top:0">Before you start</h2>
+   <p>Dear colleague, this study examines how health staff accept and use the Al Shifa 3+ system and how this relates to their quality of work life. The results will help improve training and support for staff.</p>
+   <p>Participation is voluntary and anonymous: no name, employee number or email is collected, no manager will see individual answers, and results are reported only as group totals. You may stop at any time, and taking part or not has no effect on your job. There are no right or wrong answers.</p>
+   <p class="note">Your results are worked out on your own phone. Your anonymous answers are stored securely for research analysis.</p>
+   <p style="font-weight:800;margin-top:14px">By continuing, I confirm that I have read this information and agree to take part.</p>
+   <button class="btn" id="go" type="button" style="width:100%">${resume?"I agree, continue where I stopped":"I agree, let's start"}</button>
+   <div style="text-align:center"><button class="link" id="no" type="button">I do not agree</button></div></div>`;
+  $("go").onclick=()=>{S.step=Math.max(1,S.step);S.ans.consent=1;save();render()};
+  $("no").onclick=()=>{app.innerHTML=`<div class="hero"><h1>Thank you</h1><p>No answers were recorded. You can close this page. If you change your mind, you are welcome to come back at any time.</p></div>`};
+}
+
+/* ---------- submit ---------- */
+async function submit(){
+  const btn=$("next");btn.disabled=true;btn.textContent="Sending...";
+  const res=score(S.ans);
+  const a={...S.ans};delete a.consent;
+  for(const q of [...A,...B])a[q.id]=q.multi?a[q.id].map(i=>q.o[i]).join(" | "):q.o[a[q.id]];
+  const rec={ts:{".sv":"timestamp"},v:1,d:a,s:{pu:res.pu,pe:res.pe,wrqol:res.wrqol,total:res.total,...Object.fromEntries(Object.entries(res.f).map(([k,x])=>[k,x.sum]))}};
+  try{
+    const r=await fetch(`${DB_URL}/${DB_PATH}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(rec)});
+    if(!r.ok)throw new Error(r.status);
+    S.sent=true;S.res=res;S.ans={};save();render();
+  }catch(e){
+    btn.disabled=false;btn.textContent="Try again";
+    $("warn").textContent="Your answers could not be sent. Please check your connection and tap Try again. Nothing is lost.";
+  }
+}
+
+/* ---------- results ---------- */
+function row(name,chipBand,mean,desc,msg){
+  const col={hi:"var(--hi)",av:"var(--av)",lo:"var(--lo)"}[chipBand];
+  return `<div class="card"><div class="res-h"><b>${name}</b><span class="chip c-${chipBand}">${BL[chipBand]}</span></div>
+   <div class="meter"><i data-w="${mean/5*100}" style="background:${col}"></i></div>
+   <div class="sc">${mean.toFixed(1)} out of 5</div><p class="exp">${desc} <b>${msg}</b></p></div>`;
+}
+function results(){
+  $("top").classList.add("hide");$("nav").classList.add("hide");
+  const r=S.res,b=r.totalBand;
+  const head={hi:"Your quality of work life is in the higher range",av:"Your quality of work life is in the average range",lo:"Your quality of work life is in the lower range"}[b];
+  const sub={hi:"Overall, working life seems to be going well for you. Look below to see which areas are strongest.",av:"Overall, your working life is similar to most staff in the reference group. Look below for your stronger and weaker areas.",lo:"Overall, working life seems difficult for you at the moment. Look below to see which areas weigh most."}[b];
+  let h=`<div class="overall b-${b}"><span class="tag">Your personal results</span><div class="big">${head}</div>
+   <p>Overall score: <b>${r.wrqol.toFixed(1)} out of 5</b></p><p>${sub}</p></div>
+   <h2>The six areas of your work life</h2><p class="lead">Higher is better in every area.</p>`;
+  for(const k of ["JCS","GWB","HWI","SAW","CAW","WCS"]){const f=r.f[k];h+=row(FACT[k].n,f.band,f.mean,FACT[k].d,BMSG[f.band])}
+  const tm={hi:"You find the system helpful in this respect.",av:"Your view is mixed.",lo:"The system is not working well for you in this respect."};
+  h+=`<h2>Your view of Al Shifa 3+</h2><p class="lead">Based on your own answers.</p>`+
+   row("Usefulness",tamBand(r.pu),r.pu,"How much you feel Al Shifa 3+ helps you do your job.",tm[tamBand(r.pu)])+
+   row("Ease of use",tamBand(r.pe),r.pe,"How easy you find Al Shifa 3+ to learn and use.",tm[tamBand(r.pe)])+
+  `<div class="card"><p class="q">How to read these results</p>
+   <p class="exp">Work life results are compared with a reference group of 953 health service staff in the United Kingdom, from the official manual of the scale. They are a general guide, not a medical or psychological assessment. The Al Shifa 3+ labels are a simple guide: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher.</p>
+   <p class="exp">If you have been feeling low or under heavy stress for some time, please consider talking to someone you trust or to a health professional.</p>
+   <p class="exp">These results are shown only to you and are not linked to your name.</p></div>
+   <div class="hero" style="margin-top:16px"><h1 style="font-size:24px">Thank you for taking part</h1><p>Your answers will help improve training and support for staff. You can take a screenshot to keep your results.</p></div>
+   <p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
+  app.innerHTML=h;
+  requestAnimationFrame(()=>setTimeout(()=>app.querySelectorAll(".meter i").forEach(i=>i.style.width=i.dataset.w+"%"),60));
+}
+
+/* ---------- admin export (#admin) ---------- */
+function adminView(){
+  $("top").classList.add("hide");$("nav").classList.add("hide");
+  app.innerHTML=`<h1>Data export</h1><p class="lead">Researcher access only.</p>
+  <form class="card" id="af"><label class="q" for="pw">PIN</label><input class="fld" id="pw" type="password" inputmode="numeric" autocomplete="current-password" minlength="6" required autofocus>
+  <button class="btn" style="width:100%" id="ab">Open</button><p class="warn" id="aw" role="alert"></p></form><div id="ad"></div>`;
+  $("af").onsubmit=async e=>{e.preventDefault();const b=$("ab"),w=$("aw");b.disabled=true;b.textContent="Checking...";w.textContent="";
+    try{
+      let r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="+API_KEY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:ADMIN_USER,password:$("pw").value,returnSecureToken:true})});
+      let j=await r.json();if(!r.ok)throw new Error(j.error&&/TOO_MANY/.test(j.error.message)?"Too many attempts. Please wait a few minutes.":"Wrong PIN.");
+      r=await fetch(`${DB_URL}/${DB_PATH}.json?auth=${j.idToken}`);
+      if(!r.ok)throw new Error("PIN accepted, but the database rule does not allow reading yet. Check the wq rule.");
+      adminData(await r.json()||{});$("af").classList.add("hide");
+    }catch(err){w.textContent=err.message;b.disabled=false;b.textContent="Open"}
+  };
+}
+const COLS=["A1","A2","A3","A4","A5","A6","B1","B2","B3","B4","B5",...[1,2,3,4,5,6].map(i=>"PU"+i),...[1,2,3,4,5,6].map(i=>"PE"+i),...WQ.map((_,i)=>"W"+(i+1))];
+function toRows(data){
+  return Object.entries(data).sort((a,b)=>(a[1].ts||0)-(b[1].ts||0)).map(([id,r],n)=>{
+    const d=r.d||{},s=r.s||{},o={No:n+1,ID:id,Submitted:r.ts?new Date(r.ts).toLocaleString("en-GB",{timeZone:"Asia/Muscat"}):""};
+    COLS.forEach(c=>o[c]=d[c]??"");
+    o.B3_count=d.B3?String(d.B3).split(" | ").length:0;
+    o.B5_count=d.B5&&d.B5!=="None"?String(d.B5).split(" | ").length:0;
+    Object.assign(o,{PU_mean:s.pu,PEOU_mean:s.pe,JCS_sum:s.JCS,GWB_sum:s.GWB,HWI_sum:s.HWI,SAW_sum:s.SAW,CAW_sum:s.CAW,WCS_sum:s.WCS,WRQoL_total:s.total,WRQoL_mean:s.wrqol});
+    return o});
+}
+function adminData(data){
+  const rows=toRows(data),n=rows.length;
+  const cnt=k=>{const m={};rows.forEach(r=>m[r[k]]=(m[r[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([a,b])=>`<tr><td>${esc(String(a))}</td><td>${b}</td></tr>`).join("")};
+  const avg=k=>n?(rows.reduce((s,r)=>s+(+r[k]||0),0)/n).toFixed(2):"-";
+  $("ad").innerHTML=`<div class="facts"><div class="fact"><b>${n}</b><span>responses</span></div><div class="fact"><b>${avg("WRQoL_mean")}</b><span>mean work life</span></div><div class="fact"><b>${avg("PU_mean")} / ${avg("PEOU_mean")}</b><span>useful / easy</span></div></div>
+   <div class="card"><p class="q">Responses by job category</p><table class="tbl">${cnt("A3")||"<tr><td>No responses yet</td><td></td></tr>"}</table></div>
+   <div class="card"><p class="q">Responses by workplace</p><table class="tbl">${cnt("A5")}</table></div>
+   <button class="btn" id="xl" style="width:100%" ${n?"":"disabled"}>Download Excel</button>
+   <div style="text-align:center"><button class="link" id="cs" ${n?"":"disabled"}>Download CSV instead</button></div>
+   <p class="note">In the file: W7, W9 and W19 are the raw answers (not reversed). Factor sums and WRQoL totals already include the reversal, as in the manual.</p>`;
+  const stamp=new Date().toISOString().slice(0,10);
+  const dl=(blob,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()};
+  const csv=()=>{const h=Object.keys(rows[0]);const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+    dl(new Blob(["﻿"+[h.join(","),...rows.map(r=>h.map(k=>q(r[k])).join(","))].join("\r\n")],{type:"text/csv"}),`worklife_data_${stamp}.csv`)};
+  $("cs").onclick=csv;
+  $("xl").onclick=()=>{const go=()=>{const wb=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Data");
+      const cb=[["Column","Meaning"],["A1-A6","Background (text)"],["B1,B2,B4","Use of Al Shifa 3+ (text)"],["B3,B5","Multiple answers separated by |"],["B3_count","Number of Al Shifa 3+ parts used"],["B5_count","Number of other digital tools used"],["PU1-PU6","Perceived usefulness, 1 = Strongly disagree to 5 = Strongly agree"],["PE1-PE6","Perceived ease of use, 1 to 5"],["W1-W24","WRQoL items, raw answers 1 to 5 (W7, W9, W19 not reversed; W24 = overall item)"],["PU_mean, PEOU_mean","Mean of the six items"],["JCS_sum ... WCS_sum","Factor totals after reversing W7, W9, W19"],["WRQoL_total","Sum of the six factor totals (23 to 115)"],["WRQoL_mean","Mean of the six factor means (1 to 5)"],...COLS.filter(c=>c[0]=="W").map((c,i)=>[c,WQ[i]])];
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cb),"Codebook");
+      XLSX.writeFile(wb,`worklife_data_${stamp}.xlsx`)};
+    if(window.XLSX)return go();
+    const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    sc.onload=go;sc.onerror=csv;document.head.appendChild(sc)};
+}
+const start=()=>location.hash==="#admin"?adminView():render();
+window.addEventListener("hashchange",start);
+start();
+</script>
+</body>
+</html>
