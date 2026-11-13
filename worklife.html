@@ -172,8 +172,9 @@ const app=$("app");
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
 
 /* ---------- render ---------- */
+let scrollT=0;
+function toTop(){clearTimeout(scrollT);window.scrollTo({top:0,left:0,behavior:"instant"});document.documentElement.scrollTop=0;document.body.scrollTop=0}
 function render(){
-  window.scrollTo(0,0);
   if(S.sent&&S.res)return results();
   if(S.step===0)return welcome();
   const st=STEPS[S.step];
@@ -195,7 +196,7 @@ function render(){
   });
   h+=`<p class="warn" id="warn" role="alert"></p>`;
   if(st.pre==="W")h+=`<p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
-  app.innerHTML=h;mark();
+  app.innerHTML=h;mark();toTop();
 }
 function mark(){app.querySelectorAll(".card[data-q]").forEach(c=>c.classList.toggle("done",answered(c.dataset.q)))}
 function answered(id){const v=S.ans[id];return Array.isArray(v)?v.length>0:v!==undefined}
@@ -212,7 +213,7 @@ app.addEventListener("change",e=>{
   }else{
     S.ans[el.name]=+el.value;
     const card=el.closest(".card"),nx=card.nextElementSibling;
-    if(nx&&nx.classList.contains("card")&&!answered(nx.dataset.q))setTimeout(()=>nx.scrollIntoView({block:"center"}),180);
+    if(nx&&nx.classList.contains("card")&&!answered(nx.dataset.q))scrollT=setTimeout(()=>nx.scrollIntoView({block:"center"}),180);
   }
   el.closest(".card").classList.remove("miss");$("warn").textContent="";save();mark();
 });
@@ -241,6 +242,7 @@ function welcome(){
    <p style="font-weight:800;margin-top:14px">By continuing, I confirm that I have read this information and agree to take part.</p>
    <button class="btn" id="go" type="button" style="width:100%">${resume?"I agree, continue where I stopped":"I agree, let's start"}</button>
    <div style="text-align:center"><button class="link" id="no" type="button">I do not agree</button></div></div>`;
+  toTop();
   $("go").onclick=()=>{S.step=Math.max(1,S.step);S.ans.consent=1;save();render()};
   $("no").onclick=()=>{app.innerHTML=`<div class="hero"><h1>Thank you</h1><p>No answers were recorded. You can close this page. If you change your mind, you are welcome to come back at any time.</p></div>`};
 }
@@ -288,7 +290,7 @@ function results(){
    <p class="exp">These results are shown only to you and are not linked to your name.</p></div>
    <div class="hero" style="margin-top:16px"><h1 style="font-size:24px">Thank you for taking part</h1><p>Your answers will help improve training and support for staff. You can take a screenshot to keep your results.</p></div>
    <p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
-  app.innerHTML=h;
+  app.innerHTML=h;toTop();
   requestAnimationFrame(()=>setTimeout(()=>app.querySelectorAll(".meter i").forEach(i=>i.style.width=i.dataset.w+"%"),60));
 }
 
