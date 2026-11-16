@@ -88,8 +88,17 @@ button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20p
 .hero .ar b{display:block;font-size:24px;font-weight:800;margin-bottom:4px}
 .consent .ar{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
 .fact em{display:block;font-style:normal;font-family:Tajawal,sans-serif;font-size:13px;color:var(--soft);direction:rtl}
+.wf .fact{padding:14px 6px 12px}.wf .fact b{font-size:15px;color:var(--ink);margin-top:6px}.wf .fact span{display:block;font-size:12px;line-height:1.3;margin:2px 0}
+.ic{display:inline-flex;width:40px;height:40px;border-radius:50%;background:var(--tint);align-items:center;justify-content:center}.ic svg{width:22px;height:22px;fill:none;stroke:var(--pri);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gift{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#E3F3EE);border:2px solid #F2C14E;border-radius:22px;padding:18px 16px;margin:4px 0 16px;box-shadow:0 6px 18px rgba(217,154,0,.15)}
+.gift h2{margin:6px 0 6px;font-size:20px;color:var(--ink)}.gift p{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.gift .ar{font-family:Tajawal,sans-serif;direction:rtl;text-align:right;color:var(--soft);margin:0}
+.badge{display:inline-block;background:#D99A00;color:#fff;font-weight:800;font-size:11px;letter-spacing:.5px;padding:3px 9px;border-radius:99px}
+.gift-t{flex:1 1 auto}.gift-v{flex:0 0 92px;background:#fff;border-radius:14px;padding:10px 8px;text-align:center;border:1px solid var(--line)}
+.mini i{display:block;height:7px;border-radius:4px;margin:5px 0}.gift-v small{font-size:11px;color:var(--soft);font-weight:700}
 .fld{display:block;width:100%;font:inherit;padding:14px;border:2px solid var(--line);border-radius:14px;margin:6px 0 12px;background:#fff}
 .fld:focus{outline:3px solid #7FD1BA;border-color:var(--pri)}
+.cov td{font-size:14px}.cov th{font-size:12px;color:var(--soft);text-align:right;padding:4px;font-weight:700}.cov th:first-child{text-align:left}.cov td:not(:first-child){text-align:right}.fl{display:inline-block;min-width:46px;padding:2px 6px;border-radius:99px;color:#fff;font-weight:800;font-size:13px;text-align:center}.fl.r{background:var(--lo)}.fl.a{background:var(--av)}.fl.g{background:var(--hi)}.dy{display:flex;align-items:center;gap:8px;font-size:13px;margin:3px 0}.dy span{width:70px;color:var(--soft)}.dy i{display:block;height:12px;background:var(--pri);border-radius:6px}.stf{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0;font-size:14px}.stf input{width:90px;padding:6px;border:1px solid var(--line);border-radius:8px;font-size:15px;text-align:right}
 .tbl{width:100%;border-collapse:collapse;font-size:15px}.tbl td{padding:7px 4px;border-bottom:1px solid var(--line)}.tbl td:last-child{text-align:right;font-weight:800}
 @media (min-width:560px){.lik span{font-size:13px}}
 @media print{#dlr,.nav,header.top,.link{display:none!important}.meter i{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
@@ -122,13 +131,13 @@ const AG = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
 const A = [
  {id:"A1",t:"Gender",o:["Male","Female"]},
  {id:"A2",t:"Age group",o:["Under 30","30–39","40–49","50 or above"]},
- {id:"A3",t:"Job category",col:1,o:["Doctors","Dentist","Staff Nurse","Pharmacists and Assistant Pharmacist","Physiotherapists","Laboratory Technicians","Dental Technician","Dietician","Other paramedical health professionals"]},
+ {id:"A3",t:"Job category",col:1,o:["Doctors","Dentist","Staff Nurse","Pharmacists and Assistant Pharmacist","Physiotherapists","Laboratory Technicians","Dental Technician","Dietician","Medical orderlies / Health Assistants","Other paramedical health professionals"]},
  {id:"A4",t:"Years of experience",o:["Less than 5","5–9","10–19","20 or more"]},
- {id:"A5",t:"Workplace",o:["Hospital","Health center","Directorate office"]},
+ {id:"A5",t:"Workplace",col:1,o:["Ibra Hospital","Sinaw Hospital","Local Hospital","Health Center","Directorate General"]},
  {id:"A6",t:"Nationality",o:["Omani","Non-Omani"]},
- {id:"A7",t:"What is your usual working pattern?",o:["Day duty only","Shift duty (including nights)","On-call system"]},
+ {id:"A7",t:"What is your usual working pattern?",col:1,o:["Morning duty only","Shift duty (Morning / Afternoon)","Shift duty (Morning / Afternoon) + On-call","Shift duty (Morning / Afternoon / Nights)","Shift duty (Morning / Afternoon / Nights) + On-call"]},
  {id:"A8",t:"In a typical week, how many extra hours do you work beyond your official hours (overtime, on-call or staying late)?",o:["None","1–5 hours","6–10 hours","More than 10 hours"]},
- {id:"A9",t:"How many night duties or on-calls do you work per month?",wh:"Answer only if you work shifts or on-call",showIf:{id:"A7",not:0},o:["None","1–4","5–8","More than 8"]},
+ {id:"A9",t:"How many night duties or on-calls do you work per month?",wh:"Answer only if your duty includes nights or on-call",showIf:{id:"A7",in:[2,3,4]},o:["None","1–4","5–8","More than 8"]},
  {id:"A10",t:"How is the number of staff in your unit compared with the workload?",col:1,o:["Much less than needed","Slightly less than needed","About right","More than needed"]}
 ];
 const B = [
@@ -233,7 +242,7 @@ function render(){
   if(st.pre==="W")h+=`<p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
   app.innerHTML=h;mark();toTop();
 }
-const shown=q=>!q.showIf||(S.ans[q.showIf.id]!==undefined&&S.ans[q.showIf.id]!==q.showIf.not);
+const shown=q=>{if(!q.showIf)return true;const v=S.ans[q.showIf.id];if(v===undefined)return false;return q.showIf.in?q.showIf.in.includes(v):v!==q.showIf.not};
 function mark(){app.querySelectorAll(".card[data-q]").forEach(c=>c.classList.toggle("done",answered(c.dataset.q)))}
 function answered(id){const v=S.ans[id];return Array.isArray(v)?v.length>0:v!==undefined}
 
@@ -272,7 +281,17 @@ function welcome(){
    <h1>AI tools and your work life</h1>
    <p>Tell us how you use and view AI tools such as ChatGPT, and how working life feels for you. At the end you get your own personal results, straight away.</p>
    <div class="ar" lang="ar"><b>أدوات الذكاء الاصطناعي وحياتك الوظيفية</b>شاركنا كيف تستخدم أدوات الذكاء الاصطناعي مثل ChatGPT ورأيك فيها، وكيف تشعر تجاه حياتك الوظيفية، وستحصل في النهاية على نتائجك الشخصية مباشرة.</div></div>
-  <div class="facts"><div class="fact"><b>6 min</b><span>to complete</span><em lang="ar">6 دقائق</em></div><div class="fact"><b>Anonymous</b><span>no name asked</span><em lang="ar">دون ذكر الاسم</em></div><div class="fact"><b>Your results</b><span>at the end</span><em lang="ar">نتائجك في النهاية</em></div></div>
+  <div class="facts wf">
+   <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></i><b>Quick and easy</b><span>about 6 minutes</span><em lang="ar">أسئلة سهلة وسريعة</em></div>
+   <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></i><b>Anonymous</b><span>your answers carry no name</span><em lang="ar">إجاباتك مجهولة الهوية</em></div>
+   <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></i><b>Private</b><span>your manager will never see them</span><em lang="ar">لن يطّلع عليها مسؤولك</em></div>
+  </div>
+  <div class="gift">
+   <div class="gift-t"><span class="badge">FREE · instant</span><h2>Get your personal results</h2>
+    <p>As soon as you finish, see your own work-life profile across six areas and how you view AI tools. Save it as a PDF to keep.</p>
+    <p class="ar" lang="ar">احصل على نتائجك الشخصية فور الانتهاء: صورة عن حياتك الوظيفية في ستة جوانب ونظرتك لأدوات الذكاء الاصطناعي، مع إمكانية حفظها PDF.</p></div>
+   <div class="gift-v" aria-hidden="true"><div class="mini">${[78,55,66,42,70,60].map((w,i)=>`<i style="width:${w}%;background:${["#1E9E6A","#D99A00","#1E9E6A","#D9603B","#1E9E6A","#D99A00"][i]}"></i>`).join("")}</div><small>Your profile</small></div>
+  </div>
   <div class="consent"><h2 style="margin-top:0">Before you start</h2>
    <p>Dear colleague, this study examines how health staff use and view artificial intelligence (AI) tools, such as ChatGPT, and how this relates to their quality of work life. The results will help improve training and support for staff. It is not a check on any policy.</p>
    <p>Participation is voluntary and anonymous: no name, employee number or email is collected, no manager will see individual answers, and results are reported only as group totals. You may stop at any time, and taking part or not has no effect on your job. There are no right or wrong answers.</p>
@@ -398,9 +417,59 @@ function downloadResults(){
 
 /* ---------- admin export (#admin) ---------- */
 let TOKEN="",ADATA={};
+const CFG_PATH="wqcfg";
+const CFG0={target:327,staff:{A3:{"Doctors":405,"Dentist":23,"Staff Nurse":1028,"Pharmacists and Assistant Pharmacist":162,"Physiotherapists":29,"Laboratory Technicians":114,"Dental Technician":32,"Dietician":12,"Medical orderlies / Health Assistants":232,"Other paramedical health professionals":153},A1:{},A4:{},A5:{}}};
+let CFG=JSON.parse(JSON.stringify(CFG0));
+const MON=["A3","A5","A1","A4"];
+const qOf=id=>A.find(q=>q.id===id);
+async function loadCfg(){
+  try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`);if(r.ok){const j=await r.json();if(j&&j.staff){CFG=mergeCfg(j);return}}}catch(e){}
+  try{const j=JSON.parse(localStorage.getItem("wq_cfg")||"null");if(j&&j.staff)CFG=mergeCfg(j)}catch(e){}
+}
+function mergeCfg(j){const c=JSON.parse(JSON.stringify(CFG0));c.target=+j.target||c.target;MON.forEach(k=>{if(j.staff&&j.staff[k])c.staff[k]=j.staff[k]});return c}
+function alloc(staff,opts,T){const tot=opts.reduce((s,o)=>s+staff[o],0);const raw=opts.map(o=>T*staff[o]/tot);const fl=raw.map(Math.floor);let left=T-fl.reduce((a,b)=>a+b,0);
+  raw.map((v,i)=>[v-fl[i],i]).sort((a,b)=>b[0]-a[0]).slice(0,left).forEach(([_,i])=>fl[i]++);const m={};opts.forEach((o,i)=>m[o]=fl[i]);return m}
+function coverage(rows,k){
+  const q=qOf(k),opts=q.o,st=CFG.staff[k]||{},have=opts.every(o=>+st[o]>0),c={};rows.forEach(r=>{c[r[k]]=(c[r[k]]||0)+1});
+  const n=rows.length;
+  if(!have) return `<div class="card"><p class="q">${q.t}<small>Counts only. Add staff numbers to see targets.</small></p><table class="tbl cov"><tr><th>Group</th><th>Responses</th><th>% of responses</th></tr>${opts.map(o=>`<tr><td>${esc(o)}</td><td>${c[o]||0}</td><td>${n?Math.round(100*(c[o]||0)/n):0}%</td></tr>`).join("")}</table></div>`;
+  const stf={};opts.forEach(o=>stf[o]=+st[o]);const tg=alloc(stf,opts,CFG.target),tot=opts.reduce((x,o)=>x+stf[o],0);
+  const rowsH=opts.map(o=>{const got=c[o]||0,t=tg[o],exp=n*stf[o]/tot,ratio=exp?got/exp:1,small=exp<3;
+    const cl=small?"":ratio>=0.9?"g":ratio>=0.7?"a":"r";
+    return {o,ratio,small,html:`<tr><td>${esc(o)}</td><td>${stf[o]}</td><td>${got} / ${t}</td><td>${Math.round(100*got/stf[o])}%</td><td>${small?"<span class='note'>too few yet</span>":`<span class="fl ${cl}">${Math.round(100*ratio)}%</span>`}</td></tr>`}});
+  const low=rowsH.filter(x=>!x.small&&x.ratio<0.7).sort((x,y)=>x.ratio-y.ratio).map(x=>x.o);
+  return `<div class="card"><p class="q">${q.t}<small>Balance = responses compared with what the group's share of staff would give at this point (100% = in line). Red under 70%, amber 70–89%, green 90% or more. Target = the group's share of ${CFG.target}.</small></p>
+  <table class="tbl cov"><tr><th>Group</th><th>Staff</th><th>Resp. / target</th><th>Rate</th><th>Balance</th></tr>${rowsH.map(x=>x.html).join("")}</table>
+  ${n&&low.length?`<p class="note"><b>Remind next:</b> ${low.map(esc).join(", ")}.</p>`:n?`<p class="note">All groups are in line with their share of staff.</p>`:""}</div>`;
+}
+function monitor(rows,data){
+  const n=rows.length,T=CFG.target,tot=Object.values(CFG.staff.A3).reduce((a,b)=>a+(+b||0),0)||2190;
+  const days={};Object.values(data).forEach(r=>{if(!r.ts)return;const d=new Date(r.ts).toLocaleDateString("en-CA",{timeZone:"Asia/Muscat"});days[d]=(days[d]||0)+1});
+  const dk=Object.keys(days).sort().slice(-21),mx=Math.max(1,...dk.map(d=>days[d]));
+  const g={};rows.forEach(r=>{g[r.AI_group]=(g[r.AI_group]||0)+1});
+  const grp=["Non-user","Occasional user","Regular user"];
+  return `<div class="card"><p class="q">Progress<small>${n} of ${T} target responses · response rate ${(100*n/tot).toFixed(1)}% of ${tot} staff</small></p><div class="bar"><i style="width:${Math.min(100,100*n/T)}%"></i></div></div>
+  ${MON.map(k=>coverage(rows,k)).join("")}
+  <div class="card"><p class="q">Responses per day<small>Last ${dk.length||0} days with responses (Oman time)</small></p>${dk.map(d=>`<div class="dy"><span>${d.slice(5)}</span><i style="width:${Math.max(4,70*days[d]/mx)}%"></i><b>${days[d]}</b></div>`).join("")||"<p class='note'>No responses yet.</p>"}</div>
+  <div class="card"><p class="q">AI use groups<small>Each group should reach about 40 for the group comparison.</small></p><table class="tbl cov">${grp.map(x=>{const v=g[x]||0;return `<tr><td>${x}</td><td><span class="fl ${v>=40?"g":v>=20?"a":"r"}">${v}</span></td></tr>`}).join("")}</table></div>
+  <button class="link" id="ed" type="button" style="width:100%">Edit staff numbers and target</button><div id="edf"></div>`;
+}
+function editCfg(){
+  const box=$("edf");
+  box.innerHTML=`<form class="card" id="cf"><p class="q">Staff numbers<small>Leave a group blank if unknown. Targets appear only when every option in a question has a number.</small></p>
+  <div class="stf"><b>Target responses</b><input id="c_t" type="number" min="1" value="${CFG.target}"></div>
+  ${MON.map(k=>{const q=qOf(k);return `<p class="q" style="margin-top:14px">${q.t}</p>`+q.o.map((o,i)=>`<div class="stf"><span>${esc(o)}</span><input type="number" min="0" data-k="${k}" data-o="${i}" value="${CFG.staff[k][o]??""}"></div>`).join("")}).join("")}
+  <button class="btn" style="width:100%;margin-top:12px">Save</button><p class="warn" id="cw" role="alert"></p></form>`;
+  $("cf").onsubmit=async e=>{e.preventDefault();
+    const c={target:Math.max(1,+$("c_t").value||327),staff:{}};MON.forEach(k=>c.staff[k]={});
+    box.querySelectorAll("input[data-k]").forEach(x=>{if(x.value!=="")c.staff[x.dataset.k][qOf(x.dataset.k).o[+x.dataset.o]]=+x.value});
+    CFG=mergeCfg(c);try{localStorage.setItem("wq_cfg",JSON.stringify(c))}catch(e){}
+    let ok=false;try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(c)});ok=r.ok}catch(e){}
+    adminData(ADATA);if(!ok)$("mw").textContent="Saved on this device only. Add the wqcfg rule in Firebase to save it online."};
+}
 function adminView(){
   $("top").classList.add("hide");$("nav").classList.add("hide");
-  app.innerHTML=`<h1>Data export</h1><p class="lead">Researcher access only.</p>
+  app.innerHTML=`<h1>Survey monitor</h1><p class="lead">Researcher access only.</p>
   <form class="card" id="af"><label class="q" for="pw">PIN</label><input class="fld" id="pw" type="password" inputmode="numeric" autocomplete="current-password" minlength="6" required autofocus>
   <button class="btn" style="width:100%" id="ab">Open</button><p class="warn" id="aw" role="alert"></p></form><div id="ad"></div>`;
   $("af").onsubmit=async e=>{e.preventDefault();const b=$("ab"),w=$("aw");b.disabled=true;b.textContent="Checking...";w.textContent="";
@@ -409,7 +478,7 @@ function adminView(){
       let j=await r.json();if(!r.ok)throw new Error(j.error&&/TOO_MANY/.test(j.error.message)?"Too many attempts. Please wait a few minutes.":"Wrong PIN.");
       r=await fetch(`${DB_URL}/${DB_PATH}.json?auth=${j.idToken}`);
       if(!r.ok)throw new Error("PIN accepted, but the database rule does not allow reading yet. Check the wq rule.");
-      TOKEN=j.idToken;ADATA=await r.json()||{};adminData(ADATA);$("af").classList.add("hide");
+      TOKEN=j.idToken;ADATA=await r.json()||{};await loadCfg();adminData(ADATA);$("af").classList.add("hide");
     }catch(err){w.textContent=err.message;b.disabled=false;b.textContent="Open"}
   };
 }
@@ -432,14 +501,13 @@ function adminData(data){
   const cnt=k=>{const m={};rows.forEach(r=>m[r[k]]=(m[r[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([a,b])=>`<tr><td>${esc(String(a))}</td><td>${b}</td></tr>`).join("")};
   const avg=k=>n?(rows.reduce((s,r)=>s+(+r[k]||0),0)/n).toFixed(2):"-";
   $("ad").innerHTML=`<div class="facts"><div class="fact"><b>${n}</b><span>responses</span></div><div class="fact"><b>${avg("WRQoL_mean")}</b><span>mean work life</span></div><div class="fact"><b>${avg("PU_mean")} / ${avg("PEOU_mean")}</b><span>useful / easy</span></div></div>
-   <div class="card"><p class="q">Responses by job category</p><table class="tbl">${cnt("A3")||"<tr><td>No responses yet</td><td></td></tr>"}</table></div>
-   <div class="card"><p class="q">Responses by workplace</p><table class="tbl">${cnt("A5")}</table></div>
-   <div class="card"><p class="q">AI use</p><table class="tbl">${cnt("AI_group")}</table></div>
+   <p class="warn" id="mw" role="alert"></p>${monitor(rows,data)}
    <button class="btn" id="xl" style="width:100%" ${n?"":"disabled"}>Download Excel</button>
    <div style="text-align:center"><button class="link" id="cs" ${n?"":"disabled"}>Download CSV instead</button></div>
    <div class="card"><p class="q">All records<small>Tap Delete twice to remove a test or pilot record. This cannot be undone.</small></p>
     <table class="tbl rec">${rows.slice().reverse().map(r=>`<tr><td>${r.No}</td><td>${r.Submitted}<br>${esc(String(r.A3))}, ${esc(String(r.A5))}</td><td><button class="del" data-id="${r.ID}" type="button">Delete</button></td></tr>`).join("")||"<tr><td>No records</td><td></td><td></td></tr>"}</table><p class="warn" id="dw" role="alert"></p></div>
    <p class="note">In the file: W7, W9 and W19 are the raw answers (not reversed). Factor sums and WRQoL totals already include the reversal, as in the manual.</p>`;
+  $("ed").onclick=editCfg;
   $("ad").querySelectorAll(".del").forEach(b=>b.onclick=async()=>{
     if(!b.dataset.arm){b.dataset.arm=1;b.textContent="Confirm delete";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Delete"}},4000);return}
     b.disabled=true;b.textContent="Deleting...";
