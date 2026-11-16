@@ -277,7 +277,7 @@ function welcome(){
   $("top").classList.add("hide");$("nav").classList.add("hide");
   const resume=Object.keys(S.ans).length>0;
   app.innerHTML=`
-  <div class="hero"><span class="tag">General Directorate of Health Services, North Al Sharqiyah</span>
+  <div class="hero">
    <h1>AI tools and your work life</h1>
    <p>Tell us how you use and view AI tools such as ChatGPT, and how working life feels for you. At the end you get your own personal results, straight away.</p>
    <div class="ar" lang="ar"><b>أدوات الذكاء الاصطناعي وحياتك الوظيفية</b>شاركنا كيف تستخدم أدوات الذكاء الاصطناعي مثل ChatGPT ورأيك فيها، وكيف تشعر تجاه حياتك الوظيفية، وستحصل في النهاية على نتائجك الشخصية مباشرة.</div></div>
@@ -295,10 +295,12 @@ function welcome(){
   <div class="consent"><h2 style="margin-top:0">Before you start</h2>
    <p>Dear colleague, this study examines how health staff use and view artificial intelligence (AI) tools, such as ChatGPT, and how this relates to their quality of work life. The results will help improve training and support for staff. It is not a check on any policy.</p>
    <p>Participation is voluntary and anonymous: no name, employee number or email is collected, no manager will see individual answers, and results are reported only as group totals. You may stop at any time, and taking part or not has no effect on your job. There are no right or wrong answers.</p>
+   <p>This staff survey is conducted in North Al Sharqiyah Governorate with approval from the Ministry of Health research ethics committee.</p>
    <p class="note">Your results are worked out on your own phone. Your anonymous answers are stored securely for research analysis.</p>
    <div class="ar" lang="ar"><h2 style="margin:0 0 6px">قبل أن تبدأ</h2>
    <p>تبحث هذه الدراسة في استخدام الكوادر الصحية لأدوات الذكاء الاصطناعي مثل ChatGPT ونظرتهم إليها، وعلاقة ذلك بجودة حياتهم الوظيفية. ستساعد النتائج في تطوير التدريب والدعم المقدَّم للموظفين. هذه الاستبانة ليست للتحقق من الالتزام بأي سياسة.</p>
    <p>المشاركة اختيارية ومجهولة الهوية: لا يُطلب الاسم أو الرقم الوظيفي أو البريد الإلكتروني، ولن يطّلع أي مسؤول على الإجابات الفردية، وتُعرض النتائج بصورة إجمالية فقط. يمكنك التوقف في أي وقت، ولا تؤثر المشاركة أو عدمها على عملك. لا توجد إجابات صحيحة أو خاطئة.</p>
+   <p>يُجرى هذا الاستبيان للكوادر الصحية في محافظة شمال الشرقية بموافقة لجنة أخلاقيات البحث في وزارة الصحة.</p>
    <p class="note">تُحسب نتائجك على هاتفك، وتُحفظ إجاباتك المجهولة بصورة آمنة لأغراض التحليل البحثي. الأسئلة باللغة الإنجليزية وتستغرق نحو 6 دقائق.</p></div>
    <p style="font-weight:800;margin-top:14px">By continuing, I confirm that I have read this information and agree to take part.</p>
    <p class="ar" lang="ar" style="font-weight:700;margin:0 0 12px;border:0;padding-top:0">بالمتابعة أقرّ بأنني قرأت هذه المعلومات وأوافق على المشاركة.</p>
@@ -375,7 +377,7 @@ function downloadResults(){
     const para=(t,size,style,color,gap)=>{d.setFont("helvetica",style||"normal");d.setFontSize(size);d.setTextColor(...(color||[20,49,43]));
       const L=d.splitTextToSize(t,CW);need(L.length*size*0.42+2);d.text(L,M,y);y+=L.length*size*0.42+(gap||2)};
     d.setFont("helvetica","bold");d.setFontSize(10);d.setTextColor(91,115,109);
-    d.text("General Directorate of Health Services, North Al Sharqiyah",M,y+4);
+    d.text("Staff survey, North Al Sharqiyah",M,y+4);
     d.setFont("helvetica","normal");d.text("Personal results  |  "+new Date().toLocaleDateString("en-GB"),W-M,y+4,{align:"right"});
     y+=10;
     d.setFillColor(...rgb[ob]);d.roundedRect(M,y,CW,30,4,4,"F");d.setTextColor(255,255,255);
