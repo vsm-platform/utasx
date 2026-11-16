@@ -132,12 +132,15 @@ const A = [
  {id:"A10",t:"How is the number of staff in your unit compared with the workload?",col:1,o:["Much less than needed","Slightly less than needed","About right","More than needed"]}
 ];
 const B = [
- {id:"B1",t:"How often do you use AI tools for work-related tasks?",col:1,o:["Never","Rarely","A few times a month","A few times a week","Daily"]},
- {id:"B2",t:"Which AI tools have you used for work?",h:"Select all that apply",multi:1,col:1,none:"None",o:["ChatGPT","Gemini","Microsoft Copilot","Other AI tools","None"]},
- {id:"B3",t:"What do you use AI tools for in your work?",h:"Select all that apply",multi:1,col:1,none:"I do not use AI tools for work",o:["Searching for medical information","Writing or editing documents and reports","Translation","Summarising articles or guidelines","Data analysis or calculations","Learning and training","I do not use AI tools for work"]},
- {id:"B4",t:"On a day when you use AI tools for work, for how long do you use them?",col:1,o:["Less than 15 minutes","15–30 minutes","30–60 minutes","More than 1 hour","I do not use AI tools for work"]},
- {id:"B5",t:"Have you received any training or guidance on AI tools from your institution?",o:["Yes","No","Not sure"]},
- {id:"B6",t:"On a typical working day, how many hours do you use the Al Shifa 3+ system?",col:1,o:["Less than 1 hour","1–2 hours","3–4 hours","5–6 hours","More than 6 hours"]}
+ {id:"B1",t:"In the past month, how often did you use AI tools for work-related tasks?",col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
+ {id:"B2",t:"In the past month, how often did you use AI tools to improve the efficiency of your work?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
+ {id:"B3",t:"In the past month, how often did you use AI tools to write, edit or prepare text or other content for a work task?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
+ {id:"B4",t:"In the past month, how often did you use AI tools to handle routine tasks such as emails, scheduling or organising data?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
+ {id:"B5",t:"In the past month, how often did you use AI tools to help you make decisions at work?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
+ {id:"B6",t:"Which AI tools have you used for work?",h:"Select all that apply",multi:1,col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["ChatGPT","Gemini","Microsoft Copilot","Claude","DeepSeek","Perplexity","Meta AI","Grok","OpenEvidence or other medical AI tools","Other AI tools"]},
+ {id:"B7",t:"What do you use AI tools for in your work?",h:"Select all that apply",multi:1,col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["Searching for medical information","Writing or editing documents and reports","Translation","Summarising articles or guidelines","Data analysis or calculations","Learning and training","Other"]},
+ {id:"B8",t:"On a day when you use AI tools for work, for how long do you use them?",col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["Less than 15 minutes","15–30 minutes","30–60 minutes","More than 1 hour"]},
+ {id:"B9",t:"Have you received any training or guidance on AI tools from your institution?",o:["Yes","No","Not sure"]}
 ];
 const PU = ["Using AI tools in my job would enable me to accomplish tasks more quickly.","Using AI tools would improve my job performance.","Using AI tools in my job would increase my productivity.","Using AI tools would enhance my effectiveness on the job.","Using AI tools would make it easier to do my job.","I would find AI tools useful in my job."];
 const PE = ["Learning to use AI tools would be easy for me.","I would find it easy to get AI tools to do what I want them to do.","My interaction with AI tools would be clear and understandable.","I would find AI tools flexible to interact with.","It would be easy for me to become skillful at using AI tools.","I would find AI tools easy to use."];
@@ -148,7 +151,7 @@ const WQ = ["I have a clear set of goals and aims to enable me to do my job","I 
 const STEPS = [
  {name:"Welcome"},
  {name:"About you",title:"A little about you",lead:"A few quick taps. Nothing here can identify you.",kind:"opt",items:A},
- {name:"AI use",title:"How you use AI tools",lead:"AI tools here means programs that answer questions or produce text, such as ChatGPT, Gemini or Microsoft Copilot. This is not a check on any policy.",kind:"opt",items:B},
+ {name:"AI use",title:"How you use AI tools",lead:"AI tools here means programs that answer questions or produce text, such as ChatGPT, Gemini, Claude or Microsoft Copilot. This is not a check on any policy.",kind:"opt",items:B},
  {name:"Usefulness",title:"Would AI tools be useful in your work?",lead:"Please answer even if you have never used them. Tell us what you expect.",kind:"lik",pre:"PU",items:PU,from:0},
  {name:"Ease of use",title:"Would AI tools be easy to use?",lead:"Your honest first reaction is the best answer.",kind:"lik",pre:"PE",items:PE,from:0},
  {name:"Your plans",title:"Your plans for AI tools",lead:"Two short statements.",kind:"lik",pre:"BI",items:BI,from:0},
@@ -410,14 +413,17 @@ function adminView(){
     }catch(err){w.textContent=err.message;b.disabled=false;b.textContent="Open"}
   };
 }
-const COLS=["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","B1","B2","B3","B4","B5","B6",...[1,2,3,4,5,6].map(i=>"PU"+i),...[1,2,3,4,5,6].map(i=>"PE"+i),"BI1","BI2",...WQ.map((_,i)=>"W"+(i+1))];
+const COLS=["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","B1","B2","B3","B4","B5","B6","B7","B8","B9",...[1,2,3,4,5,6].map(i=>"PU"+i),...[1,2,3,4,5,6].map(i=>"PE"+i),"BI1","BI2",...WQ.map((_,i)=>"W"+(i+1))];
 function toRows(data){
   return Object.entries(data).sort((a,b)=>(a[1].ts||0)-(b[1].ts||0)).map(([id,r],n)=>{
     const d=r.d||{},s=r.s||{},o={No:n+1,ID:id,Submitted:r.ts?new Date(r.ts).toLocaleString("en-GB",{timeZone:"Asia/Muscat"}):""};
     COLS.forEach(c=>o[c]=d[c]??"");
-    o.B2_count=d.B2&&d.B2!=="None"?String(d.B2).split(" | ").length:0;
-    o.B3_count=d.B3&&!/^I do not use/.test(d.B3)?String(d.B3).split(" | ").length:0;
-    o.AI_group=d.B1==="Never"?"Non-user":(d.B1==="Rarely"||d.B1==="A few times a month"?"Occasional user":"Regular user");o.AI_use_score=["Never","Rarely","A few times a month","A few times a week","Daily"].indexOf(d.B1)+1;
+    const FQ=["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"],fq=v=>FQ.indexOf(v)+1;
+    o.B6_count=d.B6&&d.B6!=="Not applicable"?String(d.B6).split(" | ").length:0;
+    o.B7_count=d.B7&&d.B7!=="Not applicable"?String(d.B7).split(" | ").length:0;
+    o.AI_use_score=fq(d.B1)||"";
+    o.AI_group=d.B1===FQ[0]?"Non-user":(d.B1===FQ[1]||d.B1===FQ[2]?"Occasional user":(d.B1?"Regular user":""));
+    o.AI_task_mean=d.B1===FQ[0]?1:(fq(d.B2)&&fq(d.B5)?+((fq(d.B2)+fq(d.B3)+fq(d.B4)+fq(d.B5))/4).toFixed(2):"");
     Object.assign(o,{PU_mean:s.pu,PEOU_mean:s.pe,BI_mean:s.bi,JCS_sum:s.JCS,GWB_sum:s.GWB,HWI_sum:s.HWI,SAW_sum:s.SAW,CAW_sum:s.CAW,WCS_sum:s.WCS,WRQoL_total:s.total,WRQoL_mean:s.wrqol});
     return o});
 }
@@ -447,7 +453,7 @@ function adminData(data){
   $("cs").onclick=csv;
   $("xl").onclick=()=>{const go=()=>{const wb=XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Data");
-      const cb=[["Column","Meaning"],["A1-A6","Background (text)"],["A7-A10","Workload controls: working pattern, extra hours per week, night duties or on-calls per month (Not applicable for day duty), staffing adequacy (text)"],["B1","Frequency of AI tool use for work (text)"],["AI_use_score","B1 coded 1 = Never to 5 = Daily"],["AI_group","Non-user (never), Occasional user (rarely or monthly), Regular user (weekly or daily)"],["B2,B3","Multiple answers separated by |"],["B2_count","Number of AI tools used"],["B3_count","Number of purposes AI tools are used for"],["B4","Time per day of use (text)"],["B5","Training or guidance received (text)"],["B6","Daily hours on Al Shifa 3+ (text)"],["PU1-PU6","Perceived usefulness of AI tools, 1 = Strongly disagree to 5 = Strongly agree"],["PE1-PE6","Perceived ease of use of AI tools, 1 to 5"],["BI1-BI2","Intention to use AI tools, 1 to 5"],["W1-W24","WRQoL items, raw answers 1 to 5 (W7, W9, W19 not reversed; W24 = overall item)"],["PU_mean, PEOU_mean, BI_mean","Mean of the items of each scale"],["JCS_sum ... WCS_sum","Factor totals after reversing W7, W9, W19"],["WRQoL_total","Sum of the six factor totals (23 to 115)"],["WRQoL_mean","Mean of the six factor means (1 to 5)"],...COLS.filter(c=>c[0]=="W").map((c,i)=>[c,WQ[i]])];
+      const cb=[["Column","Meaning"],["A1-A6","Background (text)"],["A7-A10","Workload controls: working pattern, extra hours per week, night duties or on-calls per month (Not applicable for day duty), staffing adequacy (text)"],["B1","Overall frequency of AI tool use for work in the past month (text)"],["AI_use_score","B1 coded 1 = Never to 5 = Very frequently (nearly daily)"],["AI_group","Non-user (Never), Occasional user (Rarely or Occasionally), Regular user (Frequently or Very frequently)"],["B2-B5","Task-oriented use items adapted from the GAIES Use Frequency subscale (Zhang et al., 2025); Not applicable for non-users"],["AI_task_mean","Mean of B2-B5 coded 1 to 5; non-users (B1 = Never) scored 1"],["B6,B7","Multiple answers separated by |; Not applicable for non-users"],["B6_count","Number of AI tools used"],["B7_count","Number of purposes AI tools are used for"],["B8","Time per day of use (text); Not applicable for non-users"],["B9","Training or guidance received (text)"],["PU1-PU6","Perceived usefulness of AI tools, 1 = Strongly disagree to 5 = Strongly agree"],["PE1-PE6","Perceived ease of use of AI tools, 1 to 5"],["BI1-BI2","Intention to use AI tools, 1 to 5"],["W1-W24","WRQoL items, raw answers 1 to 5 (W7, W9, W19 not reversed; W24 = overall item)"],["PU_mean, PEOU_mean, BI_mean","Mean of the items of each scale"],["JCS_sum ... WCS_sum","Factor totals after reversing W7, W9, W19"],["WRQoL_total","Sum of the six factor totals (23 to 115)"],["WRQoL_mean","Mean of the six factor means (1 to 5)"],...COLS.filter(c=>c[0]=="W").map((c,i)=>[c,WQ[i]])];
       XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cb),"Codebook");
       XLSX.writeFile(wb,`worklife_data_${stamp}.xlsx`)};
     if(window.XLSX)return go();
