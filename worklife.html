@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>AI Tools and Your Work Life</title>
+<title>AI Tools in Your Medical Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
@@ -105,6 +105,7 @@ button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20p
 .del{background:#FBE9E3;color:#B44A29;padding:8px 12px;min-height:40px;font-size:14px;border-radius:10px}
 .rec td{font-size:14px;vertical-align:middle}.rec td:last-child{font-weight:400}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+.oth{margin-top:10px;width:100%}
 </style>
 </head>
 <body>
@@ -122,90 +123,72 @@ button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20p
 /* ---------- settings ---------- */
 const DB_URL = "https://utasx-f7719-default-rtdb.europe-west1.firebasedatabase.app";
 const DB_PATH = "wq";
-const KEY = "wq_v2";
+const KEY = "wq_v4";
+const VER = 4;
 const ADMIN_USER = "admin@worklife-survey.app"; // fixed admin account; the PIN is its password in Firebase Authentication
 const API_KEY = "AIzaSyDKVw0oMUqD5iaQBQM9aT0zRGE3b1LxXw8"; // public web key of the Firebase project (not a password)
 
 /* ---------- content ---------- */
 const AG = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+/* time-anchored frequency options of the GAIES Use Frequency subscale (Zhang et al., 2025) */
+const FQ = ["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"];
+const IFUSER = {id:"B1",not:0};
 const A = [
  {id:"A1",t:"Gender",o:["Male","Female"]},
  {id:"A2",t:"Age group",o:["Under 30","30–39","40–49","50 or above"]},
- {id:"A3",t:"Job category",col:1,o:["Doctors","Dentist","Staff Nurse","Pharmacists and Assistant Pharmacist","Physiotherapists","Laboratory Technicians","Dental Technician","Dietician","Medical orderlies / Health Assistants","Other paramedical health professionals"]},
- {id:"A4",t:"Years of experience",o:["Less than 5","5–9","10–19","20 or more"]},
- {id:"A5",t:"Workplace",col:1,o:["Ibra Hospital","Sinaw Hospital","Local Hospital","Health Center","Directorate General"]},
- {id:"A6",t:"Nationality",o:["Omani","Non-Omani"]},
- {id:"A7",t:"What is your usual working pattern?",col:1,o:["Morning duty only","Shift duty (Morning / Afternoon)","Shift duty (Morning / Afternoon) + On-call","Shift duty (Morning / Afternoon / Nights)","Shift duty (Morning / Afternoon / Nights) + On-call"]},
- {id:"A8",t:"In a typical week, how many extra hours do you work beyond your official hours (overtime, on-call or staying late)?",o:["None","1–5 hours","6–10 hours","More than 10 hours"]},
- {id:"A9",t:"How many night duties or on-calls do you work per month?",wh:"Answer only if your duty includes nights or on-call",showIf:{id:"A7",in:[2,3,4]},o:["None","1–4","5–8","More than 8"]},
- {id:"A10",t:"How is the number of staff in your unit compared with the workload?",col:1,o:["Much less than needed","Slightly less than needed","About right","More than needed"]}
+ {id:"A3",t:"Your current grade",col:1,o:["General Practitioner / Medical Officer","Resident (OMSB trainee)","Specialist / Senior Specialist","Consultant / Senior Consultant"]},
+ {id:"A4",t:"Your main area of practice",col:1,o:["Family medicine / General practice","Internal medicine or its subspecialties","Surgery or surgical specialties","Paediatrics","Obstetrics and gynaecology","Emergency medicine","Anaesthesia or intensive care","Radiology, pathology or laboratory medicine","Administration or public health","Other"]},
+ {id:"A5",t:"Years of experience as a doctor",o:["Less than 5","5–9","10–19","20 or more"]},
+ {id:"A6",t:"Workplace",col:1,o:["Ibra Hospital","Sinaw Hospital","Local Hospital","Health Center","Directorate General"]},
+ {id:"A7",t:"Nationality",o:["Omani","Non-Omani"]}
 ];
 const B = [
- {id:"B1",t:"In the past month, how often did you use AI tools for work-related tasks?",col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
- {id:"B2",t:"In the past month, how often did you use AI tools to improve the efficiency of your work?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
- {id:"B3",t:"In the past month, how often did you use AI tools to write, edit or prepare text or other content for a work task?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
- {id:"B4",t:"In the past month, how often did you use AI tools to handle routine tasks such as emails, scheduling or organising data?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
- {id:"B5",t:"In the past month, how often did you use AI tools to help you make decisions at work?",wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},col:1,o:["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"]},
- {id:"B6",t:"Which AI tools have you used for work?",h:"Select all that apply",multi:1,col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["ChatGPT","Gemini","Microsoft Copilot","Claude","DeepSeek","Perplexity","Meta AI","Grok","OpenEvidence or other medical AI tools","Other AI tools"]},
- {id:"B7",t:"What do you use AI tools for in your work?",h:"Select all that apply",multi:1,col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["Searching for medical information","Writing or editing documents and reports","Translation","Summarising articles or guidelines","Data analysis or calculations","Learning and training","Other"]},
- {id:"B8",t:"On a day when you use AI tools for work, for how long do you use them?",col:1,wh:"Skip if you answered Never to B1",showIf:{id:"B1",not:0},o:["Less than 15 minutes","15–30 minutes","30–60 minutes","More than 1 hour"]},
- {id:"B9",t:"Have you received any training or guidance on AI tools from your institution?",o:["Yes","No","Not sure"]}
+ {id:"B1",t:"In the past month, how often did you use AI tools for any work-related task?",col:1,o:FQ},
+ {id:"B2",t:"Which AI tools have you used for work?",h:"Select all that apply",wh:"Skip if you answered Never to B1; select all that apply",multi:1,col:1,showIf:IFUSER,other:"Other AI tools",o:["ChatGPT","Gemini","Microsoft Copilot","Claude","DeepSeek","Perplexity","Meta AI","Grok","OpenEvidence or other medical AI tools","Other AI tools"]},
+ {id:"B3",t:"Apart from patient care, what else do you use AI tools for in your work?",h:"Select all that apply",wh:"Skip if you answered Never to B1; select all that apply",multi:1,col:1,showIf:IFUSER,none:"None of these",other:"Other",o:["Searching for medical or scientific information","Summarising articles or guidelines","Writing reports, letters or emails (not patient records)","Research (literature review, study design or writing papers)","Learning, training or exams","Preparing presentations or teaching material","Data analysis or calculations","Translation","None of these","Other"]},
+ {id:"B4",t:"Have you received any formal training on AI tools (a course, workshop or session)?",col:1,o:["Yes, from the Ministry of Health or my workplace","Yes, from other sources (university, conference or online course)","No"]}
 ];
-const PU = ["Using AI tools in my job would enable me to accomplish tasks more quickly.","Using AI tools would improve my job performance.","Using AI tools in my job would increase my productivity.","Using AI tools would enhance my effectiveness on the job.","Using AI tools would make it easier to do my job.","I would find AI tools useful in my job."];
-const PE = ["Learning to use AI tools would be easy for me.","I would find it easy to get AI tools to do what I want them to do.","My interaction with AI tools would be clear and understandable.","I would find AI tools flexible to interact with.","It would be easy for me to become skillful at using AI tools.","I would find AI tools easy to use."];
+/* clinical use: tasks adapted from Bagla et al. (2026) and Blease et al. (2025); response format from GAIES */
+const CU = [
+ {id:"CU1",t:"In the past month, how often did you use AI tools to suggest a differential diagnosis?",col:1,showIf:IFUSER,o:FQ},
+ {id:"CU2",t:"In the past month, how often did you use AI tools to confirm a diagnosis you suspected?",col:1,showIf:IFUSER,o:FQ},
+ {id:"CU3",t:"In the past month, how often did you use AI tools to answer clinical questions, such as drug doses, side effects or guidelines?",col:1,showIf:IFUSER,o:FQ},
+ {id:"CU4",t:"In the past month, how often did you use AI tools to decide on investigations or treatment options?",col:1,showIf:IFUSER,o:FQ},
+ {id:"CU5",t:"In the past month, how often did you use AI tools to prepare patient education or counselling material?",col:1,showIf:IFUSER,o:FQ},
+ {id:"DOC",t:"In the past month, did you use AI tools to help write clinical documents, such as patient notes, referral letters or discharge summaries?",showIf:IFUSER,o:["Yes","No"]}
+];
+const OPTQ = [...A,...B,...CU];
+/* TAM2 four-item scales (Venkatesh & Davis, 2000), conditional wording so non-users answer from expectation */
+const PU = ["Using AI tools would improve my performance in my job.","Using AI tools in my job would increase my productivity.","Using AI tools would enhance my effectiveness in my job.","I would find AI tools useful in my job."];
+const PE = ["My interaction with AI tools would be clear and understandable.","Interacting with AI tools would not require a lot of my mental effort.","I would find AI tools easy to use.","I would find it easy to get AI tools to do what I want them to do."];
+/* perceived risk, adapted from Dai et al. (2025) */
+const RK = ["I am concerned that AI tools may provide incorrect information, leading to adverse outcomes.","I am concerned that using AI tools may lead to medical disputes, making it difficult to determine responsibility.","I am concerned that the lack of transparency and explainability of AI tools may negatively affect the medical process.","I am concerned that the use of AI tools may increase inequities in health care services.","I am concerned that my job might eventually be replaced by AI."];
 const BI = ["Assuming I have access to AI tools, I intend to use them in my work.","Given that I have access to AI tools, I predict that I would use them in my work."];
-/* Work-Related Quality of Life Scale. Copyright (c) 2008 QoWL Ltd. Used with permission. Wording and order unchanged. */
-const WQ = ["I have a clear set of goals and aims to enable me to do my job","I feel able to voice opinions and influence changes in my area of work","I have the opportunity to use my abilities at work","I feel well at the moment","My employer provides adequate facilities and flexibility for me to fit work in around my family life","My current working hours / patterns suit my personal circumstances","I often feel under pressure at work","When I have done a good job it is acknowledged by my line manager","Recently, I have been feeling unhappy and depressed","I am satisfied with my life","I am encouraged to develop new skills","I am involved in decisions that affect me in my own area of work","My employer provides me with what I need to do my job effectively","My line manager actively promotes flexible working hours / patterns","In most ways my life is close to ideal","I work in a safe environment","Generally things work out well for me","I am satisfied with the career opportunities available for me here","I often feel excessive levels of stress at work","I am satisfied with the training I receive in order to perform my present job","Recently, I have been feeling reasonably happy all things considered","The working conditions are satisfactory","I am involved in decisions that affect members of the public in my own area of work","I am satisfied with the overall quality of my working life"];
 
+const VIEW = "If you use AI tools, answer from your experience. If you have never used them, tell us what you expect.";
 const STEPS = [
  {name:"Welcome"},
  {name:"About you",title:"A little about you",lead:"A few quick taps. Nothing here can identify you.",kind:"opt",items:A},
- {name:"AI use",title:"How you use AI tools",lead:"AI tools here means programs that answer questions or produce text, such as ChatGPT, Gemini, Claude or Microsoft Copilot. This is not a check on any policy.",kind:"opt",items:B},
- {name:"Usefulness",title:"Would AI tools be useful in your work?",lead:"Please answer even if you have never used them. Tell us what you expect.",kind:"lik",pre:"PU",items:PU,from:0},
- {name:"Ease of use",title:"Would AI tools be easy to use?",lead:"Your honest first reaction is the best answer.",kind:"lik",pre:"PE",items:PE,from:0},
- {name:"Your plans",title:"Your plans for AI tools",lead:"Two short statements.",kind:"lik",pre:"BI",items:BI,from:0},
- {name:"Work life 1/3",title:"Your working life",lead:"This is not a test. Please go with your first reaction.",kind:"lik",pre:"W",items:WQ.slice(0,8),from:0},
- {name:"Work life 2/3",title:"Your working life",lead:"You are more than halfway. Keep going.",kind:"lik",pre:"W",items:WQ.slice(8,16),from:8},
- {name:"Work life 3/3",title:"Your working life",lead:"Last page. Your results are next.",kind:"lik",pre:"W",items:WQ.slice(16,24),from:16}
+ {name:"AI use",title:"How you use AI tools",lead:"AI tools here means programs that answer questions or produce text, such as ChatGPT, Gemini, Claude, Microsoft Copilot or OpenEvidence. Count only your use for work, not personal use such as help with children's homework or shopping. This is not a check on any policy.",kind:"opt",items:B},
+ {name:"Patient care",title:"AI tools in patient care",lead:"Think of the patients you saw in the past month. Your answers are anonymous, so please answer as it really is.",kind:"opt",items:CU},
+ {name:"Usefulness",title:"Would AI tools be useful in your work?",lead:VIEW,kind:"lik",pre:"PU",items:PU,from:0},
+ {name:"Ease of use",title:"Would AI tools be easy to use?",lead:VIEW,kind:"lik",pre:"PE",items:PE,from:0},
+ {name:"Concerns",title:"Your concerns about AI tools",lead:"Tell us how far you agree with each statement.",kind:"lik",pre:"RK",items:RK,from:0},
+ {name:"Your plans",title:"Your plans for AI tools",lead:"Two short statements. Your results are next.",kind:"lik",pre:"BI",items:BI,from:0}
 ];
 
-/* ---------- scoring (WRQoL User Manual, 2nd ed.) ---------- */
-const FACT = {
- JCS:{n:"Job and career satisfaction",i:[1,3,8,11,18,20],lo:19,hi:23,d:"How satisfied you are with your job and career: clear goals, recognition, training and opportunities."},
- GWB:{n:"General well-being",i:[4,9,10,15,17,21],lo:20,hi:24,d:"How you feel in yourself and about life in general."},
- HWI:{n:"Home–work balance",i:[5,6,14],lo:9,hi:12,d:"How well your work fits around your home and family life."},
- SAW:{n:"Stress at work",i:[7,19],lo:4,hi:6,d:"How much pressure and stress you feel at work. A higher result here means less stress."},
- CAW:{n:"Control at work",i:[2,12,23],lo:8,hi:11,d:"How much say you have in decisions that affect your work."},
- WCS:{n:"Working conditions",i:[13,16,22],lo:9,hi:12,d:"Whether you have the resources, safety and conditions you need to do your job."}
-};
-const REV = [7,9,19];
-function band(v,lo,hi){return v<=lo?"lo":(v>=hi?"hi":"av")}
+/* ---------- scoring ---------- */
+const mean=(ans,p,n)=>+(Array.from({length:n},(_,i)=>ans[p+(i+1)]).reduce((s,v)=>s+v,0)/n).toFixed(2);
 function score(ans){
-  const w=k=>{const v=ans["W"+k];return REV.includes(k)?6-v:v};
-  const out={f:{}};let total=0;
-  for(const k in FACT){const f=FACT[k];const sum=f.i.reduce((s,i)=>s+w(i),0);total+=sum;
-    out.f[k]={sum,mean:+(sum/f.i.length).toFixed(2),band:band(sum,f.lo,f.hi)}}
-  out.total=total;out.totalBand=band(total,71,83);
-  out.wrqol=+(Object.values(out.f).reduce((s,x)=>s+x.mean,0)/6).toFixed(2);
-  const m=(p,n)=>+(Array.from({length:n},(_,i)=>ans[p+(i+1)]).reduce((s,v)=>s+v,0)/n).toFixed(2);
-  out.pu=m("PU",6);out.pe=m("PE",6);out.bi=m("BI",2);
-  return out;
+  const user=ans.B1!==undefined&&ans.B1!==0;
+  const cu=k=>user?ans["CU"+k]+1:1; // 1 = Never ... 5 = Very frequently; non-users scored 1
+  const cuAll=[1,2,3,4,5].map(cu);
+  return {pu:mean(ans,"PU",4),pe:mean(ans,"PE",4),rk:mean(ans,"RK",5),bi:mean(ans,"BI",2),
+    use:(ans.B1??0)+1,cu:+(cuAll.reduce((a,b)=>a+b,0)/5).toFixed(2),cudt:+(cuAll.slice(0,4).reduce((a,b)=>a+b,0)/4).toFixed(2),
+    cuany:cuAll.some(v=>v>1)?1:0,user:user?1:0};
 }
-/* 1 to 10 scores: the ten percentile rows of the manual's table (NHS norms, N = 953). 1-3 lower, 4-6 average, 7-10 higher. */
-const TEN={GWB:[[16,1],[19,2],[20,3],[21,4],[22,5],[23,6],[24,7],[25,8],[26,9],[30,10]],HWI:[[7,1],[8,2],[9,3],[10,4],[11,5],[12,8],[14,9],[15,10]],JCS:[[15,1],[17,2],[19,3],[20,4],[21,5],[22,6],[23,7],[24,8],[26,9],[30,10]],CAW:[[6,1],[8,3],[9,4],[10,6],[11,8],[12,9],[15,10]],WCS:[[7,1],[9,3],[10,4],[11,6],[12,8],[13,9],[15,10]],SAW:[[3,1],[4,3],[5,4],[6,7],[7,8],[8,9],[10,10]],ALL:[[58,1],[65,2],[71,3],[75,4],[78,5],[82,6],[85,7],[88,8],[93,9],[115,10]]};
-const ten=(k,sum)=>TEN[k].find(x=>sum<=x[0])[1];
-const tenBand=t=>t<=3?"lo":(t>=7?"hi":"av");
-const FTXT={
- JCS:{lo:"Your answers suggest you are not getting enough of what you want from your job at the moment, such as clear goals, recognition, training or chances to progress. It can help to work out which of these matters most to you and raise it with your line manager.",av:"You seem reasonably satisfied with your job and your prospects. There may still be one or two things, such as recognition or development, that would make work more rewarding. It is worth noticing which.",hi:"You appear to get a lot from your job: clear goals, use of your abilities and a sense of progress. Knowing what creates this for you will help you protect it."},
- GWB:{lo:"Your answers suggest you have not been feeling at your best lately. Well-being is shaped by life outside work as well as by work itself. Rest, activity and time with people you trust all help. If this feeling has lasted a while, talking to a health professional is a good step.",av:"You seem to feel all right most of the time. Because well-being supports everything else at work, small habits such as regular breaks, sleep and exercise are worth keeping up.",hi:"You seem to feel well in yourself and positive about life. This is a strong base for coping with pressure at work."},
- HWI:{lo:"Work and home life seem to be pulling against each other. Working hours, shift patterns or limited flexibility may be part of it. If a change in pattern would help, it is worth discussing the options with your manager.",av:"Work and home life fit together reasonably well for you, though probably not all the time. Notice which weeks or shifts are hardest, and what makes the easier ones work.",hi:"Your work and home life seem to fit well together, and you appear to feel supported when pressures arise at home."},
- SAW:{lo:"Your answers point to a high level of pressure and stress at work. Some pressure is normal, but when it feels too much for too long it affects health and work. Talk to your line manager about workload, and use the support available to staff.",av:"The pressure you feel at work appears manageable most of the time. Keep an eye on busy periods and on how well you recover after them.",hi:"You do not seem to feel under excessive pressure at work, and the demands of your job appear manageable."},
- CAW:{lo:"You seem to feel that you have little say over decisions that affect your work. Look for one or two decisions where your input would matter most and ask to be involved.",av:"You appear to have a fair amount of say in your work, with some areas where you would like more. Decide which of those matter enough to raise.",hi:"You feel involved in decisions and able to voice your opinions. This sense of control is closely tied to satisfaction and well-being."},
- WCS:{lo:"You seem dissatisfied with the conditions you work in, such as resources, equipment, safety or the physical environment. Note the specific things that get in the way of doing your job and report them through the proper channel.",av:"Your working conditions seem acceptable overall. There may be particular resources or facilities that would make the job easier.",hi:"You are satisfied with the resources, safety and conditions you need to do your job."}};
-const SHORT={ALL:"Overall",JCS:"Job & career",GWB:"Well-being",HWI:"Home–work",SAW:"Stress",CAW:"Control",WCS:"Conditions"};
-const tamBand=v=>v<2.5?"lo":(v>3.5?"hi":"av");
+const band=v=>v<2.5?"lo":(v>3.5?"hi":"av");
 const BL={hi:"Higher",av:"Average",lo:"Lower"};
-const BMSG={hi:"This is a strength for you right now.",av:"Similar to most staff in the reference group.",lo:"This area may deserve some attention. Think about what would help, and who could support you."};
 
 /* ---------- state ---------- */
 let S={step:0,ans:{},sent:false,res:null};
@@ -213,25 +196,30 @@ try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.ans)S=s}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const app=$("app");
-const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 
 /* ---------- render ---------- */
 let scrollT=0;
 function toTop(){clearTimeout(scrollT);window.scrollTo({top:0,left:0,behavior:"instant"});document.documentElement.scrollTop=0;document.body.scrollTop=0}
+const shown=q=>{if(!q.showIf)return true;const v=S.ans[q.showIf.id];if(v===undefined)return false;return q.showIf.in?q.showIf.in.includes(v):v!==q.showIf.not};
+const stepOn=i=>{const st=STEPS[i];return !(st.kind==="opt"&&!st.items.some(q=>shown(q)||(q.showIf&&S.ans[q.showIf.id]===undefined)))};
+const visSteps=()=>STEPS.map((_,i)=>i).filter(i=>i>0&&stepOn(i));
 function render(){
   if(S.sent&&S.res)return results();
   if(S.step===0)return welcome();
-  const st=STEPS[S.step];
+  if(!stepOn(S.step)){S.step=Math.min(STEPS.length-1,S.step+1);return render()}
+  const st=STEPS[S.step],vs=visSteps(),pos=vs.indexOf(S.step)+1;
   $("top").classList.remove("hide");$("nav").classList.remove("hide");
-  $("stepName").textContent=st.name;$("stepNum").textContent="Step "+S.step+" of "+(STEPS.length-1);
-  $("barFill").style.width=((S.step-1)/(STEPS.length-1)*100+4)+"%";
+  $("stepName").textContent=st.name;$("stepNum").textContent="Step "+pos+" of "+vs.length;
+  $("barFill").style.width=((pos-1)/vs.length*100+4)+"%";
   $("next").textContent=S.step===STEPS.length-1?"See my results":"Continue";
   let h=`<h2>${st.title}</h2><p class="lead">${st.lead}</p>`;
   if(st.kind==="opt")st.items.forEach(q=>{
-    const cur=S.ans[q.id];
+    const cur=S.ans[q.id],oi=q.other?q.o.indexOf(q.other):-1,oOn=q.multi&&(cur||[]).includes(oi);
     h+=`<div class="card${shown(q)?"":" hide"}" data-q="${q.id}"><p class="q">${esc(q.t)}${q.h?`<small>${q.h}</small>`:""}</p><div class="opts ${q.col?"col":""}">`+
       q.o.map((o,i)=>{const on=q.multi?(cur||[]).includes(i):cur===i;
-        return `<label><input type="${q.multi?"checkbox":"radio"}" name="${q.id}" value="${i}" ${on?"checked":""}><span>${esc(o)}</span></label>`}).join("")+`</div></div>`;
+        return `<label><input type="${q.multi?"checkbox":"radio"}" name="${q.id}" value="${i}" ${on?"checked":""}><span>${esc(o)}</span></label>`}).join("")+`</div>`+
+      (q.other?`<input class="fld oth${oOn?"":" hide"}" data-oth="${q.id}" type="text" maxlength="120" placeholder="Please specify (optional)" aria-label="${esc(q.other)}: please specify" value="${esc(S.ans[q.id+"_other"]||"")}">`:"")+`</div>`;
   });
   else st.items.forEach((t,k)=>{
     const id=st.pre+(st.from+k+1),cur=S.ans[id];
@@ -239,38 +227,40 @@ function render(){
       AG.map((a,i)=>`<label><input type="radio" name="${id}" value="${i+1}" ${cur===i+1?"checked":""}><span>${a}</span></label>`).join("")+`</div></div>`;
   });
   h+=`<p class="warn" id="warn" role="alert"></p>`;
-  if(st.pre==="W")h+=`<p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
   app.innerHTML=h;mark();toTop();
 }
-const shown=q=>{if(!q.showIf)return true;const v=S.ans[q.showIf.id];if(v===undefined)return false;return q.showIf.in?q.showIf.in.includes(v):v!==q.showIf.not};
 function mark(){app.querySelectorAll(".card[data-q]").forEach(c=>c.classList.toggle("done",answered(c.dataset.q)))}
 function answered(id){const v=S.ans[id];return Array.isArray(v)?v.length>0:v!==undefined}
 
+app.addEventListener("input",e=>{const el=e.target;if(el.dataset&&el.dataset.oth){S.ans[el.dataset.oth+"_other"]=el.value.slice(0,120);save()}});
 app.addEventListener("change",e=>{
   const el=e.target;if(!el.name)return;
-  const q=[...A,...B].find(x=>x.id===el.name);
+  const q=OPTQ.find(x=>x.id===el.name);
   if(q&&q.multi){
     const boxes=[...app.querySelectorAll(`input[name="${q.id}"]`)];
     if(q.none){const ni=q.o.indexOf(q.none);
       if(+el.value===ni&&el.checked)boxes.forEach(b=>{if(+b.value!==ni)b.checked=false});
       else if(el.checked)boxes[ni].checked=false}
     S.ans[q.id]=boxes.filter(b=>b.checked).map(b=>+b.value);
+    if(q.other){const oi=q.o.indexOf(q.other),on=S.ans[q.id].includes(oi),f=app.querySelector(`[data-oth="${q.id}"]`);
+      if(f){f.classList.toggle("hide",!on);if(on&&el.checked&&+el.value===oi)f.focus();if(!on){f.value="";delete S.ans[q.id+"_other"]}}}
   }else{
     S.ans[el.name]=+el.value;
     const card=el.closest(".card"),nx=card.nextElementSibling;
     if(nx&&nx.classList.contains("card")&&!nx.classList.contains("hide")&&!answered(nx.dataset.q))scrollT=setTimeout(()=>nx.scrollIntoView({block:"center"}),180);
   }
-  [...A,...B].filter(x=>x.showIf&&x.showIf.id===el.name).forEach(x=>{const c=app.querySelector(`.card[data-q="${x.id}"]`);if(!c)return;const on=shown(x);c.classList.toggle("hide",!on);if(!on){delete S.ans[x.id];c.querySelectorAll("input").forEach(i=>i.checked=false);c.classList.remove("miss")}});
+  OPTQ.filter(x=>x.showIf&&x.showIf.id===el.name).forEach(x=>{const on=shown(x);if(!on){delete S.ans[x.id];delete S.ans[x.id+"_other"]}
+    const c=app.querySelector(`.card[data-q="${x.id}"]`);if(!c)return;c.classList.toggle("hide",!on);if(!on){c.querySelectorAll("input").forEach(i=>{i.checked=false;if(i.type==="text")i.value=""});c.classList.remove("miss")}});
   el.closest(".card").classList.remove("miss");$("warn").textContent="";save();mark();
 });
 
-$("back").onclick=()=>{S.step=Math.max(0,S.step-1);save();render()};
+$("back").onclick=()=>{let s=S.step-1;while(s>0&&!stepOn(s))s--;S.step=Math.max(0,s);save();render()};
 $("next").onclick=()=>{
   const miss=[...app.querySelectorAll(".card[data-q]:not(.hide)")].filter(c=>!answered(c.dataset.q));
   if(miss.length){miss.forEach(c=>c.classList.add("miss"));
     $("warn").textContent=miss.length===1?"One question still needs an answer.":miss.length+" questions still need an answer.";
     miss[0].scrollIntoView({block:"center"});return}
-  if(S.step<STEPS.length-1){S.step++;save();render()}else submit();
+  if(S.step<STEPS.length-1){let s=S.step+1;while(s<STEPS.length-1&&!stepOn(s))s++;S.step=s;save();render()}else submit();
 };
 
 function welcome(){
@@ -278,30 +268,30 @@ function welcome(){
   const resume=Object.keys(S.ans).length>0;
   app.innerHTML=`
   <div class="hero">
-   <h1>AI tools and your work life</h1>
-   <p>Tell us how you use and view AI tools such as ChatGPT, and how working life feels for you. At the end you get your own personal results, straight away.</p>
-   <div class="ar" lang="ar"><b>أدوات الذكاء الاصطناعي وحياتك الوظيفية</b>شاركنا كيف تستخدم أدوات الذكاء الاصطناعي مثل ChatGPT ورأيك فيها، وكيف تشعر تجاه حياتك الوظيفية، وستحصل في النهاية على نتائجك الشخصية مباشرة.</div></div>
+   <h1>AI tools in your medical practice</h1>
+   <p>Tell us how you use and view AI tools such as ChatGPT in your work as a doctor. At the end you get your own personal AI profile, straight away.</p>
+   <div class="ar" lang="ar"><b>أدوات الذكاء الاصطناعي في ممارستك الطبية</b>شاركنا كيف تستخدم أدوات الذكاء الاصطناعي مثل ChatGPT في عملك كطبيب ورأيك فيها، وستحصل في النهاية على ملفك الشخصي مباشرة.</div></div>
   <div class="facts wf">
-   <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></i><b>Quick and easy</b><span>about 6 minutes</span><em lang="ar">أسئلة سهلة وسريعة</em></div>
+   <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></i><b>Quick and easy</b><span>about 5 minutes</span><em lang="ar">أسئلة سهلة وسريعة</em></div>
    <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></i><b>Anonymous</b><span>your answers carry no name</span><em lang="ar">إجاباتك مجهولة الهوية</em></div>
    <div class="fact"><i class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></i><b>Private</b><span>your manager will never see them</span><em lang="ar">لن يطّلع عليها مسؤولك</em></div>
   </div>
   <div class="gift">
-   <div class="gift-t"><span class="badge">FREE · instant</span><h2>Get your personal results</h2>
-    <p>As soon as you finish, see your own work-life profile across six areas and how you view AI tools. Save it as a PDF to keep.</p>
-    <p class="ar" lang="ar">احصل على نتائجك الشخصية فور الانتهاء: صورة عن حياتك الوظيفية في ستة جوانب ونظرتك لأدوات الذكاء الاصطناعي، مع إمكانية حفظها PDF.</p></div>
-   <div class="gift-v" aria-hidden="true"><div class="mini">${[78,55,66,42,70,60].map((w,i)=>`<i style="width:${w}%;background:${["#1E9E6A","#D99A00","#1E9E6A","#D9603B","#1E9E6A","#D99A00"][i]}"></i>`).join("")}</div><small>Your profile</small></div>
+   <div class="gift-t"><span class="badge">FREE · instant</span><h2>Get your personal AI profile</h2>
+    <p>As soon as you finish, see how you view AI tools in four areas, with practical tips for using them safely in clinical work. Save it as a PDF to keep.</p>
+    <p class="ar" lang="ar">احصل على ملفك الشخصي فور الانتهاء: نظرتك لأدوات الذكاء الاصطناعي في أربعة جوانب، مع نصائح عملية لاستخدامها بأمان في العمل السريري، وإمكانية حفظه PDF.</p></div>
+   <div class="gift-v" aria-hidden="true"><div class="mini">${[78,55,66,42].map((w,i)=>`<i style="width:${w}%;background:${["#1E9E6A","#D99A00","#1E9E6A","#D9603B"][i]}"></i>`).join("")}</div><small>Your profile</small></div>
   </div>
   <div class="consent"><h2 style="margin-top:0">Before you start</h2>
-   <p>Dear colleague, this study examines how health staff use and view artificial intelligence (AI) tools, such as ChatGPT, and how this relates to their quality of work life. The results will help improve training and support for staff. It is not a check on any policy.</p>
+   <p>Dear Doctor, this study examines how doctors use and view artificial intelligence (AI) tools, such as ChatGPT, in their work, including patient care. The results will help plan training and guidance for doctors. It is not a check on any policy.</p>
    <p>Participation is voluntary and anonymous: no name, employee number or email is collected, no manager will see individual answers, and results are reported only as group totals. You may stop at any time, and taking part or not has no effect on your job. There are no right or wrong answers.</p>
-   <p>This staff survey is conducted in North Al Sharqiyah Governorate with approval from the Ministry of Health research ethics committee.</p>
-   <p class="note">Your results are worked out on your own phone. Your anonymous answers are stored securely for research analysis.</p>
+   <p>This survey of doctors is conducted in North Al Sharqiyah Governorate with approval from the Ministry of Health research ethics committee.</p>
+   <p class="note">Your profile is worked out on your own phone. Your anonymous answers are stored securely for research analysis.</p>
    <div class="ar" lang="ar"><h2 style="margin:0 0 6px">قبل أن تبدأ</h2>
-   <p>تبحث هذه الدراسة في استخدام الكوادر الصحية لأدوات الذكاء الاصطناعي مثل ChatGPT ونظرتهم إليها، وعلاقة ذلك بجودة حياتهم الوظيفية. ستساعد النتائج في تطوير التدريب والدعم المقدَّم للموظفين. هذه الاستبانة ليست للتحقق من الالتزام بأي سياسة.</p>
+   <p>عزيزي الطبيب، تبحث هذه الدراسة في استخدام الأطباء لأدوات الذكاء الاصطناعي مثل ChatGPT في عملهم، بما في ذلك رعاية المرضى، ونظرتهم إليها. ستساعد النتائج في تخطيط التدريب والإرشادات المقدَّمة للأطباء. هذه الاستبانة ليست للتحقق من الالتزام بأي سياسة.</p>
    <p>المشاركة اختيارية ومجهولة الهوية: لا يُطلب الاسم أو الرقم الوظيفي أو البريد الإلكتروني، ولن يطّلع أي مسؤول على الإجابات الفردية، وتُعرض النتائج بصورة إجمالية فقط. يمكنك التوقف في أي وقت، ولا تؤثر المشاركة أو عدمها على عملك. لا توجد إجابات صحيحة أو خاطئة.</p>
-   <p>يُجرى هذا الاستبيان للكوادر الصحية في محافظة شمال الشرقية بموافقة لجنة أخلاقيات البحث في وزارة الصحة.</p>
-   <p class="note">تُحسب نتائجك على هاتفك، وتُحفظ إجاباتك المجهولة بصورة آمنة لأغراض التحليل البحثي. الأسئلة باللغة الإنجليزية وتستغرق نحو 6 دقائق.</p></div>
+   <p>يُجرى هذا الاستبيان للأطباء في محافظة شمال الشرقية بموافقة لجنة أخلاقيات البحث في وزارة الصحة.</p>
+   <p class="note">يُحسب ملفك الشخصي على هاتفك، وتُحفظ إجاباتك المجهولة بصورة آمنة لأغراض التحليل البحثي. الأسئلة باللغة الإنجليزية وتستغرق نحو 5 دقائق.</p></div>
    <p style="font-weight:800;margin-top:14px">By continuing, I confirm that I have read this information and agree to take part.</p>
    <p class="ar" lang="ar" style="font-weight:700;margin:0 0 12px;border:0;padding-top:0">بالمتابعة أقرّ بأنني قرأت هذه المعلومات وأوافق على المشاركة.</p>
    <button class="btn" id="go" type="button" style="width:100%">${resume?"I agree, continue where I stopped · أوافق":"I agree, let's start · أوافق"}</button>
@@ -312,12 +302,17 @@ function welcome(){
 }
 
 /* ---------- submit ---------- */
+function record(ans){
+  const a={};
+  for(const q of OPTQ){const v=ans[q.id];a[q.id]=v===undefined?(q.showIf&&q.showIf.id==="B1"&&ans.B1===0?(q.o===FQ?"Never":"Not applicable"):"Not applicable"):(q.multi?v.map(i=>q.o[i]).join(" | "):q.o[v]);
+    if(q.other&&ans[q.id+"_other"])a[q.id+"_other"]=String(ans[q.id+"_other"]).trim().slice(0,120)}
+  for(const [p,n] of [["PU",4],["PE",4],["RK",5],["BI",2]])for(let i=1;i<=n;i++)a[p+i]=ans[p+i];
+  return a;
+}
 async function submit(){
   const btn=$("next");btn.disabled=true;btn.textContent="Sending...";
   const res=score(S.ans);
-  const a={...S.ans};delete a.consent;
-  for(const q of [...A,...B])a[q.id]=a[q.id]===undefined?"Not applicable":(q.multi?a[q.id].map(i=>q.o[i]).join(" | "):q.o[a[q.id]]);
-  const rec={ts:{".sv":"timestamp"},v:2,d:a,s:{pu:res.pu,pe:res.pe,bi:res.bi,wrqol:res.wrqol,total:res.total,...Object.fromEntries(Object.entries(res.f).map(([k,x])=>[k,x.sum]))}};
+  const rec={ts:{".sv":"timestamp"},v:VER,d:record(S.ans),s:res};
   try{
     const r=await fetch(`${DB_URL}/${DB_PATH}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(rec)});
     if(!r.ok)throw new Error(r.status);
@@ -329,41 +324,34 @@ async function submit(){
 }
 
 /* ---------- results ---------- */
-function row(name,bd,val,max,desc,msg){
-  const col={hi:"var(--hi)",av:"var(--av)",lo:"var(--lo)"}[bd];
-  return `<div class="card"><div class="res-h"><b>${name}</b><span class="chip c-${bd}">${BL[bd]}</span></div>
-   <div class="meter"><i data-w="${val/max*100}" style="background:${col}"></i></div>
-   <div class="sc">${max===10?val:val.toFixed(1)} out of ${max}</div><p class="exp"><span style="color:var(--soft)">${desc}</span></p><p class="exp">${msg}</p></div>`;
-}
-function tens(r){const t={ALL:ten("ALL",r.total)};for(const k in FACT)t[k]=ten(k,r.f[k].sum);return t}
+const AREAS=[
+ {k:"pu",n:"Usefulness",d:"How much you expect AI tools to help you do your job.",m:{hi:"You expect AI tools to help you in your work.",av:"You are unsure how much AI tools would help you.",lo:"You do not expect AI tools to help much in your work."}},
+ {k:"pe",n:"Ease of use",d:"How easy you expect AI tools to be to learn and use.",m:{hi:"You expect AI tools to be easy to use.",av:"You expect some difficulty in using AI tools.",lo:"You expect AI tools to be hard to use."}},
+ {k:"rk",n:"Concerns",d:"How concerned you are about errors, responsibility, transparency, fairness and jobs.",m:{hi:"You have strong concerns about the risks of AI tools. Careful checking of every AI answer suits this view.",av:"You have some concerns about the risks of AI tools.",lo:"You have few concerns about the risks of AI tools. Remember that AI answers can still be wrong."},risk:1},
+ {k:"bi",n:"Intention to use",d:"How far you intend to use AI tools in your work.",m:{hi:"You intend to use AI tools in your work.",av:"You are undecided about using AI tools in your work.",lo:"You do not plan to use AI tools in your work."}}];
+const RL={hi:"High",av:"Moderate",lo:"Low"};
+const TIPS=["Check every AI answer against a trusted source, such as a guideline, a formulary or a senior colleague, before acting on it.","Never enter a patient's name, civil ID, file number or other identifying details into a public AI tool.","You remain responsible for every clinical decision. Treat AI output as a suggestion, not an answer.","AI tools can sound confident and still be wrong, especially on doses, rare conditions and recent guidance.","Follow any guidance your institution or the Ministry of Health issues on AI use."];
+const useTxt=r=>!r.user?"You did not use AI tools for work in the past month.":r.cuany?"You used AI tools for work in the past month, including some use in patient care.":"You used AI tools for work in the past month, but not in patient care.";
+function row(a,v){const bd=band(v),col=a.risk?"var(--av)":{hi:"var(--hi)",av:"var(--av)",lo:"var(--lo)"}[bd];
+  return `<div class="card"><div class="res-h"><b>${a.n}</b><span class="chip c-${a.risk?"av":bd}">${a.risk?RL[bd]:BL[bd]}</span></div>
+   <div class="meter"><i data-w="${v/5*100}" style="background:${col}"></i></div>
+   <div class="sc">${v.toFixed(1)} out of 5</div><p class="exp"><span style="color:var(--soft)">${a.d}</span></p><p class="exp">${a.m[bd]}</p></div>`}
 function results(){
   $("top").classList.add("hide");$("nav").classList.add("hide");
-  const r=S.res,T=tens(r),b=tenBand(T.ALL),col={hi:"var(--hi)",av:"var(--av)",lo:"var(--lo)"};
-  const head={hi:"Your quality of work life is in the higher range",av:"Your quality of work life is in the average range",lo:"Your quality of work life is in the lower range"}[b];
-  const sub={hi:"Overall, working life seems to be going well for you. Look below to see which areas are strongest.",av:"Overall, your working life is similar to most staff in the reference group. Look below for your stronger and weaker areas.",lo:"Overall, working life seems difficult for you at the moment. Look below to see which areas weigh most."}[b];
-  let h=`<div class="overall b-${b}"><span class="tag">Your personal results</span><div class="big">${head}</div>
-   <p>Overall score: <b>${T.ALL} out of 10</b></p><p>${sub}</p></div>
-   <div class="card"><p class="q">Your profile<small>Scores out of 10. 1 to 3 is lower, 4 to 6 is average, 7 to 10 is higher.</small></p>
-   <div class="chart">${["ALL","JCS","GWB","HWI","SAW","CAW","WCS"].map(k=>`<div class="cb"><span>${T[k]}</span><i data-h="${T[k]*10}" style="background:${col[tenBand(T[k])]}"></i><em>${SHORT[k]}</em></div>`).join("")}</div></div>
-   <h2>The six areas of your work life</h2><p class="lead">Higher is better in every area.</p>`;
-  for(const k of ["JCS","GWB","HWI","SAW","CAW","WCS"]){const bd=tenBand(T[k]);h+=row(FACT[k].n,bd,T[k],10,FACT[k].d,FTXT[k][bd])}
-  const TM={pu:{hi:"You expect AI tools to help you in your work.",av:"You are unsure how much AI tools would help you.",lo:"You do not expect AI tools to help much in your work."},pe:{hi:"You expect AI tools to be easy to use.",av:"You expect some difficulty in using AI tools.",lo:"You expect AI tools to be hard to use."},bi:{hi:"You intend to use AI tools in your work.",av:"You are undecided about using AI tools in your work.",lo:"You do not plan to use AI tools in your work."}};const bi=r.bi??3;
-  h+=`<h2>Your view of AI tools</h2><p class="lead">Based on your own answers.</p>`+
-   row("Usefulness",tamBand(r.pu),r.pu,5,"How much you expect AI tools to help you do your job.",TM.pu[tamBand(r.pu)])+
-   row("Ease of use",tamBand(r.pe),r.pe,5,"How easy you expect AI tools to be to learn and use.",TM.pe[tamBand(r.pe)])+
-   row("Intention to use",tamBand(bi),bi,5,"How far you intend to use AI tools in your work.",TM.bi[tamBand(bi)])+
-  `<div class="card"><p class="q">How to read these results</p>
-   <p class="exp">Work life scores run from 1 to 10. They show where your answers fall compared with a reference group of 953 health service staff in the United Kingdom, using the official manual of the Work-Related Quality of Life scale: 1 to 3 is lower, 4 to 6 is average and 7 to 10 is higher. They are a general guide, not a medical or psychological assessment.</p>
-   <p class="exp">The three AI scores are the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher.</p>
-   <p class="exp">If you have been feeling low or under heavy stress for some time, please consider talking to someone you trust or to a health professional.</p>
+  const r=S.res;
+  let h=`<div class="overall b-${band(r.bi)}"><span class="tag">Your personal AI profile</span><div class="big">${AREAS[3].m[band(r.bi)]}</div><p>${useTxt(r)}</p></div>
+   <h2>How you view AI tools</h2><p class="lead">Each score is the average of your answers, from 1 to 5.</p>`+
+   AREAS.map(a=>row(a,r[a.k])).join("")+
+   `<div class="card"><p class="q">Using AI tools safely in clinical work</p><ul class="exp" style="padding-left:20px;margin:6px 0">${TIPS.map(t=>`<li style="margin:6px 0">${t}</li>`).join("")}</ul></div>
+   <div class="card"><p class="q">How to read these results</p>
+   <p class="exp">Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong.</p>
    <p class="exp">These results are shown only to you and are not linked to your name.</p></div>
-   <div class="hero" style="margin-top:16px"><h1 style="font-size:24px">Thank you for taking part</h1><p>Your answers will help improve training and support for staff.</p></div>
+   <div class="hero" style="margin-top:16px"><h1 style="font-size:24px">Thank you for taking part</h1><p>Your answers will help plan training and guidance for doctors.</p></div>
    <button class="btn" id="dlr" type="button" style="width:100%;margin-top:14px">Download my results (PDF)</button>
-   <p class="note" style="text-align:center">Saves a detailed PDF on this device, for you only. You can print it.</p>
-   <p class="copy">Work-Related Quality of Life Scale. Copyright &copy; 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.</p>`;
+   <p class="note" style="text-align:center">Saves a PDF on this device, for you only. You can print it.</p>`;
   app.innerHTML=h;toTop();
   $("dlr").onclick=downloadResults;
-  requestAnimationFrame(()=>setTimeout(()=>{app.querySelectorAll(".meter i").forEach(i=>i.style.width=i.dataset.w+"%");app.querySelectorAll(".cb i").forEach(i=>i.style.height=i.dataset.h*1.5+"px")},60));
+  requestAnimationFrame(()=>setTimeout(()=>{app.querySelectorAll(".meter i").forEach(i=>i.style.width=i.dataset.w+"%")},60));
 }
 
 /* ---------- download personal results as PDF ---------- */
@@ -371,47 +359,32 @@ function downloadResults(){
   const btn=$("dlr"),done=()=>{btn.disabled=false;btn.textContent="Download my results (PDF)"};
   btn.disabled=true;btn.textContent="Preparing PDF...";
   const make=()=>{try{
-    const r=S.res,T=tens(r),ob=tenBand(T.ALL),d=new window.jspdf.jsPDF({unit:"mm",format:"a4"}),W=210,M=16,CW=W-2*M,rgb={hi:[30,158,106],av:[217,154,0],lo:[217,96,59]};
+    const r=S.res,ob=band(r.bi),d=new window.jspdf.jsPDF({unit:"mm",format:"a4"}),W=210,M=16,CW=W-2*M,rgb={hi:[30,158,106],av:[217,154,0],lo:[217,96,59]};
     let y=12;
     const need=h=>{if(y+h>282){d.addPage();y=16}};
     const para=(t,size,style,color,gap)=>{d.setFont("helvetica",style||"normal");d.setFontSize(size);d.setTextColor(...(color||[20,49,43]));
       const L=d.splitTextToSize(t,CW);need(L.length*size*0.42+2);d.text(L,M,y);y+=L.length*size*0.42+(gap||2)};
     d.setFont("helvetica","bold");d.setFontSize(10);d.setTextColor(91,115,109);
-    d.text("Staff survey, North Al Sharqiyah",M,y+4);
+    d.text("Survey of doctors, North Al Sharqiyah",M,y+4);
     d.setFont("helvetica","normal");d.text("Personal results  |  "+new Date().toLocaleDateString("en-GB"),W-M,y+4,{align:"right"});
     y+=10;
     d.setFillColor(...rgb[ob]);d.roundedRect(M,y,CW,30,4,4,"F");d.setTextColor(255,255,255);
-    d.setFont("helvetica","bold");d.setFontSize(11);d.text("AI tools and your work life",M+6,y+8);
-    d.setFontSize(17);d.text("Your quality of work life is in the "+BL[ob].toLowerCase()+" range",M+6,y+17);
-    d.setFont("helvetica","normal");d.setFontSize(11);d.text("Overall score "+T.ALL+" out of 10   |   Full scale total "+r.total+" of 115",M+6,y+25);
+    d.setFont("helvetica","bold");d.setFontSize(11);d.text("Your personal AI profile",M+6,y+8);
+    d.setFontSize(15);d.text(AREAS[3].m[ob],M+6,y+17);
+    d.setFont("helvetica","normal");d.setFontSize(10.5);d.text(useTxt(r),M+6,y+25);
     y+=38;
-    d.setFont("helvetica","bold");d.setFontSize(14);d.setTextColor(20,49,43);d.text("Your profile (scores out of 10)",M,y);y+=4;
-    const ch=44,bw=CW/7;[[0,3,[217,96,59]],[3,6,[217,154,0]],[6,10,[30,158,106]]].forEach(z=>{d.setFillColor(...z[2].map(c=>Math.round(255-(255-c)*0.1)));d.rect(M,y+ch-ch*z[1]/10,CW,ch*(z[1]-z[0])/10,"F")});
-    ["ALL","JCS","GWB","HWI","SAW","CAW","WCS"].forEach((k,i)=>{const hh=ch*T[k]/10,x0=M+i*bw+bw*0.2;d.setFillColor(...rgb[tenBand(T[k])]);d.rect(x0,y+ch-hh,bw*0.6,hh,"F");
-      d.setFont("helvetica","bold");d.setFontSize(10);d.setTextColor(20,49,43);d.text(String(T[k]),M+i*bw+bw/2,y+ch-hh-1.5,{align:"center"});
-      d.setFont("helvetica","normal");d.setFontSize(8.5);d.setTextColor(91,115,109);d.text(SHORT[k].replace("–","-"),M+i*bw+bw/2,y+ch+4.5,{align:"center"})});
-    y+=ch+14;
-    const row=(name,val,max,bd,desc,msg,detail)=>{need(40);
-      d.setFont("helvetica","bold");d.setFontSize(12);d.setTextColor(20,49,43);d.text(name,M,y);
-      d.setTextColor(...rgb[bd]);d.text(BL[bd],W-M,y,{align:"right"});y+=3;
-      d.setFillColor(220,231,226);d.roundedRect(M,y,CW,3,1.5,1.5,"F");d.setFillColor(...rgb[bd]);d.roundedRect(M,y,Math.max(3,CW*val/max),3,1.5,1.5,"F");y+=8;
-      para((max===10?val:val.toFixed(1))+" out of "+max+(detail?"   |   "+detail:""),9.5,"normal",[91,115,109],1.5);
-      para(desc,10,"normal",[91,115,109],1.5);para(msg,10.5,"normal",null,6)};
-    para("The six areas of your work life",14,"bold",null,5);
-    for(const k of ["JCS","GWB","HWI","SAW","CAW","WCS"]){const f=r.f[k],F=FACT[k];
-      const bd=tenBand(T[k]);row(F.n,T[k],10,bd,F.d,FTXT[k][bd],"raw total "+f.sum+" of "+F.i.length*5)}
-    need(80);para("Your view of AI tools",14,"bold",null,5);
-    const TM={pu:{hi:"You expect AI tools to help you in your work.",av:"You are unsure how much AI tools would help you.",lo:"You do not expect AI tools to help much in your work."},pe:{hi:"You expect AI tools to be easy to use.",av:"You expect some difficulty in using AI tools.",lo:"You expect AI tools to be hard to use."},bi:{hi:"You intend to use AI tools in your work.",av:"You are undecided about using AI tools in your work.",lo:"You do not plan to use AI tools in your work."}},bi=r.bi??3;
-    row("Usefulness",r.pu,5,tamBand(r.pu),"How much you expect AI tools to help you do your job.",TM.pu[tamBand(r.pu)]);
-    row("Ease of use",r.pe,5,tamBand(r.pe),"How easy you expect AI tools to be to learn and use.",TM.pe[tamBand(r.pe)]);
-    row("Intention to use",bi,5,tamBand(bi),"How far you intend to use AI tools in your work.",TM.bi[tamBand(bi)]);
-    need(50);para("How to read these results",14,"bold",null,4);
-    para("Work life scores run from 1 to 10. They show where your answers fall compared with a reference group of 953 health service staff in the United Kingdom, using the official manual of the Work-Related Quality of Life scale: 1 to 3 is lower, 4 to 6 is average and 7 to 10 is higher. They are a general guide, not a medical or psychological assessment.",10.5,"normal",null,3);
-    para("Higher is better in every area. For stress at work, a higher score means less stress. The three AI scores are the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher.",10.5,"normal",null,3);
-    para("If you have been feeling low or under heavy stress for some time, please consider talking to someone you trust or to a health professional.",10.5,"normal",null,3);
+    para("How you view AI tools",14,"bold",null,5);
+    for(const a of AREAS){const v=r[a.k],bd=band(v),c=a.risk?rgb.av:rgb[bd];need(36);
+      d.setFont("helvetica","bold");d.setFontSize(12);d.setTextColor(20,49,43);d.text(a.n,M,y);
+      d.setTextColor(...c);d.text(a.risk?RL[bd]:BL[bd],W-M,y,{align:"right"});y+=3;
+      d.setFillColor(220,231,226);d.roundedRect(M,y,CW,3,1.5,1.5,"F");d.setFillColor(...c);d.roundedRect(M,y,Math.max(3,CW*v/5),3,1.5,1.5,"F");y+=8;
+      para(v.toFixed(1)+" out of 5",9.5,"normal",[91,115,109],1.5);para(a.d,10,"normal",[91,115,109],1.5);para(a.m[bd],10.5,"normal",null,6)}
+    need(60);para("Using AI tools safely in clinical work",14,"bold",null,4);
+    TIPS.forEach(t=>para("- "+t,10.5,"normal",null,2.5));y+=3;
+    need(30);para("How to read these results",14,"bold",null,4);
+    para("Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong.",10.5,"normal",null,3);
     para("These results were produced on your own device and are not linked to your name.",10.5,"normal",null,6);
-    para("Work-Related Quality of Life Scale. Copyright (c) 2008 QoWL Ltd. All rights reserved. Used with the permission of the authors.",8.5,"normal",[91,115,109]);
-    d.save("my-worklife-results.pdf")}catch(e){window.print()}done()};
+    d.save("my-ai-profile.pdf")}catch(e){window.print()}done()};
   if(window.jspdf)return make();
   const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
   sc.onload=make;sc.onerror=()=>{window.print();done()};document.head.appendChild(sc);
@@ -420,52 +393,53 @@ function downloadResults(){
 /* ---------- admin export (#admin) ---------- */
 let TOKEN="",ADATA={};
 const CFG_PATH="wqcfg";
-const CFG0={target:327,staff:{A3:{"Doctors":405,"Dentist":23,"Staff Nurse":1028,"Pharmacists and Assistant Pharmacist":162,"Physiotherapists":29,"Laboratory Technicians":114,"Dental Technician":32,"Dietician":12,"Medical orderlies / Health Assistants":232,"Other paramedical health professionals":153},A1:{},A4:{},A5:{}}};
+const CFG0={v:VER,target:197,pop:405,staff:{A3:{},A6:{},A1:{},A5:{}}};
 let CFG=JSON.parse(JSON.stringify(CFG0));
-const MON=["A3","A5","A1","A4"];
+const MON=["A3","A6","A1","A5"];
 const qOf=id=>A.find(q=>q.id===id);
 async function loadCfg(){
-  try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`);if(r.ok){const j=await r.json();if(j&&j.staff){CFG=mergeCfg(j);return}}}catch(e){}
-  try{const j=JSON.parse(localStorage.getItem("wq_cfg")||"null");if(j&&j.staff)CFG=mergeCfg(j)}catch(e){}
+  try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`);if(r.ok){const j=await r.json();if(j&&j.v===VER&&j.staff){CFG=mergeCfg(j);return}}}catch(e){}
+  try{const j=JSON.parse(localStorage.getItem("wq_cfg4")||"null");if(j&&j.staff)CFG=mergeCfg(j)}catch(e){}
 }
-function mergeCfg(j){const c=JSON.parse(JSON.stringify(CFG0));c.target=+j.target||c.target;MON.forEach(k=>{if(j.staff&&j.staff[k])c.staff[k]=j.staff[k]});return c}
+function mergeCfg(j){const c=JSON.parse(JSON.stringify(CFG0));c.target=+j.target||c.target;c.pop=+j.pop||c.pop;MON.forEach(k=>{if(j.staff&&j.staff[k])c.staff[k]=j.staff[k]});return c}
 function alloc(staff,opts,T){const tot=opts.reduce((s,o)=>s+staff[o],0);const raw=opts.map(o=>T*staff[o]/tot);const fl=raw.map(Math.floor);let left=T-fl.reduce((a,b)=>a+b,0);
   raw.map((v,i)=>[v-fl[i],i]).sort((a,b)=>b[0]-a[0]).slice(0,left).forEach(([_,i])=>fl[i]++);const m={};opts.forEach((o,i)=>m[o]=fl[i]);return m}
 function coverage(rows,k){
   const q=qOf(k),opts=q.o,st=CFG.staff[k]||{},have=opts.every(o=>+st[o]>0),c={};rows.forEach(r=>{c[r[k]]=(c[r[k]]||0)+1});
   const n=rows.length;
-  if(!have) return `<div class="card"><p class="q">${q.t}<small>Counts only. Add staff numbers to see targets.</small></p><table class="tbl cov"><tr><th>Group</th><th>Responses</th><th>% of responses</th></tr>${opts.map(o=>`<tr><td>${esc(o)}</td><td>${c[o]||0}</td><td>${n?Math.round(100*(c[o]||0)/n):0}%</td></tr>`).join("")}</table></div>`;
+  if(!have) return `<div class="card"><p class="q">${q.t}<small>Counts only. Add numbers of doctors to see targets.</small></p><table class="tbl cov"><tr><th>Group</th><th>Responses</th><th>% of responses</th></tr>${opts.map(o=>`<tr><td>${esc(o)}</td><td>${c[o]||0}</td><td>${n?Math.round(100*(c[o]||0)/n):0}%</td></tr>`).join("")}</table></div>`;
   const stf={};opts.forEach(o=>stf[o]=+st[o]);const tg=alloc(stf,opts,CFG.target),tot=opts.reduce((x,o)=>x+stf[o],0);
   const rowsH=opts.map(o=>{const got=c[o]||0,t=tg[o],exp=n*stf[o]/tot,ratio=exp?got/exp:1,small=exp<3;
     const cl=small?"":ratio>=0.9?"g":ratio>=0.7?"a":"r";
     return {o,ratio,small,html:`<tr><td>${esc(o)}</td><td>${stf[o]}</td><td>${got} / ${t}</td><td>${Math.round(100*got/stf[o])}%</td><td>${small?"<span class='note'>too few yet</span>":`<span class="fl ${cl}">${Math.round(100*ratio)}%</span>`}</td></tr>`}});
   const low=rowsH.filter(x=>!x.small&&x.ratio<0.7).sort((x,y)=>x.ratio-y.ratio).map(x=>x.o);
-  return `<div class="card"><p class="q">${q.t}<small>Balance = responses compared with what the group's share of staff would give at this point (100% = in line). Red under 70%, amber 70–89%, green 90% or more. Target = the group's share of ${CFG.target}.</small></p>
-  <table class="tbl cov"><tr><th>Group</th><th>Staff</th><th>Resp. / target</th><th>Rate</th><th>Balance</th></tr>${rowsH.map(x=>x.html).join("")}</table>
-  ${n&&low.length?`<p class="note"><b>Remind next:</b> ${low.map(esc).join(", ")}.</p>`:n?`<p class="note">All groups are in line with their share of staff.</p>`:""}</div>`;
+  return `<div class="card"><p class="q">${q.t}<small>Balance = responses compared with what the group's share of doctors would give at this point (100% = in line). Red under 70%, amber 70–89%, green 90% or more. Target = the group's share of ${CFG.target}.</small></p>
+  <table class="tbl cov"><tr><th>Group</th><th>Doctors</th><th>Resp. / target</th><th>Rate</th><th>Balance</th></tr>${rowsH.map(x=>x.html).join("")}</table>
+  ${n&&low.length?`<p class="note"><b>Remind next:</b> ${low.map(esc).join(", ")}.</p>`:n?`<p class="note">All groups are in line with their share of doctors.</p>`:""}</div>`;
 }
 function monitor(rows,data){
-  const n=rows.length,T=CFG.target,tot=Object.values(CFG.staff.A3).reduce((a,b)=>a+(+b||0),0)||2190;
-  const days={};Object.values(data).forEach(r=>{if(!r.ts)return;const d=new Date(r.ts).toLocaleDateString("en-CA",{timeZone:"Asia/Muscat"});days[d]=(days[d]||0)+1});
+  const n=rows.length,T=CFG.target,tot=CFG.pop;
+  const days={};rows.forEach(r=>{if(!r._ts)return;const d=new Date(r._ts).toLocaleDateString("en-CA",{timeZone:"Asia/Muscat"});days[d]=(days[d]||0)+1});
   const dk=Object.keys(days).sort().slice(-21),mx=Math.max(1,...dk.map(d=>days[d]));
   const g={};rows.forEach(r=>{g[r.AI_group]=(g[r.AI_group]||0)+1});
-  const grp=["Non-user","Occasional user","Regular user"];
-  return `<div class="card"><p class="q">Progress<small>${n} of ${T} target responses · response rate ${(100*n/tot).toFixed(1)}% of ${tot} staff</small></p><div class="bar"><i style="width:${Math.min(100,100*n/T)}%"></i></div></div>
+  const grp=["Non-user","Occasional user","Regular user"],cl=rows.filter(r=>r.CU_any===1).length;
+  return `<div class="card"><p class="q">Progress<small>${n} of ${T} target responses · response rate ${(100*n/tot).toFixed(1)}% of ${tot} doctors</small></p><div class="bar"><i style="width:${Math.min(100,100*n/T)}%"></i></div></div>
   ${MON.map(k=>coverage(rows,k)).join("")}
   <div class="card"><p class="q">Responses per day<small>Last ${dk.length||0} days with responses (Oman time)</small></p>${dk.map(d=>`<div class="dy"><span>${d.slice(5)}</span><i style="width:${Math.max(4,70*days[d]/mx)}%"></i><b>${days[d]}</b></div>`).join("")||"<p class='note'>No responses yet.</p>"}</div>
-  <div class="card"><p class="q">AI use groups<small>Each group should reach about 40 for the group comparison.</small></p><table class="tbl cov">${grp.map(x=>{const v=g[x]||0;return `<tr><td>${x}</td><td><span class="fl ${v>=40?"g":v>=20?"a":"r"}">${v}</span></td></tr>`}).join("")}</table></div>
-  <button class="link" id="ed" type="button" style="width:100%">Edit staff numbers and target</button><div id="edf"></div>`;
+  <div class="card"><p class="q">AI use groups<small>Clinical users are needed for the step-2 analysis (how often AI is used in patient care); aim for at least 60.</small></p><table class="tbl cov">${grp.map(x=>{const v=g[x]||0;return `<tr><td>${x}</td><td><span class="fl ${v>=40?"g":v>=20?"a":"r"}">${v}</span></td></tr>`}).join("")}<tr><td><b>Clinical users</b> (any patient-care use)</td><td><span class="fl ${cl>=60?"g":cl>=30?"a":"r"}">${cl}</span></td></tr></table></div>
+  <button class="link" id="ed" type="button" style="width:100%">Edit numbers of doctors and target</button><div id="edf"></div>`;
 }
 function editCfg(){
   const box=$("edf");
-  box.innerHTML=`<form class="card" id="cf"><p class="q">Staff numbers<small>Leave a group blank if unknown. Targets appear only when every option in a question has a number.</small></p>
+  box.innerHTML=`<form class="card" id="cf"><p class="q">Numbers of doctors<small>Leave a group blank if unknown. Targets appear only when every option in a question has a number.</small></p>
   <div class="stf"><b>Target responses</b><input id="c_t" type="number" min="1" value="${CFG.target}"></div>
+  <div class="stf"><b>All doctors (population)</b><input id="c_p" type="number" min="1" value="${CFG.pop}"></div>
   ${MON.map(k=>{const q=qOf(k);return `<p class="q" style="margin-top:14px">${q.t}</p>`+q.o.map((o,i)=>`<div class="stf"><span>${esc(o)}</span><input type="number" min="0" data-k="${k}" data-o="${i}" value="${CFG.staff[k][o]??""}"></div>`).join("")}).join("")}
   <button class="btn" style="width:100%;margin-top:12px">Save</button><p class="warn" id="cw" role="alert"></p></form>`;
   $("cf").onsubmit=async e=>{e.preventDefault();
-    const c={target:Math.max(1,+$("c_t").value||327),staff:{}};MON.forEach(k=>c.staff[k]={});
+    const c={v:VER,target:Math.max(1,+$("c_t").value||197),pop:Math.max(1,+$("c_p").value||405),staff:{}};MON.forEach(k=>c.staff[k]={});
     box.querySelectorAll("input[data-k]").forEach(x=>{if(x.value!=="")c.staff[x.dataset.k][qOf(x.dataset.k).o[+x.dataset.o]]=+x.value});
-    CFG=mergeCfg(c);try{localStorage.setItem("wq_cfg",JSON.stringify(c))}catch(e){}
+    CFG=mergeCfg(c);try{localStorage.setItem("wq_cfg4",JSON.stringify(c))}catch(e){}
     let ok=false;try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(c)});ok=r.ok}catch(e){}
     adminData(ADATA);if(!ok)$("mw").textContent="Saved on this device only. Add the wqcfg rule in Firebase to save it online."};
 }
@@ -484,31 +458,35 @@ function adminView(){
     }catch(err){w.textContent=err.message;b.disabled=false;b.textContent="Open"}
   };
 }
-const COLS=["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","B1","B2","B3","B4","B5","B6","B7","B8","B9",...[1,2,3,4,5,6].map(i=>"PU"+i),...[1,2,3,4,5,6].map(i=>"PE"+i),"BI1","BI2",...WQ.map((_,i)=>"W"+(i+1))];
+const COLS=[...A.map(q=>q.id),"B1","B2","B2_other","B3","B3_other","B4",...CU.map(q=>q.id),...[1,2,3,4].map(i=>"PU"+i),...[1,2,3,4].map(i=>"PE"+i),...[1,2,3,4,5].map(i=>"RK"+i),"BI1","BI2"];
+const fq=v=>{const i=FQ.indexOf(v);return i<0?"":i+1};
 function toRows(data){
-  return Object.entries(data).sort((a,b)=>(a[1].ts||0)-(b[1].ts||0)).map(([id,r],n)=>{
+  return Object.entries(data).filter(([_,r])=>r&&r.v===VER).sort((a,b)=>(a[1].ts||0)-(b[1].ts||0)).map(([id,r],n)=>{
     const d=r.d||{},s=r.s||{},o={No:n+1,ID:id,Submitted:r.ts?new Date(r.ts).toLocaleString("en-GB",{timeZone:"Asia/Muscat"}):""};
     COLS.forEach(c=>o[c]=d[c]??"");
-    const FQ=["Never","Rarely (once or twice in the month)","Occasionally (about once a week)","Frequently (several times a week)","Very frequently (nearly daily)"],fq=v=>FQ.indexOf(v)+1;
-    o.B6_count=d.B6&&d.B6!=="Not applicable"?String(d.B6).split(" | ").length:0;
-    o.B7_count=d.B7&&d.B7!=="Not applicable"?String(d.B7).split(" | ").length:0;
-    o.AI_use_score=fq(d.B1)||"";
+    o.AI_use_score=fq(d.B1);
     o.AI_group=d.B1===FQ[0]?"Non-user":(d.B1===FQ[1]||d.B1===FQ[2]?"Occasional user":(d.B1?"Regular user":""));
-    o.AI_task_mean=d.B1===FQ[0]?1:(fq(d.B2)&&fq(d.B5)?+((fq(d.B2)+fq(d.B3)+fq(d.B4)+fq(d.B5))/4).toFixed(2):"");
-    Object.assign(o,{PU_mean:s.pu,PEOU_mean:s.pe,BI_mean:s.bi,JCS_sum:s.JCS,GWB_sum:s.GWB,HWI_sum:s.HWI,SAW_sum:s.SAW,CAW_sum:s.CAW,WCS_sum:s.WCS,WRQoL_total:s.total,WRQoL_mean:s.wrqol});
+    o.Tools_count=d.B2&&d.B2!=="Not applicable"?String(d.B2).split(" | ").length:0;
+    o.NonClinical_count=d.B3&&d.B3!=="Not applicable"&&d.B3!=="None of these"?String(d.B3).split(" | ").length:0;
+    o.Training_any=/^Yes/.test(d.B4||"")?1:(d.B4?0:"");
+    const cu=[1,2,3,4,5].map(i=>fq(d["CU"+i])||1);
+    o.CU_mean=+(cu.reduce((a,b)=>a+b,0)/5).toFixed(2);
+    o.CU_dx_tx_mean=+(cu.slice(0,4).reduce((a,b)=>a+b,0)/4).toFixed(2);
+    o.CU_any=cu.some(v=>v>1)?1:0;
+    o.Doc_use=d.DOC==="Yes"?1:0;
+    Object.assign(o,{PU_mean:s.pu,PEOU_mean:s.pe,RISK_mean:s.rk,BI_mean:s.bi});
+    Object.defineProperty(o,"_ts",{value:r.ts,enumerable:false});
     return o});
 }
 function adminData(data){
-  const rows=toRows(data),n=rows.length;
-  const cnt=k=>{const m={};rows.forEach(r=>m[r[k]]=(m[r[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([a,b])=>`<tr><td>${esc(String(a))}</td><td>${b}</td></tr>`).join("")};
+  const rows=toRows(data),n=rows.length,old=Object.entries(data).filter(([_,r])=>!r||r.v!==VER);
   const avg=k=>n?(rows.reduce((s,r)=>s+(+r[k]||0),0)/n).toFixed(2):"-";
-  $("ad").innerHTML=`<div class="facts"><div class="fact"><b>${n}</b><span>responses</span></div><div class="fact"><b>${avg("WRQoL_mean")}</b><span>mean work life</span></div><div class="fact"><b>${avg("PU_mean")} / ${avg("PEOU_mean")}</b><span>useful / easy</span></div></div>
-   <p class="warn" id="mw" role="alert"></p>${monitor(rows,data)}
+  $("ad").innerHTML=`<div class="facts"><div class="fact"><b>${n}</b><span>responses</span></div><div class="fact"><b>${avg("PU_mean")} / ${avg("PEOU_mean")}</b><span>useful / easy</span></div><div class="fact"><b>${avg("RISK_mean")}</b><span>mean concern</span></div></div>
+   <p class="warn" id="mw" role="alert"></p>${old.length?`<p class="warn">${old.length} record(s) from an earlier version of the survey are not counted. Delete them below before the pilot.</p>`:""}${monitor(rows,data)}
    <button class="btn" id="xl" style="width:100%" ${n?"":"disabled"}>Download Excel</button>
    <div style="text-align:center"><button class="link" id="cs" ${n?"":"disabled"}>Download CSV instead</button></div>
    <div class="card"><p class="q">All records<small>Tap Delete twice to remove a test or pilot record. This cannot be undone.</small></p>
-    <table class="tbl rec">${rows.slice().reverse().map(r=>`<tr><td>${r.No}</td><td>${r.Submitted}<br>${esc(String(r.A3))}, ${esc(String(r.A5))}</td><td><button class="del" data-id="${r.ID}" type="button">Delete</button></td></tr>`).join("")||"<tr><td>No records</td><td></td><td></td></tr>"}</table><p class="warn" id="dw" role="alert"></p></div>
-   <p class="note">In the file: W7, W9 and W19 are the raw answers (not reversed). Factor sums and WRQoL totals already include the reversal, as in the manual.</p>`;
+    <table class="tbl rec">${rows.slice().reverse().map(r=>`<tr><td>${r.No}</td><td>${r.Submitted}<br>${esc(r.A3)}, ${esc(r.A6)}</td><td><button class="del" data-id="${r.ID}" type="button">Delete</button></td></tr>`).join("")}${old.map(([id,r])=>`<tr><td>old</td><td>${r&&r.ts?new Date(r.ts).toLocaleString("en-GB",{timeZone:"Asia/Muscat"}):""}<br>earlier version</td><td><button class="del" data-id="${id}" type="button">Delete</button></td></tr>`).join("")||(n?"":"<tr><td>No records</td><td></td><td></td></tr>")}</table><p class="warn" id="dw" role="alert"></p></div>`;
   $("ed").onclick=editCfg;
   $("ad").querySelectorAll(".del").forEach(b=>b.onclick=async()=>{
     if(!b.dataset.arm){b.dataset.arm=1;b.textContent="Confirm delete";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Delete"}},4000);return}
@@ -519,13 +497,24 @@ function adminData(data){
   const stamp=new Date().toISOString().slice(0,10);
   const dl=(blob,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()};
   const csv=()=>{const h=Object.keys(rows[0]);const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-    dl(new Blob(["﻿"+[h.join(","),...rows.map(r=>h.map(k=>q(r[k])).join(","))].join("\r\n")],{type:"text/csv"}),`worklife_data_${stamp}.csv`)};
+    dl(new Blob(["﻿"+[h.join(","),...rows.map(r=>h.map(k=>q(r[k])).join(","))].join("\r\n")],{type:"text/csv"}),`ai_doctors_data_${stamp}.csv`)};
   $("cs").onclick=csv;
   $("xl").onclick=()=>{const go=()=>{const wb=XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Data");
-      const cb=[["Column","Meaning"],["A1-A6","Background (text)"],["A7-A10","Workload controls: working pattern, extra hours per week, night duties or on-calls per month (Not applicable for day duty), staffing adequacy (text)"],["B1","Overall frequency of AI tool use for work in the past month (text)"],["AI_use_score","B1 coded 1 = Never to 5 = Very frequently (nearly daily)"],["AI_group","Non-user (Never), Occasional user (Rarely or Occasionally), Regular user (Frequently or Very frequently)"],["B2-B5","Task-oriented use items adapted from the GAIES Use Frequency subscale (Zhang et al., 2025); Not applicable for non-users"],["AI_task_mean","Mean of B2-B5 coded 1 to 5; non-users (B1 = Never) scored 1"],["B6,B7","Multiple answers separated by |; Not applicable for non-users"],["B6_count","Number of AI tools used"],["B7_count","Number of purposes AI tools are used for"],["B8","Time per day of use (text); Not applicable for non-users"],["B9","Training or guidance received (text)"],["PU1-PU6","Perceived usefulness of AI tools, 1 = Strongly disagree to 5 = Strongly agree"],["PE1-PE6","Perceived ease of use of AI tools, 1 to 5"],["BI1-BI2","Intention to use AI tools, 1 to 5"],["W1-W24","WRQoL items, raw answers 1 to 5 (W7, W9, W19 not reversed; W24 = overall item)"],["PU_mean, PEOU_mean, BI_mean","Mean of the items of each scale"],["JCS_sum ... WCS_sum","Factor totals after reversing W7, W9, W19"],["WRQoL_total","Sum of the six factor totals (23 to 115)"],["WRQoL_mean","Mean of the six factor means (1 to 5)"],...COLS.filter(c=>c[0]=="W").map((c,i)=>[c,WQ[i]])];
+      const cb=[["Column","Meaning"],["A1-A7","Background: gender, age group, grade, area of practice, years as a doctor, workplace, nationality (text)"],
+        ["B1","Overall frequency of AI tool use for work in the past month (GAIES Use Frequency format)"],["AI_use_score","B1 coded 1 = Never to 5 = Very frequently (nearly daily)"],["AI_group","Non-user (Never), Occasional user (Rarely or Occasionally), Regular user (Frequently or Very frequently)"],
+        ["B2, B2_other","AI tools used (multiple answers separated by |) and the text typed for Other; Not applicable for non-users"],["Tools_count","Number of AI tools used"],
+        ["B3, B3_other","Non-clinical purposes (multiple answers separated by |) and the text typed for Other; Not applicable for non-users"],["NonClinical_count","Number of non-clinical purposes (0 if None of these)"],
+        ["B4","Formal AI training (text)"],["Training_any","1 = any formal AI training (either Yes option), 0 = No (for H8)"],
+        ["CU1-CU5","Clinical use frequency in the past month: differential diagnosis, confirming a diagnosis, clinical questions, investigations or treatment, patient education. Tasks adapted from Bagla et al. (2026) and Blease et al. (2025); non-users (B1 = Never) recorded as Never"],
+        ["CU_mean","Mean of CU1-CU5 coded 1 to 5 (clinical use score)"],["CU_dx_tx_mean","Mean of CU1-CU4 (diagnosis and treatment use only)"],["CU_any","1 = any clinical use (any CU item above Never), 0 = none. Step 1 outcome (logistic regression)"],
+        ["DOC, Doc_use","AI help with clinical documents (Yes/No; 1/0); separate item, not part of the clinical use score"],
+        ["PU1-PU4","Perceived usefulness (TAM2, Venkatesh & Davis, 2000), 1 = Strongly disagree to 5 = Strongly agree"],["PE1-PE4","Perceived ease of use (TAM2), 1 to 5"],
+        ["RK1-RK5","Perceived risk (adapted from Dai et al., 2025), 1 to 5; higher = more concern"],["BI1-BI2","Intention to use (TAM2), 1 to 5"],
+        ["PU_mean, PEOU_mean, RISK_mean, BI_mean","Mean of the items of each scale"],
+        ...CU.slice(0,5).map(q=>[q.id,q.t]),...PU.map((t,i)=>["PU"+(i+1),t]),...PE.map((t,i)=>["PE"+(i+1),t]),...RK.map((t,i)=>["RK"+(i+1),t]),...BI.map((t,i)=>["BI"+(i+1),t])];
       XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cb),"Codebook");
-      XLSX.writeFile(wb,`worklife_data_${stamp}.xlsx`)};
+      XLSX.writeFile(wb,`ai_doctors_data_${stamp}.xlsx`)};
     if(window.XLSX)return go();
     const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
     sc.onload=go;sc.onerror=csv;document.head.appendChild(sc)};
