@@ -108,6 +108,10 @@ button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20p
 .oth{margin-top:10px;width:100%}
 .cu{display:grid;grid-template-columns:1fr 34%;gap:2px 10px;align-items:center;margin:8px 0}.cu span{font-size:14px}.cu .meter{margin:0}.cu em{grid-column:2;font-style:normal;font-size:12px;color:var(--soft)}
 .bn{display:flex;gap:12px;align-items:baseline;border-top:1px solid var(--line);padding-top:8px;margin-top:8px}.bn b{font-size:20px;color:var(--pri);min-width:64px}.bn .exp{margin:0}
+.info{display:inline-flex;align-items:center;justify-content:center;width:22px!important;height:22px!important;min-width:0!important;min-height:0!important;line-height:1!important;box-sizing:border-box;box-shadow:none!important;border-radius:50%;border:1.5px solid var(--pri);background:#fff;color:var(--pri);font:italic 700 13px Georgia,serif;vertical-align:middle;margin-left:4px;padding:0;cursor:pointer;flex:none}
+button.info:focus-visible{outline:3px solid var(--pri);outline-offset:2px}.info.on{background:var(--pri);color:#fff}
+.expl{background:#F1F7F5;border-left:3px solid var(--pri);border-radius:8px;padding:8px 12px;margin:-2px 0 10px;font-size:14px;line-height:1.5}.expl p{margin:4px 0}.expl p[lang=ar]{font-size:15px}
+.tipline{display:flex;gap:8px;align-items:flex-start}.tipline .info{margin:2px 0 0;cursor:default}
 </style>
 </head>
 <body>
@@ -167,6 +171,15 @@ const PE = ["My interaction with AI tools would be clear and understandable.","I
 const RK = ["I am concerned that AI tools may provide incorrect information, leading to adverse outcomes.","I am concerned that using AI tools may lead to medical disputes, making it difficult to determine responsibility.","I am concerned that the lack of transparency and explainability of AI tools may negatively affect the medical process.","I am concerned that the use of AI tools may increase inequities in health care services.","I am concerned that my job might eventually be replaced by AI."];
 const BI = ["Assuming I have access to AI tools, I intend to use them in my work.","Given that I have access to AI tools, I predict that I would use them in my work."];
 
+/* clarification notes, shown when the (i) sign is tapped; wording explains meaning only */
+const NOTES = {
+ PE1:{en:"This asks whether using AI tools, from typing a question to reading the answer, would feel clear and easy to follow for you.",ar:"المقصود: هل سيكون التعامل مع أدوات الذكاء الاصطناعي، من كتابة السؤال إلى قراءة الإجابة، واضحًا وسهل الفهم بالنسبة لك؟"},
+ PE2:{en:"This asks whether using AI tools would be easy for you, without needing much thinking or concentration to make them work. Agreeing means you expect it to be easy.",ar:"المقصود: هل سيكون استخدام أدوات الذكاء الاصطناعي سهلًا عليك دون أن يتطلب تفكيرًا أو تركيزًا كبيرًا لتشغيلها؟ الموافقة تعني أنك تتوقع أن يكون سهلًا."},
+ RK2:{en:"If an AI tool contributes to a mistake in patient care, it may not be clear who is responsible: the doctor, the health institution or the AI company.",ar:"إذا ساهمت أداة الذكاء الاصطناعي في خطأ في رعاية المريض، فقد لا يكون واضحًا من المسؤول: الطبيب أم المؤسسة الصحية أم الشركة المطوِّرة."},
+ RK3:{en:"AI tools usually give an answer without showing how they reached it, so it is hard to check their reasoning.",ar:"غالبًا ما تقدّم أدوات الذكاء الاصطناعي إجابة دون أن توضّح كيف توصّلت إليها، مما يصعّب التحقق من صحة منطقها."},
+ RK4:{en:"AI tools may work better for some patients or places than for others, for example patients whose data were less used to build them, so care may become less fair.",ar:"قد تعمل أدوات الذكاء الاصطناعي بشكل أفضل لبعض المرضى أو الأماكن دون غيرها، مثل المرضى الذين لم تُستخدم بياناتهم بشكل كافٍ في بنائها، فتصبح الرعاية أقل عدالة."},
+ BI2:{en:"If AI tools are available to you, do you expect that you will use them in your work?",ar:"المقصود: إذا كانت أدوات الذكاء الاصطناعي متاحة لك، هل تتوقع أنك ستستخدمها في عملك؟"}
+};
 const VIEW = "If you use AI tools, answer from your experience. If you have never used them, tell us what you expect.";
 const STEPS = [
  {name:"Welcome"},
@@ -225,7 +238,9 @@ function render(){
   });
   else st.items.forEach((t,k)=>{
     const id=st.pre+(st.from+k+1),cur=S.ans[id];
-    h+=`<div class="card" data-q="${id}"><p class="q"><span class="num">${st.from+k+1}</span>${esc(t)}</p><div class="lik">`+
+    const nt=NOTES[id];
+    h+=`<div class="card" data-q="${id}"><p class="q"><span class="num">${st.from+k+1}</span>${esc(t)}${nt?` <button type="button" class="info" data-n="${id}" aria-expanded="false" aria-controls="ex_${id}" aria-label="What this question means">i</button>`:""}</p>`+
+      (nt?`<div class="expl hide" id="ex_${id}"><p>${esc(nt.en)}</p><p lang="ar" dir="rtl">${esc(nt.ar)}</p></div>`:"")+`<div class="lik">`+
       AG.map((a,i)=>`<label><input type="radio" name="${id}" value="${i+1}" ${cur===i+1?"checked":""}><span>${a}</span></label>`).join("")+`</div></div>`;
   });
   h+=`<p class="warn" id="warn" role="alert"></p>`;
@@ -234,6 +249,8 @@ function render(){
 function mark(){app.querySelectorAll(".card[data-q]").forEach(c=>c.classList.toggle("done",answered(c.dataset.q)))}
 function answered(id){const v=S.ans[id];return Array.isArray(v)?v.length>0:v!==undefined}
 
+app.addEventListener("click",e=>{const b=e.target.closest(".info");if(!b)return;const x=$("ex_"+b.dataset.n);if(!x)return;
+  const open=x.classList.toggle("hide")===false;b.setAttribute("aria-expanded",open?"true":"false");b.classList.toggle("on",open)});
 app.addEventListener("input",e=>{const el=e.target;if(el.dataset&&el.dataset.oth){S.ans[el.dataset.oth+"_other"]=el.value.slice(0,120);save()}});
 app.addEventListener("change",e=>{
   const el=e.target;if(!el.name)return;
@@ -286,14 +303,16 @@ function welcome(){
   </div>
   <div class="consent"><h2 style="margin-top:0">Before you start</h2>
    <p>Dear Doctor, this study examines how doctors use and view artificial intelligence (AI) tools, such as ChatGPT, in their work, including patient care. The results will help plan training and guidance for doctors. It is not a check on any policy.</p>
+   <p class="tipline"><span class="info" aria-hidden="true">i</span><span>Some questions have an <b>i</b> sign. Tap it to see a short explanation in English and Arabic.</span></p>
    <p>Participation is voluntary and anonymous: no name, employee number or email is collected, no manager will see individual answers, and results are reported only as group totals. You may stop at any time, and taking part or not has no effect on your job. There are no right or wrong answers.</p>
    <p>This survey of doctors is conducted in North Al Sharqiyah Governorate with approval from the Ministry of Health research ethics committee.</p>
-   <p class="note">Your profile is worked out on your own phone. Your anonymous answers are stored securely for research analysis.</p>
+   <p class="note">Your profile is worked out on your own phone. Your anonymous answers are stored securely in a protected online database (servers in Europe) that only the researcher can open, and are deleted from it after the study. Because no name is recorded, answers cannot be withdrawn once submitted.</p>
    <div class="ar" lang="ar"><h2 style="margin:0 0 6px">قبل أن تبدأ</h2>
    <p>عزيزي الطبيب، تبحث هذه الدراسة في استخدام الأطباء لأدوات الذكاء الاصطناعي مثل ChatGPT في عملهم، بما في ذلك رعاية المرضى، ونظرتهم إليها. ستساعد النتائج في تخطيط التدريب والإرشادات المقدَّمة للأطباء. هذه الاستبانة ليست للتحقق من الالتزام بأي سياسة.</p>
+   <p>بعض الأسئلة عليها علامة <b>i</b>، اضغط عليها لرؤية توضيح مختصر باللغتين الإنجليزية والعربية.</p>
    <p>المشاركة اختيارية ومجهولة الهوية: لا يُطلب الاسم أو الرقم الوظيفي أو البريد الإلكتروني، ولن يطّلع أي مسؤول على الإجابات الفردية، وتُعرض النتائج بصورة إجمالية فقط. يمكنك التوقف في أي وقت، ولا تؤثر المشاركة أو عدمها على عملك. لا توجد إجابات صحيحة أو خاطئة.</p>
    <p>يُجرى هذا الاستبيان للأطباء في محافظة شمال الشرقية بموافقة لجنة أخلاقيات البحث في وزارة الصحة.</p>
-   <p class="note">يُحسب ملفك الشخصي على هاتفك، وتُحفظ إجاباتك المجهولة بصورة آمنة لأغراض التحليل البحثي. الأسئلة باللغة الإنجليزية وتستغرق نحو 5 دقائق.</p></div>
+   <p class="note">يُحسب ملفك الشخصي على هاتفك، وتُحفظ إجاباتك المجهولة بصورة آمنة في قاعدة بيانات إلكترونية محمية (خوادم في أوروبا) لا يطّلع عليها إلا الباحث، وتُحذف منها بعد انتهاء الدراسة. ولأن الاسم لا يُسجَّل، لا يمكن سحب الإجابات بعد إرسالها. الأسئلة باللغة الإنجليزية وتستغرق نحو 5 دقائق.</p></div>
    <p style="font-weight:800;margin-top:14px">By continuing, I confirm that I have read this information and agree to take part.</p>
    <p class="ar" lang="ar" style="font-weight:700;margin:0 0 12px;border:0;padding-top:0">بالمتابعة أقرّ بأنني قرأت هذه المعلومات وأوافق على المشاركة.</p>
    <button class="btn" id="go" type="button" style="width:100%">${resume?"I agree, continue where I stopped · أوافق":"I agree, let's start · أوافق"}</button>
@@ -452,7 +471,7 @@ function downloadResults(){
 /* ---------- admin export (#admin) ---------- */
 let TOKEN="",ADATA={};
 const CFG_PATH="wqcfg";
-const CFG0={v:VER,target:197,pop:405,staff:{A3:{},A6:{},A1:{},A5:{}}};
+const CFG0={v:VER,target:198,pop:405,staff:{A3:{},A6:{},A1:{},A5:{}}};
 let CFG=JSON.parse(JSON.stringify(CFG0));
 const MON=["A3","A6","A1","A5"];
 const qOf=id=>A.find(q=>q.id===id);
@@ -496,7 +515,7 @@ function editCfg(){
   ${MON.map(k=>{const q=qOf(k);return `<p class="q" style="margin-top:14px">${q.t}</p>`+q.o.map((o,i)=>`<div class="stf"><span>${esc(o)}</span><input type="number" min="0" data-k="${k}" data-o="${i}" value="${CFG.staff[k][o]??""}"></div>`).join("")}).join("")}
   <button class="btn" style="width:100%;margin-top:12px">Save</button><p class="warn" id="cw" role="alert"></p></form>`;
   $("cf").onsubmit=async e=>{e.preventDefault();
-    const c={v:VER,target:Math.max(1,+$("c_t").value||197),pop:Math.max(1,+$("c_p").value||405),staff:{}};MON.forEach(k=>c.staff[k]={});
+    const c={v:VER,target:Math.max(1,+$("c_t").value||198),pop:Math.max(1,+$("c_p").value||405),staff:{}};MON.forEach(k=>c.staff[k]={});
     box.querySelectorAll("input[data-k]").forEach(x=>{if(x.value!=="")c.staff[x.dataset.k][qOf(x.dataset.k).o[+x.dataset.o]]=+x.value});
     CFG=mergeCfg(c);try{localStorage.setItem("wq_cfg4",JSON.stringify(c))}catch(e){}
     let ok=false;try{const r=await fetch(`${DB_URL}/${CFG_PATH}.json?auth=${TOKEN}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(c)});ok=r.ok}catch(e){}
