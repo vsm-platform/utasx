@@ -106,6 +106,8 @@ button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:15px 20p
 .rec td{font-size:14px;vertical-align:middle}.rec td:last-child{font-weight:400}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 .oth{margin-top:10px;width:100%}
+.cu{display:grid;grid-template-columns:1fr 34%;gap:2px 10px;align-items:center;margin:8px 0}.cu span{font-size:14px}.cu .meter{margin:0}.cu em{grid-column:2;font-style:normal;font-size:12px;color:var(--soft)}
+.bn{display:flex;gap:12px;align-items:baseline;border-top:1px solid var(--line);padding-top:8px;margin-top:8px}.bn b{font-size:20px;color:var(--pri);min-width:64px}.bn .exp{margin:0}
 </style>
 </head>
 <body>
@@ -316,7 +318,7 @@ async function submit(){
   try{
     const r=await fetch(`${DB_URL}/${DB_PATH}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(rec)});
     if(!r.ok)throw new Error(r.status);
-    S.sent=true;S.res=res;S.ans={};save();render();
+    S.sent=true;S.res={...res,g:glance(S.ans)};S.ans={};save();render();
   }catch(e){
     btn.disabled=false;btn.textContent="Try again";
     $("warn").textContent="Your answers could not be sent. Please check your connection and tap Try again. Nothing is lost.";
@@ -325,26 +327,66 @@ async function submit(){
 
 /* ---------- results ---------- */
 const AREAS=[
- {k:"pu",n:"Usefulness",d:"How much you expect AI tools to help you do your job.",m:{hi:"You expect AI tools to help you in your work.",av:"You are unsure how much AI tools would help you.",lo:"You do not expect AI tools to help much in your work."}},
- {k:"pe",n:"Ease of use",d:"How easy you expect AI tools to be to learn and use.",m:{hi:"You expect AI tools to be easy to use.",av:"You expect some difficulty in using AI tools.",lo:"You expect AI tools to be hard to use."}},
- {k:"rk",n:"Concerns",d:"How concerned you are about errors, responsibility, transparency, fairness and jobs.",m:{hi:"You have strong concerns about the risks of AI tools. Careful checking of every AI answer suits this view.",av:"You have some concerns about the risks of AI tools.",lo:"You have few concerns about the risks of AI tools. Remember that AI answers can still be wrong."},risk:1},
- {k:"bi",n:"Intention to use",d:"How far you intend to use AI tools in your work.",m:{hi:"You intend to use AI tools in your work.",av:"You are undecided about using AI tools in your work.",lo:"You do not plan to use AI tools in your work."}}];
+ {k:"pu",p:"PU",items:PU,n:"Usefulness",d:"How much you expect AI tools to help you do your job.",m:{hi:"You expect AI tools to help you in your work.",av:"You are unsure how much AI tools would help you.",lo:"You do not expect AI tools to help much in your work."}},
+ {k:"pe",p:"PE",items:PE,n:"Ease of use",d:"How easy you expect AI tools to be to learn and use.",m:{hi:"You expect AI tools to be easy to use.",av:"You expect some difficulty in using AI tools.",lo:"You expect AI tools to be hard to use."}},
+ {k:"rk",p:"RK",items:RK,n:"Concerns",d:"How concerned you are about errors, responsibility, transparency, fairness and jobs.",m:{hi:"You have strong concerns about the risks of AI tools. Careful checking of every AI answer suits this view.",av:"You have some concerns about the risks of AI tools.",lo:"You have few concerns about the risks of AI tools. Remember that AI answers can still be wrong."},risk:1},
+ {k:"bi",p:"BI",items:BI,n:"Intention to use",d:"How far you intend to use AI tools in your work.",m:{hi:"You intend to use AI tools in your work.",av:"You are undecided about using AI tools in your work.",lo:"You do not plan to use AI tools in your work."}}];
 const RL={hi:"High",av:"Moderate",lo:"Low"};
+const CUN=["Suggesting a differential diagnosis","Confirming a suspected diagnosis","Answering clinical questions","Deciding investigations or treatment","Patient education material"];
+const FQS=["Never","Rarely","Occasionally","Frequently","Very frequently"];
 const TIPS=["Check every AI answer against a trusted source, such as a guideline, a formulary or a senior colleague, before acting on it.","Never enter a patient's name, civil ID, file number or other identifying details into a public AI tool.","You remain responsible for every clinical decision. Treat AI output as a suggestion, not an answer.","AI tools can sound confident and still be wrong, especially on doses, rare conditions and recent guidance.","Follow any guidance your institution or the Ministry of Health issues on AI use."];
+/* published figures, shown for context only (exact values from the cited papers) */
+const BENCH=[
+ ["7 in 10","physicians at Sultan Qaboos University Hospital had used ChatGPT or similar tools, and 29.5% used them in clinical practice (survey of 146 physicians, 2024).","Al Kindi et al., 2025"],
+ ["25%","of general practitioners in the United Kingdom used generative AI tools in clinical practice; 95% had no professional training in them (survey of 1,005 GPs, 2025).","Blease et al., 2025"],
+ ["27.8%","of physicians in 50 countries had used AI in practice, and 17.7% had received formal AI training (survey of 1,049 physicians, 2024).","Bold et al., 2026"],
+ ["22.8%","of physicians in a nationwide survey in China had used medical AI (991 physicians, 2024).","Dai et al., 2025"]];
+/* summary of the doctor's own answers, kept on this device only */
+function glance(ans){
+  const user=ans.B1!==undefined&&ans.B1!==0,pick=(q,v)=>(v||[]).map(i=>q.o[i]===q.other&&ans[q.id+"_other"]?String(ans[q.id+"_other"]).trim():q.o[i]);
+  return {use:FQ[ans.B1??0],user:user?1:0,tools:user?pick(B[1],ans.B2):[],non:user?pick(B[2],ans.B3).filter(x=>x!=="None of these"):[],
+    train:/^Yes/.test(B[3].o[ans.B4]||"")?1:0,cu:[1,2,3,4,5].map(k=>user?ans["CU"+k]:0),doc:user&&ans.DOC===0?1:0,
+    it:Object.fromEntries(["PU","PE","RK","BI"].map(p=>[p,Object.keys(ans).filter(k=>new RegExp("^"+p+"\\d$").test(k)).sort().map(k=>ans[k])]))};
+}
+function myTips(r,g){
+  const t=[],dxtx=g.cu[0]>=2||g.cu[1]>=2||g.cu[3]>=2;
+  if(!g.user&&r.bi>3.5)t.push("You intend to use AI tools but have not used them for work yet. Ask your workplace whether training or guidance is available before you start.");
+  if(!g.user&&r.bi<=3.5)t.push("Not using AI tools is a valid choice. If you decide to try them, start with low-risk tasks, such as summarising a guideline you already know, so you can judge the quality of the answers.");
+  if(g.user&&!r.cuany)t.push("You use AI tools only outside patient care. That is a low-risk way to learn their strengths and weaknesses before any clinical use.");
+  if(r.cuany&&!g.train)t.push("You use AI tools in patient care but have had no formal training. A short course on safe clinical use would help you judge when an answer can be trusted.");
+  if(dxtx)t.push("When an AI tool suggests a diagnosis, test or treatment, ask it for its reasoning and sources, then confirm with a guideline or a senior colleague. It cannot examine the patient.");
+  if(g.doc)t.push("You use AI tools for clinical documents. Remove every patient identifier before you paste any text, and read the final note fully: you sign the record, not the tool.");
+  if(r.pu>3.5&&r.pe<2.5)t.push("You expect AI tools to be useful but hard to use. Clear, specific questions that give context (for example the patient's age group and the guideline you follow, without identifiers) usually give better answers.");
+  if(r.rk>3.5)t.push("Your concerns are shared by many doctors: in one Omani study almost all physicians reported concerns about reliability, accuracy or privacy. Checking answers and protecting patient data address most of them.");
+  if(r.rk<2.5&&g.user)t.push("You have few concerns about AI tools. Keep in mind that they can produce confident but wrong answers, so keep checking them.");
+  return t.slice(0,4);
+}
 const useTxt=r=>!r.user?"You did not use AI tools for work in the past month.":r.cuany?"You used AI tools for work in the past month, including some use in patient care.":"You used AI tools for work in the past month, but not in patient care.";
 function row(a,v){const bd=band(v),col=a.risk?"var(--av)":{hi:"var(--hi)",av:"var(--av)",lo:"var(--lo)"}[bd];
   return `<div class="card"><div class="res-h"><b>${a.n}</b><span class="chip c-${a.risk?"av":bd}">${a.risk?RL[bd]:BL[bd]}</span></div>
    <div class="meter"><i data-w="${v/5*100}" style="background:${col}"></i></div>
    <div class="sc">${v.toFixed(1)} out of 5</div><p class="exp"><span style="color:var(--soft)">${a.d}</span></p><p class="exp">${a.m[bd]}</p></div>`}
+function glanceHtml(g){
+  if(!g.user)return `<div class="card"><p class="q">Your AI use at a glance</p><p class="exp">You did not use AI tools for work in the past month, so there is no use pattern to show.</p><p class="exp">Formal AI training: <b>${g.train?"Yes":"No"}</b></p></div>`;
+  const li=(t,v)=>`<tr><td>${t}</td><td>${v}</td></tr>`;
+  return `<div class="card"><p class="q">Your AI use at a glance<small>From your own answers about the past month.</small></p>
+   <table class="tbl">${li("Use for work",esc(g.use))}${li("Tools",esc(g.tools.join(", ")||"-"))}${li("Other uses",esc(g.non.join("; ")||"None"))}${li("Clinical documents",g.doc?"Yes":"No")}${li("Formal AI training",g.train?"Yes":"No")}</table>
+   <p class="q" style="margin-top:14px">In patient care</p>
+   ${g.cu.map((v,i)=>`<div class="cu"><span>${CUN[i]}</span><div class="meter"><i data-w="${v/4*100}" style="background:var(--pri)"></i></div><em>${FQS[v]}</em></div>`).join("")}</div>`;
+}
 function results(){
   $("top").classList.add("hide");$("nav").classList.add("hide");
-  const r=S.res;
+  const r=S.res,g=r.g||glance({}),tips=myTips(r,g);
   let h=`<div class="overall b-${band(r.bi)}"><span class="tag">Your personal AI profile</span><div class="big">${AREAS[3].m[band(r.bi)]}</div><p>${useTxt(r)}</p></div>
-   <h2>How you view AI tools</h2><p class="lead">Each score is the average of your answers, from 1 to 5.</p>`+
+   ${glanceHtml(g)}
+   <h2>How you view AI tools</h2><p class="lead">Each score is the average of your answers, from 1 to 5. The PDF also lists your answer to each statement.</p>`+
    AREAS.map(a=>row(a,r[a.k])).join("")+
+   (tips.length?`<div class="card"><p class="q">Tips for you<small>Chosen from your own answers.</small></p><ul class="exp" style="padding-left:20px;margin:6px 0">${tips.map(t=>`<li style="margin:6px 0">${t}</li>`).join("")}</ul></div>`:"")+
    `<div class="card"><p class="q">Using AI tools safely in clinical work</p><ul class="exp" style="padding-left:20px;margin:6px 0">${TIPS.map(t=>`<li style="margin:6px 0">${t}</li>`).join("")}</ul></div>
+   <div class="card"><p class="q">How doctors elsewhere compare<small>For context only, not a ranking. These studies differ in place, year and definitions.</small></p>
+   ${BENCH.map(b=>`<div class="bn"><b>${b[0]}</b><p class="exp">${b[1]} <span style="color:var(--soft)">(${b[2]})</span></p></div>`).join("")}</div>
    <div class="card"><p class="q">How to read these results</p>
-   <p class="exp">Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong.</p>
+   <p class="exp">Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong. These scores describe your views; they are not an assessment of you.</p>
    <p class="exp">These results are shown only to you and are not linked to your name.</p></div>
    <div class="hero" style="margin-top:16px"><h1 style="font-size:24px">Thank you for taking part</h1><p>Your answers will help plan training and guidance for doctors.</p></div>
    <button class="btn" id="dlr" type="button" style="width:100%;margin-top:14px">Download my results (PDF)</button>
@@ -359,12 +401,14 @@ function downloadResults(){
   const btn=$("dlr"),done=()=>{btn.disabled=false;btn.textContent="Download my results (PDF)"};
   btn.disabled=true;btn.textContent="Preparing PDF...";
   const make=()=>{try{
-    const r=S.res,ob=band(r.bi),d=new window.jspdf.jsPDF({unit:"mm",format:"a4"}),W=210,M=16,CW=W-2*M,rgb={hi:[30,158,106],av:[217,154,0],lo:[217,96,59]};
+    const r=S.res,g=r.g||glance({}),tips=myTips(r,g),ob=band(r.bi),d=new window.jspdf.jsPDF({unit:"mm",format:"a4"}),W=210,M=16,CW=W-2*M,rgb={hi:[30,158,106],av:[217,154,0],lo:[217,96,59]},ink=[20,49,43],soft=[91,115,109],pri=[14,124,102];
     let y=12;
     const need=h=>{if(y+h>282){d.addPage();y=16}};
-    const para=(t,size,style,color,gap)=>{d.setFont("helvetica",style||"normal");d.setFontSize(size);d.setTextColor(...(color||[20,49,43]));
-      const L=d.splitTextToSize(t,CW);need(L.length*size*0.42+2);d.text(L,M,y);y+=L.length*size*0.42+(gap||2)};
-    d.setFont("helvetica","bold");d.setFontSize(10);d.setTextColor(91,115,109);
+    const clean=t=>String(t).replace(/[–—]/g,"-").replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
+    const para=(t,size,style,color,gap,x)=>{x=x||M;d.setFont("helvetica",style||"normal");d.setFontSize(size);d.setTextColor(...(color||ink));
+      const L=d.splitTextToSize(clean(t),CW-(x-M));need(L.length*size*0.42+2);d.text(L,x,y);y+=L.length*size*0.42+(gap||2)};
+    const head=t=>{need(20);y+=2;para(t,14,"bold",null,4)};
+    d.setFont("helvetica","bold");d.setFontSize(10);d.setTextColor(...soft);
     d.text("Survey of doctors, North Al Sharqiyah",M,y+4);
     d.setFont("helvetica","normal");d.text("Personal results  |  "+new Date().toLocaleDateString("en-GB"),W-M,y+4,{align:"right"});
     y+=10;
@@ -373,18 +417,33 @@ function downloadResults(){
     d.setFontSize(15);d.text(AREAS[3].m[ob],M+6,y+17);
     d.setFont("helvetica","normal");d.setFontSize(10.5);d.text(useTxt(r),M+6,y+25);
     y+=38;
-    para("How you view AI tools",14,"bold",null,5);
-    for(const a of AREAS){const v=r[a.k],bd=band(v),c=a.risk?rgb.av:rgb[bd];need(36);
-      d.setFont("helvetica","bold");d.setFontSize(12);d.setTextColor(20,49,43);d.text(a.n,M,y);
+    head("Your AI use at a glance");
+    if(!g.user)para("You did not use AI tools for work in the past month. Formal AI training: "+(g.train?"Yes":"No")+".",10.5,"normal",null,4);
+    else{
+      [["Use for work",g.use],["Tools",g.tools.join(", ")||"-"],["Other uses",g.non.join("; ")||"None"],["Clinical documents",g.doc?"Yes":"No"],["Formal AI training",g.train?"Yes":"No"]].forEach(([k,v])=>{
+        d.setFont("helvetica","bold");d.setFontSize(10.5);d.setTextColor(...soft);need(7);d.text(k,M,y);const yy=y;para(v,10.5,"normal",null,2,M+42);if(y<yy+5)y=yy+5});
+      y+=2;para("In patient care",11.5,"bold",null,3);
+      g.cu.forEach((v,i)=>{need(8);d.setFont("helvetica","normal");d.setFontSize(10);d.setTextColor(...ink);d.text(CUN[i],M,y);
+        const x0=M+72,bw=CW-72-30;d.setFillColor(220,231,226);d.roundedRect(x0,y-2.6,bw,3,1.5,1.5,"F");if(v>0){d.setFillColor(...pri);d.roundedRect(x0,y-2.6,bw*v/4,3,1.5,1.5,"F")}
+        d.setTextColor(...soft);d.text(FQS[v],W-M,y,{align:"right"});y+=7});
+    }
+    head("How you view AI tools");
+    for(const a of AREAS){const v=r[a.k],bd=band(v),c=a.risk?rgb.av:rgb[bd],ans=(g.it&&g.it[a.p])||[];need(46);
+      d.setFont("helvetica","bold");d.setFontSize(12);d.setTextColor(...ink);d.text(a.n,M,y);
       d.setTextColor(...c);d.text(a.risk?RL[bd]:BL[bd],W-M,y,{align:"right"});y+=3;
       d.setFillColor(220,231,226);d.roundedRect(M,y,CW,3,1.5,1.5,"F");d.setFillColor(...c);d.roundedRect(M,y,Math.max(3,CW*v/5),3,1.5,1.5,"F");y+=8;
-      para(v.toFixed(1)+" out of 5",9.5,"normal",[91,115,109],1.5);para(a.d,10,"normal",[91,115,109],1.5);para(a.m[bd],10.5,"normal",null,6)}
-    need(60);para("Using AI tools safely in clinical work",14,"bold",null,4);
-    TIPS.forEach(t=>para("- "+t,10.5,"normal",null,2.5));y+=3;
-    need(30);para("How to read these results",14,"bold",null,4);
-    para("Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong.",10.5,"normal",null,3);
+      para(v.toFixed(1)+" out of 5. "+a.d,9.5,"normal",soft,1.5);para(a.m[bd],10.5,"normal",null,2.5);
+      a.items.forEach((t,i)=>{if(ans[i]===undefined)return;para(t+"  Your answer: "+AG[ans[i]-1]+".",9,"normal",soft,1.2,M+4)});y+=4}
+    if(tips.length){head("Tips for you");tips.forEach(t=>para("- "+t,10.5,"normal",null,2.5))}
+    head("Using AI tools safely in clinical work");
+    TIPS.forEach(t=>para("- "+t,10.5,"normal",null,2.5));
+    head("How doctors elsewhere compare");
+    para("For context only, not a ranking. These studies differ in place, year and definitions.",9.5,"normal",soft,3);
+    BENCH.forEach(b=>para(b[0]+" "+b[1]+" ("+b[2]+")",10.5,"normal",null,2.5));
+    head("How to read these results");
+    para("Each score is the average of your answers, from 1 to 5: below 2.5 lower, 2.5 to 3.5 average, above 3.5 higher. For concerns, a higher score means more concern; neither high nor low is right or wrong. These scores describe your views; they are not an assessment of you.",10.5,"normal",null,3);
     para("These results were produced on your own device and are not linked to your name.",10.5,"normal",null,6);
-    d.save("my-ai-profile.pdf")}catch(e){window.print()}done()};
+    d.save("my-ai-profile.pdf")}catch(e){console.error(e);window.print()}done()};
   if(window.jspdf)return make();
   const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
   sc.onload=make;sc.onerror=()=>{window.print();done()};document.head.appendChild(sc);
