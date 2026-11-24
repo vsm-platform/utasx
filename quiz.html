@@ -104,6 +104,11 @@ body.host{height:100vh;overflow:hidden;font-size:clamp(12px,.78vw + .42vh,32px)}
 .rw{display:flex;align-items:center;gap:.8em;background:var(--bg);border-radius:14px;padding:.6em .9em;font-size:1.15em;font-weight:750;animation:popin .4s both}
 .rw i{font-style:normal;width:2em;height:2em;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.85em}
 .rw .nm2{flex:1}.rw b{color:var(--red)}
+.endv{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.6em;padding:2em;animation:popin .7s}
+.endv img{height:6em}.endv h1{font-size:8em;line-height:1;margin:.1em 0 0;letter-spacing:-.04em;color:var(--red)}
+.endv .big{font-size:2.6em;font-weight:900;margin:0}.endv .sub{font-size:1.4em;color:var(--ink2);margin:0}
+.endv .who{display:block;margin-top:1.4em;font-size:1.25em;color:var(--ink2);line-height:1.5;border-top:3px solid var(--red);padding-top:1em}.endv .who b{color:var(--ink);font-size:1.2em}
+.endv .slog{font-weight:900;color:var(--red);font-size:1.6em;margin:.6em 0 0}
 .lesson{margin-top:auto;background:var(--red);color:#fff;border-radius:16px;padding:1em 1.2em;font-size:1.5em;font-weight:900;text-align:center}
 
 /* ===== PHONE ===== */
@@ -367,7 +372,7 @@ async function host(){
     app.innerHTML = bar(`<div class="fin">
       <div class="card podwrap"><div class="kick"><i></i>Challenge complete</div><h1>The <span>winners</span></h1>
         <div class="podium">${top.map((p, i) => p ? `<div class="pd"><div class="nm">${esc(p.name)}</div><div class="sc">${p.score} pts</div><div class="blk" style="background:${col[i]}" data-h="${H[i]}">${lab[i]}</div></div>` : `<div class="pd"></div>`).join("")}</div></div>
-      <div class="card rest"><h3>Leaderboard</h3>${rows.slice(3, 10).map((x, i) => `<div class="rw" style="animation-delay:${1.6 + i * .1}s"><i>${x.rank}</i>${avatar(x.name)}<span class="nm2">${esc(x.name)}</span><b>${x.score}</b></div>`).join("") || `<p style="color:var(--ink3)">Thank you for playing!</p>`}
+      <div class="card rest"><h3>Leaderboard <small style="color:var(--ink3);font-weight:700;font-size:.7em">· press → to finish</small></h3>${rows.slice(3, 10).map((x, i) => `<div class="rw" style="animation-delay:${1.6 + i * .1}s"><i>${x.rank}</i>${avatar(x.name)}<span class="nm2">${esc(x.name)}</span><b>${x.score}</b></div>`).join("") || `<p style="color:var(--ink3)">Thank you for playing!</p>`}
         <div class="lesson">Don't train the enemy.</div></div></div>`, `<span class="tag ok">${rows.length} players · ${NQ} questions</span>`);
     bindSnd();
     setTimeout(() => document.querySelectorAll(".pd").forEach(d => { const b = d.querySelector(".blk"); if (!b) return; d.classList.add("show"); b.style.height = b.dataset.h; }), 100);
@@ -396,6 +401,12 @@ async function host(){
     if (room.state === "lobby") return startRound(0);
     if (room.state === "question") return reveal();
     if (room.state === "reveal") return room.round < NQ - 1 ? startRound(room.round + 1) : finish();
+    if (room.state === "final") return thanks();
+  }
+  function thanks(){
+    room.state = "end";
+    app.innerHTML = `<div class="hs" style="grid-template-rows:1fr"><div class="card endv"><img src="${LOGO}" alt="Ministry of Health"><div class="kick"><i></i>Antibiotic Optimization</div><h1>Thank you</h1><p class="big">Don't train the enemy.</p><p class="sub">Clarify the indication · Make the plan visible · Review and act at 48–72 h</p><div class="who"><b>Raya Al Habsi</b><br>HOD Pharmacy and Medical Store · Ibra Hospital<br>Directorate General of Health Services — North Al Sharqiyah Governorate</div><p class="slog">Antibiotics… Wise Use… Better Outcomes</p></div></div>`;
+    Sound.start();
   }
   document.addEventListener("keydown", e => { if ([" ","Enter","ArrowRight","PageDown"].includes(e.key)){ e.preventDefault(); next(); } else if (e.key === "m" || e.key === "M"){ Sound.on = !Sound.on; } });
   setInterval(() => {
