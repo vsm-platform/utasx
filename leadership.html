@@ -1013,5 +1013,34 @@ function Admin(be) {
   addEventListener("hashchange", () => location.reload());
 })();
 </script>
+
+<!-- PRISM exhibition identity: Desk 2 (Leadership Lab) -->
+<style>
+.prism-bar{position:fixed;left:0;right:0;top:0;height:5px;z-index:200;display:flex;pointer-events:none}
+.prism-bar i{flex:1;opacity:.28}
+.prism-tag{--pc:#3B56A8;display:inline-flex;align-items:center;gap:.4em;background:var(--pc);color:#fff;border-radius:99px;padding:.28em .75em .28em .5em;font-family:"Figtree","Tajawal",Arial,sans-serif;font-weight:800;font-size:.72rem;line-height:1;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;vertical-align:middle;box-shadow:0 2px 8px color-mix(in srgb,var(--pc) 35%,transparent)}
+.prism-tag svg{width:1.35em!important;height:1.35em!important;flex:none;position:static!important;margin:0!important}
+.prism-tag .pd{font:inherit;color:inherit;opacity:.85;letter-spacing:inherit}
+.title-block .prism-tag{font-size:.82rem;margin-inline-end:.7em;transform:translateY(-.08em)}
+.p-head .prism-tag{font-size:.62rem;padding:.24em .6em .24em .4em;margin-top:.35em}
+.p-head .brand b small{display:block}
+html[lang=ar] .prism-tag{letter-spacing:0}
+@media print{.prism-bar{display:none}}
+</style>
+<script>
+(function () {
+  var bar = document.createElement("div"); bar.className = "prism-bar"; bar.setAttribute("aria-hidden", "true"); bar.innerHTML = '<i style="background:#F68922;"></i><i style="background:#3B56A8;flex:2.2;opacity:1"></i><i style="background:#E5484D;"></i><i style="background:#12A36B;"></i>';
+  document.body.appendChild(bar);
+  var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 13.2L8 12.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><g stroke-width="1.6" stroke-linecap="round"><path d="M14.4 11L23 6.5" stroke="#FFD29E"/><path d="M14.6 12L23 10.8" stroke="#C9D5FF"/><path d="M14.6 13L23 15" stroke="#FFC2C4"/><path d="M14.4 14L23 19.2" stroke="#A9F0CF"/></g><path d="M11.3 5L16 17.5H6.6Z" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function tag() { var s = document.createElement("span"); s.className = "prism-tag"; s.setAttribute("data-prism", ""); s.innerHTML = icon + 'PRISM <span class="pd">· Desk 2</span>'; return s; }
+  function apply() {
+    var t = document.querySelector(".title-block small");
+    if (t && !t.querySelector("[data-prism]")) t.insertBefore(tag(), t.firstChild);
+    document.querySelectorAll(".p-head .brand > b").forEach(function (b) { if (!b.querySelector("[data-prism]")) { var w = document.createElement("small"); w.setAttribute("data-prism-wrap", ""); w.appendChild(tag()); b.appendChild(w); } });
+  }
+  var q = false; new MutationObserver(function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; apply(); }); }).observe(document.body, {childList: true, subtree: true});
+  apply();
+})();
+</script>
 </body>
 </html>

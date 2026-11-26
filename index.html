@@ -6,7 +6,7 @@
 <title>UTAS Idea Exchange</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#232C7A">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
 /* Layout: UTAS-branded exchange floor. Orange = Staff, Blue = Students, straight from the two halves of the UTAS mark.
    Big screen: tug of war on top, idea race left, leading idea + live trades right, pitch spotlight takes over the screen.
@@ -497,6 +497,28 @@ body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
+/* ---------- Arabic (phone + certificate) ---------- */
+html[lang=ar]{--display:"Tajawal","Lexend",sans-serif;--body:"Tajawal","Figtree",sans-serif}
+html[lang=ar] body{font-size:17px}
+html[lang=ar] .v-trade *{letter-spacing:0!important}
+html[lang=ar] .v-trade .chip{text-transform:none}
+html[dir=rtl] .stock-r{text-align:left;align-items:flex-start}
+html[dir=rtl] .hold .v{text-align:left}
+.lng{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:.32em .85em;font-weight:800;font-size:.85em;color:var(--navy);font-family:"Tajawal",var(--body);cursor:pointer;line-height:1.2}
+.lng:active{transform:scale(.96)}
+.p-head .hr{display:flex;gap:.5em;align-items:center}
+.lang-pick{display:flex;gap:.5em;justify-content:center;margin:.2em 0 .9em}
+.lang-pick button{flex:1;max-width:11em;border:2px solid var(--line);background:#fff;border-radius:14px;padding:.6em .8em;font-weight:800;font-size:1em;color:var(--ink);cursor:pointer}
+.lang-pick button[aria-pressed=true]{border-color:var(--navy);background:var(--navy);color:#fff}
+.lang-pick button:last-child{font-family:"Tajawal",var(--body);font-size:1.08em}
+.sheet[dir=rtl]{font-family:"Tajawal","Figtree",sans-serif}
+.sheet[dir=rtl] *{letter-spacing:0!important}
+.sheet[dir=rtl] .c-k,.sheet[dir=rtl] .c-name,.sheet[dir=rtl] .c-idea,.sheet[dir=rtl] .c-perf h4,.sheet[dir=rtl] .c-grid b{font-family:"Tajawal","Lexend",sans-serif}
+.sheet[dir=rtl] .c-sig{text-align:right}
+.sheet[dir=rtl] .c-sig.r{text-align:left}
+.sheet[dir=rtl] .c-lead{text-transform:none}
+.cert-view[dir=rtl] .cv-bar,.cert-view[dir=rtl] .cv-hint{font-family:"Tajawal",var(--body)}
+.ar-sub{display:block;font-family:"Tajawal",sans-serif;font-weight:700;letter-spacing:0;text-transform:none}
 </style>
 </head>
 <body>
@@ -587,7 +609,9 @@ const ICON = {
   glow: `<svg class="glow" viewBox="0 0 170 240" aria-hidden="true" opacity=".22"><path d="M10 68H62Q72 68 72 78V146Q72 158 80 166L132 220Q112 240 86 240A86 86 0 0 1 0 154V78Q0 68 10 68Z" fill="#F68922"/><path d="M84 12Q84 0 94 6L164 72Q170 78 170 86V160A80 80 0 0 1 148 214L92 156Q84 148 84 136Z" fill="#fff"/></svg>`
 };
 
+const AR2L = {"ا": "A", "أ": "A", "إ": "E", "آ": "A", "ء": "A", "ؤ": "O", "ئ": "E", "ب": "B", "ت": "T", "ث": "T", "ج": "J", "ح": "H", "خ": "K", "د": "D", "ذ": "D", "ر": "R", "ز": "Z", "س": "S", "ش": "S", "ص": "S", "ض": "D", "ط": "T", "ظ": "Z", "ع": "A", "غ": "G", "ف": "F", "ق": "Q", "ك": "K", "ل": "L", "م": "M", "ن": "N", "ه": "H", "ة": "H", "و": "W", "ي": "Y", "ى": "Y"};
 function makeSymbol(name, taken) {
+  name = String(name).split(/\s+/).map(w => /[\u0600-\u06FF]/.test(w) ? w.replace(/^(و?ال)/, "").replace(/[\u064B-\u065F]/g, "").split("").map(c => AR2L[c] || "").join("") : w).join(" ");
   const words = name.toUpperCase().replace(/[^A-Z0-9 ]/g, " ").split(/\s+/).filter(Boolean);
   let s = words.length >= 2 ? words.slice(0, 4).map(w => w[0]).join("") : (words[0] || "").slice(0, 4);
   if (s.length < 3 && words[0]) s = (s + words[0].slice(1)).slice(0, 4);
@@ -790,8 +814,15 @@ function spark(series, cls = "stock-spark") {
   const c = up ? "var(--up)" : "var(--down)";
   return `<svg class="${cls}" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"><path d="${line} L97 34 L3 34Z" fill="${c}" opacity=".12"/><path d="${line}" fill="none" stroke="${c}" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`;
 }
+let LANG = "en";
+const L = (en, ar) => LANG === "ar" ? ar : en;
+function setLang(l) { LANG = l === "ar" ? "ar" : "en"; store.set("ix-lang", LANG); document.documentElement.lang = LANG; document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr"; }
+const gName = g => g === "staff" ? L("staff", "موظف") : L("student", "طالب");
+const ERR_AR = {"The market is closed.": "السوق مغلق.", "Not enough UTAS Points.": "لا تكفي نقاط UTAS لديك.", "Something changed. Try again.": "حدث تغيير. حاول مرة أخرى."};
+const langBtn = () => `<button class="lng" type="button" data-lang>${LANG === "ar" ? "English" : "عربي"}</button>`;
+const DEPT_AR = "قسم الاقتصاد وإدارة الأعمال";
 const aceChip = i => i.rCount ? `<span class="chip ace">ACE ${f1(i.ace)}/3</span>` : "";
-function statusPill(m) { return m.status === "closed" ? `<span class="status closed"><i></i>Market closed</span>` : `<span class="status"><i></i>Market open</span>`; }
+function statusPill(m) { return m.status === "closed" ? `<span class="status closed"><i></i>${L("Market closed", "السوق مغلق")}</span>` : `<span class="status"><i></i>${L("Market open", "السوق مفتوح")}</span>`; }
 const baseURL = () => location.origin + location.pathname + location.search;
 
 let AC = null;
@@ -855,43 +886,44 @@ function showCert(i, D) {
   if (!i) return;
   document.querySelector(".cert-view")?.remove();
   const rank = D.ideas.indexOf(i) + 1, closed = D.market.status === "closed";
-  const day = new Date().toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric"});
-  const v = document.createElement("div"); v.className = "cert-view"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "Certificate of appreciation");
-  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">Name on certificate</label><input id="cv-name" maxlength="40" value="${esc(i.ownerName)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">Download PDF</button><button class="btn ghost" id="cv-x">Close</button></div></div>
-    <div class="sheet-wrap"><div class="sheet">
+  const ar = LANG === "ar";
+  const day = new Date().toLocaleDateString(ar ? "ar-OM-u-nu-latn" : "en-GB", {day: "numeric", month: "long", year: "numeric"});
+  const v = document.createElement("div"); v.className = "cert-view"; if (ar) v.dir = "rtl"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "Certificate of appreciation");
+  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">${L("Name on certificate", "الاسم على الشهادة")}</label><input id="cv-name" maxlength="40" value="${esc(i.ownerName)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">${L("Download PDF", "تحميل PDF")}</button><button class="btn ghost" id="cv-x">${L("Close", "إغلاق")}</button></div></div>
+    <div class="sheet-wrap"><div class="sheet"${ar ? ' dir="rtl" lang="ar"' : ""}>
       <div class="c-frame"></div>${CERT_OR}${CERT_BL}
       <div class="c-in">
-        <div class="c-head"><img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"><div class="c-k">Certificate of <span>Appreciation</span></div></div>
+        <div class="c-head"><img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"><div class="c-k">${L("Certificate of <span>Appreciation</span>", "شهادة <span>تقدير</span>")}</div></div>
         <div class="c-body">
           <div>
-            <div class="c-lead">Idea Exchange · proudly presented to</div>
+            <div class="c-lead">${L("Idea Exchange · proudly presented to", "بورصة الأفكار · تُقدَّم بكل فخر إلى")}</div>
             <div class="c-name" id="cv-nm">${esc(i.ownerName)}</div>
-            <div class="c-lead">in recognition of contributing the idea</div>
-            <div class="c-ideabox"><i><img src="${BULB_IMG}" alt=""></i><div class="c-idea">“${esc(i.name)}”</div></div>
+            <div class="c-lead">${L("in recognition of contributing the idea", "تقديرًا لمساهمته بفكرة")}</div>
+            <div class="c-ideabox"><i><img src="${BULB_IMG}" alt=""></i><div class="c-idea">${ar ? `«${esc(i.name)}»` : `“${esc(i.name)}”`}</div></div>
             <div class="c-pitch">${esc(i.pitch)}</div>
-            <div class="c-text">to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra.</div>
-            <div class="c-thanks">Thank you for sharing your creativity with our community.</div>
+            <div class="c-text">${L(`to the Idea Exchange at the Open Day of the ${esc(CONFIG.department)}, University of Technology and Applied Sciences, Ibra.`, `في بورصة الأفكار خلال اليوم المفتوح ل${DEPT_AR}، جامعة التقنية والعلوم التطبيقية بإبراء.`)}</div>
+            <div class="c-thanks">${L("Thank you for sharing your creativity with our community.", "شكرًا لمشاركة إبداعك مع مجتمعنا.")}</div>
           </div>
-          <div class="c-perf"><h4>Market performance</h4><img src="${chartSrc(i.series, i.group === "staff" ? "#F68922" : "#3B56A8")}" alt="Share price since listing">
+          <div class="c-perf"><h4>${L("Market performance", "أداء الفكرة في السوق")}</h4><img src="${chartSrc(i.series, i.group === "staff" ? "#F68922" : "#3B56A8")}" alt="Share price since listing">
             <div class="c-grid">
-              <div><b>${esc(i.sym)}</b><span>Ticker</span></div>
-              <div><b>${rank ? `#${rank}/${D.ideas.length}` : "—"}</b><span>${closed ? "Final rank" : "Rank"}</span></div>
-              <div><b>${i.investors}</b><span>Backers</span></div>
-              <div><b>${f2(i.price)}</b><span>Share price</span></div>
-              <div><b>${pct(i.gain)}</b><span>Since listing</span></div>
-              <div><b>${i.rCount ? f1(i.ace) + "/3" : "—"}</b><span>ACE pitch</span></div>
+              <div><b>${esc(i.sym)}</b><span>${L("Ticker", "الرمز")}</span></div>
+              <div><b dir="ltr">${rank ? `#${rank}/${D.ideas.length}` : "—"}</b><span>${closed ? L("Final rank", "الترتيب النهائي") : L("Rank", "الترتيب")}</span></div>
+              <div><b>${i.investors}</b><span>${L("Backers", "الداعمون")}</span></div>
+              <div><b>${f2(i.price)}</b><span>${L("Share price", "سعر السهم")}</span></div>
+              <div><b dir="ltr">${pct(i.gain)}</b><span>${L("Since listing", "منذ الإدراج")}</span></div>
+              <div><b dir="ltr">${i.rCount ? f1(i.ace) + "/3" : "—"}</b><span>${L("ACE pitch", "تقييم العرض")}</span></div>
             </div></div>
         </div>
-        <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${esc(CONFIG.department)}<small>UTAS Ibra</small></div></div>
+        <div class="c-foot"><div class="c-sig">${L("MBA Postgraduate Team<small>Leadership and Innovation</small>", "فريق طلبة الماجستير<small>القيادة والابتكار</small>")}</div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${ar ? `${DEPT_AR}<small>جامعة التقنية والعلوم التطبيقية – إبراء</small>` : `${esc(CONFIG.department)}<small>UTAS Ibra</small>`}</div></div>
       </div></div></div>
-    <p class="cv-hint">Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.</p>`;
+    <p class="cv-hint">${L("Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.", "اضغط «تحميل PDF» لحفظ الشهادة بحجم A4 على هاتفك (في التنزيلات أو الملفات)، ثم افتحها من هناك للمشاركة أو الطباعة.")}</p>`;
   document.body.appendChild(v);
   v.querySelector("#cv-name").oninput = e => v.querySelector("#cv-nm").textContent = e.target.value.trim() || i.ownerName;
   const done = () => document.body.classList.remove("print-cert");
   v.querySelector("#cv-x").onclick = () => { done(); v.remove(); };
   v.querySelector("#cv-pdf").onclick = async e => {
     const btn = e.currentTarget, label = btn.textContent;
-    btn.disabled = true; btn.textContent = "Preparing…";
+    btn.disabled = true; btn.textContent = L("Preparing…", "جارٍ التجهيز…");
     try {
       if (!window.html2canvas) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
       if (!window.jspdf) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
@@ -904,11 +936,11 @@ function showCert(i, D) {
       holder.remove();
       const pdf = new window.jspdf.jsPDF({orientation: "landscape", unit: "mm", format: "a4"});
       pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 297, 210);
-      const who = (v.querySelector("#cv-nm").textContent || "certificate").trim().replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "certificate";
+      const who = (v.querySelector("#cv-nm").textContent || "certificate").trim().replace(/[^A-Za-z0-9\u0600-\u06FF]+/g, "-").replace(/^-|-$/g, "") || "certificate";
       pdf.save(`UTAS-Idea-Exchange-Certificate-${who}.pdf`);
-      toast("Certificate saved as PDF");
+      toast(L("Certificate saved as PDF", "تم حفظ الشهادة بصيغة PDF"));
     } catch (err) {
-      console.warn(err); toast("Could not create the PDF. Opening print instead.", true);
+      console.warn(err); toast(L("Could not create the PDF. Opening print instead.", "تعذّر إنشاء ملف PDF. سيتم فتح الطباعة بدلًا منه."), true);
       document.body.classList.add("print-cert"); addEventListener("afterprint", done, {once: true}); try { window.print(); } catch {}
     }
     btn.disabled = false; btn.textContent = label;
@@ -925,15 +957,15 @@ function Screen(be) {
   <div class="scr">
     <header class="s-head">
       <div class="logo-card"><img src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"></div>
-      <div class="title-block"><b>Idea <span>Exchange</span></b><small>${esc(CONFIG.eventLine)}</small></div>
+      <div class="title-block"><b>Idea <span>Exchange</span> <span class="ar-sub" style="display:inline;font-size:.62em;color:var(--ink-2)">· بورصة الأفكار</span></b><small>${esc(CONFIG.eventLine)}</small></div>
       <div class="mid"><span id="status"></span><span class="clock num" id="clock"></span></div>
-      <div class="scan"><div><b>Scan &amp; play</b><span>Get <span class="pts">${f0(CONFIG.startBalance)} ${esc(CONFIG.currency)}</span> free.<br>List an idea. Back the best ones.</span></div><div class="qr" id="qr"></div></div>
+      <div class="scan"><div><b>Scan &amp; play <span class="ar-sub" style="display:inline;font-size:.8em">· امسح وشارك</span></b><span>Get <span class="pts">${f0(CONFIG.startBalance)} ${esc(CONFIG.currency)}</span> free.<br>List an idea. Back the best ones.<span class="ar-sub" style="margin-top:.2em">English · عربي</span></span></div><div class="qr" id="qr"></div></div>
     </header>
     <section class="card duel" aria-label="Staff versus Students">
       <div class="duel-top">
-        <div class="side l"><div class="who">Staff</div><div class="big num" id="sv">0</div><div class="sub" id="ss"></div></div>
+        <div class="side l"><div class="who">Staff <span class="ar-sub" style="display:inline">· الموظفون</span></div><div class="big num" id="sv">0</div><div class="sub" id="ss"></div></div>
         <div class="vs">VS</div>
-        <div class="side r"><div class="who">Students</div><div class="big num" id="uv">0</div><div class="sub" id="us"></div></div>
+        <div class="side r"><div class="who">Students <span class="ar-sub" style="display:inline">· الطلاب</span></div><div class="big num" id="uv">0</div><div class="sub" id="us"></div></div>
       </div>
       <div class="rope"><div class="fill" id="rope"></div><div class="mid-line"></div>${ICON.knot}</div>
       <div class="duel-msg" id="dmsg"></div>
@@ -1285,21 +1317,31 @@ function Screen(be) {
    ===================================================================== */
 function Phone(be) {
   document.body.classList.add("v-trade");
+  setLang(store.get("ix-lang") || ((navigator.language || "").toLowerCase().startsWith("ar") ? "ar" : "en"));
   let uid = store.get("ix-uid"); if (!uid) { uid = "u" + rid(); store.set("ix-uid", uid); }
   let D, me, tab = "market", group = null, busy = false, lastBell = null, lastPitch = null, first = true, joined = null, pitchSig = "", sel = {};
   $("#app").innerHTML = `<div class="app"><div id="top"></div><div id="pitch"></div><div id="body"></div></div><nav class="tabbar" id="tabs" role="tablist" hidden></nav>`;
+  function switchLang(l) {
+    const nm = $("#jn")?.value;
+    setLang(l || (LANG === "ar" ? "en" : "ar")); navigator.vibrate?.(15);
+    $("#top").innerHTML = ""; $("#body").innerHTML = ""; $("#body").dataset.tab = ""; $("#pitch").innerHTML = ""; pitchSig = "";
+    if (D) render(D.raw);
+    if (nm && $("#jn")) $("#jn").value = nm;
+    if (group && $("#join")) $("#join").querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x.dataset.g === group));
+  }
+  $("#app").addEventListener("click", e => { const b = e.target.closest("[data-lang]"); if (b) switchLang(b.dataset.lang || null); });
 
   function render(st) {
     D = derive(st);
     me = D.investors.find(i => i.id === uid);
     if (!me) { joined = false; renderJoin(); first = false; return; }
-    if (joined === false) { joined = true; tab = "market"; setTimeout(() => confetti(0, {x: innerWidth / 2, y: 180}), 150); toast(`${f0(CONFIG.startBalance)} ${CONFIG.currency} added to your wallet`); }
+    if (joined === false) { joined = true; tab = "market"; setTimeout(() => confetti(0, {x: innerWidth / 2, y: 180}), 150); toast(L(`${f0(CONFIG.startBalance)} ${CONFIG.currency} added to your wallet`, `أُضيفت ${f0(CONFIG.startBalance)} نقطة UTAS إلى محفظتك`)); }
     joined = true;
     renderTop(); renderTabs(); renderPitch(); renderBody();
     const b = D.market.bell;
-    if (b && b.id !== lastBell) { if (!first && be.now() - b.at < 60e3) { navigator.vibrate?.([80, 60, 80]); toast(b.type === "close" ? "Closing bell! Trading has ended." : b.type === "open" ? "The market is open again." : "Market update. Look at the big screen!"); } lastBell = b.id; }
+    if (b && b.id !== lastBell) { if (!first && be.now() - b.at < 60e3) { navigator.vibrate?.([80, 60, 80]); toast(b.type === "close" ? L("Closing bell! Trading has ended.", "جرس الإغلاق! انتهى التداول.") : b.type === "open" ? L("The market is open again.", "عاد السوق للتداول.") : L("Market update. Look at the big screen!", "تحديث في السوق. انظر إلى الشاشة الكبيرة!")); } lastBell = b.id; }
     const p = D.market.pitch;
-    if (p && p.id !== lastPitch) { if (!first && be.now() - p.startAt < 20e3) { navigator.vibrate?.([60, 40, 60]); toast("A live pitch is starting at the desk"); } lastPitch = p.id; }
+    if (p && p.id !== lastPitch) { if (!first && be.now() - p.startAt < 20e3) { navigator.vibrate?.([60, 40, 60]); toast(L("A live pitch is starting at the desk", "عرض مباشر لفكرة يبدأ الآن عند الطاولة")); } lastPitch = p.id; }
     first = false;
   }
 
@@ -1307,43 +1349,44 @@ function Phone(be) {
     $("#tabs").hidden = true; $("#top").innerHTML = ""; $("#pitch").innerHTML = "";
     if ($("#join")) return;
     $("#body").innerHTML = `
-      <div class="p-head"><div class="brand">${EMBLEM()}<b>Idea Exchange<small>UTAS Ibra</small></b></div>${statusPill(D.market)}</div>
+      <div class="p-head"><div class="brand">${EMBLEM()}<b>${L("Idea Exchange", "بورصة الأفكار")}<small>${L("UTAS Ibra", "UTAS إبراء")}</small></b></div>${statusPill(D.market)}</div>
+      <div class="lang-pick" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="${LANG === "en"}">English</button><button type="button" data-lang="ar" aria-pressed="${LANG === "ar"}">عربي</button></div>
       <div class="join-hero"><div class="coin-wrap">${ICON.coin}</div>
-        <div class="pts-line">${f0(CONFIG.startBalance)} ${esc(CONFIG.currency).toUpperCase()}</div>
-        <h1>Back the <em>best idea</em> at Open Day</h1>
-        <p>Claim your free points, invest in the ideas you believe in and watch the big screen move.</p></div>
+        <div class="pts-line">${L(`${f0(CONFIG.startBalance)} ${esc(CONFIG.currency).toUpperCase()}`, `${f0(CONFIG.startBalance)} نقطة UTAS`)}</div>
+        <h1>${L("Back the <em>best idea</em> at Open Day", "ادعم <em>أفضل فكرة</em> في اليوم المفتوح")}</h1>
+        <p>${L("Claim your free points, invest in the ideas you believe in and watch the big screen move.", "احصل على نقاطك المجانية، واستثمر في الأفكار التي تؤمن بها، وشاهد الشاشة الكبيرة تتحرك.")}</p></div>
       <form class="card form" id="join" novalidate>
-        <div class="field"><label for="jn">Your full name</label><input id="jn" maxlength="32" autocomplete="name" placeholder="e.g. Maryam Al Habsi"><small style="color:var(--ink-3);font-size:.8em">It appears on your certificate if you list an idea.</small></div>
-        <div class="field"><label>I am…</label><div class="seg">
-          <button type="button" class="staff" data-g="staff" aria-pressed="false">${ICON.staff}Staff</button>
-          <button type="button" class="student" data-g="student" aria-pressed="false">${ICON.student}Student</button></div></div>
+        <div class="field"><label for="jn">${L("Your full name", "اسمك الكامل")}</label><input id="jn" maxlength="32" autocomplete="name" placeholder="${L("e.g. Maryam Al Habsi", "مثال: مريم الحبسية")}"><small style="color:var(--ink-3);font-size:.8em">${L("It appears on your certificate if you list an idea.", "يظهر في شهادتك إذا أدرجت فكرة.")}</small></div>
+        <div class="field"><label>${L("I am…", "أنا…")}</label><div class="seg">
+          <button type="button" class="staff" data-g="staff" aria-pressed="false">${ICON.staff}${L("Staff", "موظف")}</button>
+          <button type="button" class="student" data-g="student" aria-pressed="false">${ICON.student}${L("Student", "طالب")}</button></div></div>
         <div class="err" id="je"></div>
-        <button class="btn orange" type="submit" style="font-size:1.05em">Claim my ${f0(CONFIG.startBalance)} points</button>
+        <button class="btn orange" type="submit" style="font-size:1.05em">${L(`Claim my ${f0(CONFIG.startBalance)} points`, `احصل على ${f0(CONFIG.startBalance)} نقطة`)}</button>
       </form>
       <div class="steps">
-        <div class="card step">${ICON.s1}<b>List</b><span>Post one idea</span></div>
-        <div class="card step">${ICON.s2}<b>Pitch</b><span>30 seconds at the desk</span></div>
-        <div class="card step">${ICON.s3}<b>Invest</b><span>Back the best</span></div>
-        <div class="card step">${ICON.s4}<b>Win</b><span>Early backers gain most</span></div>
+        <div class="card step">${ICON.s1}<b>${L("List", "أدرج")}</b><span>${L("Post one idea", "فكرة واحدة")}</span></div>
+        <div class="card step">${ICON.s2}<b>${L("Pitch", "اعرض")}</b><span>${L("30 seconds at the desk", "30 ثانية عند الطاولة")}</span></div>
+        <div class="card step">${ICON.s3}<b>${L("Invest", "استثمر")}</b><span>${L("Back the best", "ادعم الأفضل")}</span></div>
+        <div class="card step">${ICON.s4}<b>${L("Win", "اربح")}</b><span>${L("Early backers gain most", "الداعمون الأوائل يربحون أكثر")}</span></div>
       </div>`;
     $("#join").querySelectorAll(".seg button").forEach(b => b.onclick = () => { group = b.dataset.g; $("#join").querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b)); });
     $("#join").onsubmit = async e => {
       e.preventDefault();
       const name = $("#jn").value.trim();
-      if (name.length < 2) return $("#je").textContent = "Type your name (at least 2 letters).";
-      if (!group) return $("#je").textContent = "Choose Staff or Student.";
+      if (name.length < 2) return $("#je").textContent = L("Type your name (at least 2 letters).", "اكتب اسمك (حرفان على الأقل).");
+      if (!group) return $("#je").textContent = L("Choose Staff or Student.", "اختر: موظف أو طالب.");
       $("#je").textContent = ""; unlockAudio();
-      try { await be.join(uid, name, group); } catch { $("#je").textContent = "Could not connect. Check your internet and try again."; }
+      try { await be.join(uid, name, group); } catch { $("#je").textContent = L("Could not connect. Check your internet and try again.", "تعذّر الاتصال. تحقّق من الإنترنت وحاول مرة أخرى."); }
     };
   }
 
   function renderTop() {
     const g = me.net / CONFIG.startBalance - 1;
     if (!$("#wbal")) {
-      $("#top").innerHTML = `<div class="p-head"><div class="brand">${EMBLEM()}<b>Idea Exchange<small>UTAS Ibra</small></b></div><span id="pst"></span></div>
-        <div class="wallet">${ICON.glow}<div class="lbl">Hi <span id="wname"></span> · points to invest</div>
-          <div class="bal"><span class="num" id="wbal"></span><small>PTS</small></div>
-          <div class="row2"><div><span>Shares value</span><b id="wsh"></b></div><div><span>Net worth</span><b id="wnet"></b></div><div><span>Return</span><b id="wret"></b></div></div></div>
+      $("#top").innerHTML = `<div class="p-head"><div class="brand">${EMBLEM()}<b>${L("Idea Exchange", "بورصة الأفكار")}<small>${L("UTAS Ibra", "UTAS إبراء")}</small></b></div><span class="hr">${langBtn()}<span id="pst"></span></span></div>
+        <div class="wallet">${ICON.glow}<div class="lbl">${L("Hi", "مرحبًا")} <span id="wname"></span> · ${L("points to invest", "نقاط للاستثمار")}</div>
+          <div class="bal"><span class="num" id="wbal"></span><small>${L("PTS", "نقطة")}</small></div>
+          <div class="row2"><div><span>${L("Shares value", "قيمة الأسهم")}</span><b id="wsh"></b></div><div><span>${L("Net worth", "صافي الثروة")}</span><b id="wnet"></b></div><div><span>${L("Return", "العائد")}</span><b id="wret" dir="ltr"></b></div></div></div>
         <div id="cnote"></div>`;
     }
     $("#pst").innerHTML = statusPill(D.market);
@@ -1355,11 +1398,11 @@ function Phone(be) {
   function closedNote() {
     const w = D.ideas[0], rank = D.investors.findIndex(i => i.id === me.id) + 1;
     const mine = w && w.ownerId === me.id, topInv = D.investors[0]?.id === me.id;
-    return `<div class="closed-note">${mine ? "🏆 Your idea won the IPO!" : topInv ? "🏆 You are the Top Investor!" : "Trading has ended."} ${w ? `Winner: <b>${esc(w.name)}</b>.` : ""} You finished <b>#${rank}</b> of ${D.investors.length}.</div>`;
+    return `<div class="closed-note">${mine ? L("🏆 Your idea won the IPO!", "🏆 فكرتك فازت بالمركز الأول!") : topInv ? L("🏆 You are the Top Investor!", "🏆 أنت أفضل مستثمر!") : L("Trading has ended.", "انتهى التداول.")} ${w ? L(`Winner: <b>${esc(w.name)}</b>.`, `الفكرة الفائزة: <b>${esc(w.name)}</b>.`) : ""} ${L(`You finished <b>#${rank}</b> of ${D.investors.length}.`, `ترتيبك <b>#${rank}</b> من ${D.investors.length}.`)}</div>`;
   }
   function renderTabs() {
     const t = $("#tabs"); t.hidden = false;
-    t.innerHTML = [["market", "Market", ICON.market], ["list", "My idea", ICON.idea], ["port", "Portfolio", ICON.wallet]]
+    t.innerHTML = [["market", L("Market", "السوق"), ICON.market], ["list", L("My idea", "فكرتي"), ICON.idea], ["port", L("Portfolio", "محفظتي"), ICON.wallet]]
       .map(([k, l, ic]) => `<button role="tab" data-tab="${k}" aria-selected="${tab === k}">${ic}${l}</button>`).join("");
     t.querySelectorAll("button").forEach(b => b.onclick = () => { if (tab === b.dataset.tab) return; tab = b.dataset.tab; render(D.raw); scrollTo({top: 0, behavior: "smooth"}); });
   }
@@ -1374,14 +1417,14 @@ function Phone(be) {
     pitchSig = sig;
     if (P.p.id !== sel.id) sel = {id: P.p.id};
     let inner = "";
-    if (P.phase === "pitch") inner = `<p>Listen to the pitch at the desk. Rating opens when the timer ends.</p>`;
-    else if (own) inner = `<div class="rated">This is your idea. The audience is rating your pitch now.</div>`;
-    else if (mine) inner = `<div class="rated">Thanks! You gave ${f1((mine.a + mine.c + mine.e) / 3)} / 3. Watch the big screen for the result.</div>`;
+    if (P.phase === "pitch") inner = `<p>${L("Listen to the pitch at the desk. Rating opens when the timer ends.", "استمع إلى العرض عند الطاولة. يبدأ التقييم عند انتهاء المؤقت.")}</p>`;
+    else if (own) inner = `<div class="rated">${L("This is your idea. The audience is rating your pitch now.", "هذه فكرتك. الجمهور يقيّم عرضك الآن.")}</div>`;
+    else if (mine) inner = `<div class="rated">${L(`Thanks! You gave ${f1((mine.a + mine.c + mine.e) / 3)} / 3. Watch the big screen for the result.`, `شكرًا! قيّمت العرض بـ ${f1((mine.a + mine.c + mine.e) / 3)} من 3. تابع النتيجة على الشاشة الكبيرة.`)}</div>`;
     else inner = `<div class="rate" id="rate">
-        ${[["a", "Appropriate", "The right thing to do?"], ["c", "Consistent", "Fits people like us?"], ["e", "Effective", "Will it really work?"]].map(([k, l, q]) => `<div class="rate-row"><div><b>${l}</b><small>${q}</small></div><div class="stars" data-k="${k}">${[1, 2, 3].map(n => `<button type="button" data-n="${n}" aria-label="${l} ${n} of 3" class="${(sel[k] || 0) >= n ? "on" : ""}">${ICON.star}</button>`).join("")}</div></div>`).join("")}
-        <button class="btn" id="rsend" ${sel.a && sel.c && sel.e ? "" : "disabled"}>Send my rating</button></div>`;
-    box.innerHTML = `<div class="pitch-card"><div class="top"><span class="lv"><i></i>${P.phase === "pitch" ? "Live pitch" : "Rate the pitch"}</span><span class="cd" id="pcd">${fmtT(P.left)}</span></div>
-      <h4>${esc(i.name)}</h4><p style="margin-bottom:.2em">by ${esc(i.ownerName)} · <b>${esc(i.sym)}</b></p>${inner}</div>`;
+        ${[["a", L("Appropriate", "مناسبة"), L("The right thing to do?", "هل هي الشيء الصحيح؟")], ["c", L("Consistent", "متوافقة"), L("Fits people like us?", "هل تناسب أمثالنا؟")], ["e", L("Effective", "فعّالة"), L("Will it really work?", "هل ستنجح فعلًا؟")]].map(([k, l, q]) => `<div class="rate-row"><div><b>${l}</b><small>${q}</small></div><div class="stars" data-k="${k}">${[1, 2, 3].map(n => `<button type="button" data-n="${n}" aria-label="${l} ${n} of 3" class="${(sel[k] || 0) >= n ? "on" : ""}">${ICON.star}</button>`).join("")}</div></div>`).join("")}
+        <button class="btn" id="rsend" ${sel.a && sel.c && sel.e ? "" : "disabled"}>${L("Send my rating", "أرسل تقييمي")}</button></div>`;
+    box.innerHTML = `<div class="pitch-card"><div class="top"><span class="lv"><i></i>${P.phase === "pitch" ? L("Live pitch", "عرض مباشر") : L("Rate the pitch", "قيّم العرض")}</span><span class="cd" id="pcd">${fmtT(P.left)}</span></div>
+      <h4>${esc(i.name)}</h4><p style="margin-bottom:.2em">${L("by", "بواسطة")} ${esc(i.ownerName)} · <b>${esc(i.sym)}</b></p>${inner}</div>`;
     box.querySelectorAll(".stars button").forEach(b => b.onclick = () => {
       const k = b.parentElement.dataset.k, n = +b.dataset.n; sel[k] = n; navigator.vibrate?.(15);
       b.parentElement.querySelectorAll("button").forEach(x => x.classList.toggle("on", +x.dataset.n <= n));
@@ -1390,8 +1433,8 @@ function Phone(be) {
     const send = $("#rsend");
     if (send) send.onclick = async () => {
       send.disabled = true;
-      try { await be.rate(i.id, me.id, {a: sel.a, c: sel.c, e: sel.e}); confetti(0, {x: innerWidth / 2, y: send.getBoundingClientRect().top}); toast("Rating sent. Thank you!"); }
-      catch { toast("Could not send. Try again.", true); send.disabled = false; }
+      try { await be.rate(i.id, me.id, {a: sel.a, c: sel.c, e: sel.e}); confetti(0, {x: innerWidth / 2, y: send.getBoundingClientRect().top}); toast(L("Rating sent. Thank you!", "تم إرسال تقييمك. شكرًا لك!")); }
+      catch { toast(L("Could not send. Try again.", "تعذّر الإرسال. حاول مرة أخرى."), true); send.disabled = false; }
     };
   }
   const fmtT = s => { s = Math.max(0, s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
@@ -1402,82 +1445,82 @@ function Phone(be) {
     const closed = D.market.status === "closed";
     if (tab === "market") {
       body.dataset.tab = "market";
-      body.innerHTML = `<div class="section-t"><h3>Market</h3><span>${D.ideas.length} ideas trading</span></div><div class="list">` + (D.ideas.length ? D.ideas.map((i, n) => {
+      body.innerHTML = `<div class="section-t"><h3>${L("Market", "السوق")}</h3><span>${L(`${D.ideas.length} ideas trading`, `${D.ideas.length} فكرة في التداول`)}</span></div><div class="list">` + (D.ideas.length ? D.ideas.map((i, n) => {
         const own = i.ownerId === me.id, h = D.hold[me.id]?.[i.id];
         const dis = a => closed || own || busy || a <= 0 || me.balance < a;
         return `<article class="card stock">
-          <div class="stock-h"><div style="min-width:0"><span class="tick">${esc(i.sym)}</span> <span class="chip ${i.group}">${i.group}</span><h4>${esc(i.name)}</h4><p>${esc(i.pitch)}</p></div>
-            <div class="stock-r"><span class="num">${f2(i.price)}</span><span class="delta ${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</span>${spark(i.series)}</div></div>
-          <div class="stock-meta"><span>#${n + 1} on the board</span><span>by ${esc(i.ownerName)}</span><span>${i.investors} backers</span>${aceChip(i)}</div>
-          ${h ? `<div class="own">You own ${h.shares.toFixed(2)} shares, worth <b>${f0(h.shares * i.price)} pts</b></div>` : ""}
-          ${own ? `<div class="own">This is your idea. Pitch it at the desk to attract backers.</div>` :
-            `<div class="buys">${[100, 250, 500].map(a => `<button data-buy="${i.id}" data-amt="${a}" ${dis(a) ? "disabled" : ""}>${a}</button>`).join("")}<button class="all" data-buy="${i.id}" data-amt="${me.balance}" ${dis(me.balance) ? "disabled" : ""}>All in</button></div>`}
+          <div class="stock-h"><div style="min-width:0"><span class="tick">${esc(i.sym)}</span> <span class="chip ${i.group}">${gName(i.group)}</span><h4>${esc(i.name)}</h4><p>${esc(i.pitch)}</p></div>
+            <div class="stock-r"><span class="num">${f2(i.price)}</span><span class="delta ${dir(i.gain)}" dir="ltr">${arr(i.gain)} ${pct(i.gain)}</span>${spark(i.series)}</div></div>
+          <div class="stock-meta"><span>${L(`#${n + 1} on the board`, `المركز #${n + 1}`)}</span><span>${L("by", "بواسطة")} ${esc(i.ownerName)}</span><span>${L(`${i.investors} backers`, `${i.investors} داعمين`)}</span>${aceChip(i)}</div>
+          ${h ? `<div class="own">${L(`You own ${h.shares.toFixed(2)} shares, worth <b>${f0(h.shares * i.price)} pts</b>`, `تملك ${h.shares.toFixed(2)} سهمًا بقيمة <b>${f0(h.shares * i.price)} نقطة</b>`)}</div>` : ""}
+          ${own ? `<div class="own">${L("This is your idea. Pitch it at the desk to attract backers.", "هذه فكرتك. اعرضها عند الطاولة لجذب الداعمين.")}</div>` :
+            `<div class="buys">${[100, 250, 500].map(a => `<button data-buy="${i.id}" data-amt="${a}" ${dis(a) ? "disabled" : ""}>${a}</button>`).join("")}<button class="all" data-buy="${i.id}" data-amt="${me.balance}" ${dis(me.balance) ? "disabled" : ""}>${L("All in", "الكل")}</button></div>`}
         </article>`;
-      }).join("") : `<div class="card empty">${ICON.s1.replace("viewBox", 'width="56" height="56" viewBox')}<b>No ideas yet</b>Open “My idea” and list the first one.</div>`) + `</div>`;
+      }).join("") : `<div class="card empty">${ICON.s1.replace("viewBox", 'width="56" height="56" viewBox')}<b>${L("No ideas yet", "لا توجد أفكار بعد")}</b>${L("Open “My idea” and list the first one.", "افتح «فكرتي» وأدرج أول فكرة.")}</div>`) + `</div>`;
       body.querySelectorAll("[data-buy]").forEach(b => b.onclick = () => buy(b, b.dataset.buy, +b.dataset.amt));
     } else if (tab === "list") {
       const mine = Object.values(D.byId).find(i => i.ownerId === me.id);
       if (mine && !mine.live) {
         if (body.dataset.tab === "wait") return;
         body.dataset.tab = "wait";
-        body.innerHTML = `<div class="section-t"><h3>My idea</h3><span>under review</span></div>
-          <div class="card wait">${ICON.hour}<h4 style="font-family:var(--display);font-size:1.2em;margin:.6em 0 .2em">Waiting for approval</h4>
-          <p style="color:var(--ink-2);margin:0">Our desk team checks every idea before it goes on the big screen. Show this screen at the desk to speed it up.</p>
+        body.innerHTML = `<div class="section-t"><h3>${L("My idea", "فكرتي")}</h3><span>${L("under review", "قيد المراجعة")}</span></div>
+          <div class="card wait">${ICON.hour}<h4 style="font-family:var(--display);font-size:1.2em;margin:.6em 0 .2em">${L("Waiting for approval", "بانتظار الموافقة")}</h4>
+          <p style="color:var(--ink-2);margin:0">${L("Our desk team checks every idea before it goes on the big screen. Show this screen at the desk to speed it up.", "يراجع فريق الطاولة كل فكرة قبل ظهورها على الشاشة الكبيرة. اعرض هذه الشاشة عند الطاولة لتسريع الموافقة.")}</p>
           <div style="margin-top:1em"><span class="tick">${esc(mine.sym)}</span> <b>${esc(mine.name)}</b></div></div>`;
       } else if (mine) {
         body.dataset.tab = "mine";
         const rank = D.ideas.indexOf(mine) + 1;
-        body.innerHTML = `<div class="section-t"><h3>My idea</h3><span>live</span></div>
-          <div class="mine-hero"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1em"><div style="min-width:0"><span class="tick" style="background:var(--orange)">${esc(mine.sym)}</span><h4 style="margin:.6em 0 .2em;font-size:1.25em">${esc(mine.name)}</h4><div style="color:#C2CAEB;font-size:.92em">${esc(mine.pitch)}</div></div><div style="text-align:right"><div class="rk">#${rank}</div><div style="color:#A9B3E0;font-size:.8em;font-weight:700">of ${D.ideas.length}</div></div></div>
-          <div class="kv"><div><span>Price</span><b>${f2(mine.price)}</b></div><div><span>Raised</span><b>${f0(mine.total)}</b></div><div><span>Backers</span><b>${mine.investors}</b></div><div><span>ACE</span><b>${mine.rCount ? f1(mine.ace) : "—"}</b></div></div></div>
-          <button class="btn orange" id="mycert" style="width:100%;margin-top:.9em">${ICON.award}Get my certificate of appreciation</button>
-          <div class="card tip" style="margin-top:.9em">${ICON.s2}<div><b>Now pitch it: 30 seconds</b><p>Ask the desk team to start your Live Pitch. Tell people why your idea is right, why it fits them and what they gain. The audience then rates you on Appropriate, Consistent and Effective.</p></div></div>`;
+        body.innerHTML = `<div class="section-t"><h3>${L("My idea", "فكرتي")}</h3><span>${L("live", "في التداول")}</span></div>
+          <div class="mine-hero"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1em"><div style="min-width:0"><span class="tick" style="background:var(--orange)">${esc(mine.sym)}</span><h4 style="margin:.6em 0 .2em;font-size:1.25em">${esc(mine.name)}</h4><div style="color:#C2CAEB;font-size:.92em">${esc(mine.pitch)}</div></div><div style="text-align:right"><div class="rk">#${rank}</div><div style="color:#A9B3E0;font-size:.8em;font-weight:700">${L("of", "من")} ${D.ideas.length}</div></div></div>
+          <div class="kv"><div><span>${L("Price", "السعر")}</span><b>${f2(mine.price)}</b></div><div><span>${L("Raised", "الاستثمارات")}</span><b>${f0(mine.total)}</b></div><div><span>${L("Backers", "الداعمون")}</span><b>${mine.investors}</b></div><div><span>ACE</span><b>${mine.rCount ? f1(mine.ace) : "—"}</b></div></div></div>
+          <button class="btn orange" id="mycert" style="width:100%;margin-top:.9em">${ICON.award}${L("Get my certificate of appreciation", "احصل على شهادة التقدير")}</button>
+          <div class="card tip" style="margin-top:.9em">${ICON.s2}<div><b>${L("Now pitch it: 30 seconds", "الآن اعرضها: 30 ثانية")}</b><p>${L("Ask the desk team to start your Live Pitch. Tell people why your idea is right, why it fits them and what they gain. The audience then rates you on Appropriate, Consistent and Effective.", "اطلب من فريق الطاولة بدء العرض المباشر لفكرتك. أخبر الحضور لماذا فكرتك صحيحة، ولماذا تناسبهم، وماذا سيكسبون. بعدها يقيّمك الجمهور: مناسبة، متوافقة، فعّالة.")}</p></div></div>`;
         $("#mycert").onclick = () => showCert(mine, D);
       } else if (body.dataset.tab !== "form") {
         body.dataset.tab = "form";
-        body.innerHTML = `<div class="section-t"><h3>List your idea</h3><span>one per person</span></div>
+        body.innerHTML = `<div class="section-t"><h3>${L("List your idea", "أدرج فكرتك")}</h3><span>${L("one per person", "فكرة واحدة لكل شخص")}</span></div>
           <form class="card form" id="lf" novalidate style="margin-top:0">
-            <div class="field"><label for="in">Idea name</label><input id="in" maxlength="40" placeholder="e.g. Campus Coffee Cart"><div class="counter" id="inc">0 / 40</div></div>
-            <div class="field"><label for="ip">One-line pitch</label><input id="ip" maxlength="90" placeholder="What it is and why people need it"><div class="counter" id="ipc">0 / 90</div></div>
+            <div class="field"><label for="in">${L("Idea name", "اسم الفكرة")}</label><input id="in" maxlength="40" placeholder="${L("e.g. Campus Coffee Cart", "مثال: عربة قهوة في الحرم الجامعي")}"><div class="counter" id="inc">0 / 40</div></div>
+            <div class="field"><label for="ip">${L("One-line pitch", "وصف الفكرة في سطر واحد")}</label><input id="ip" maxlength="90" placeholder="${L("What it is and why people need it", "ما هي، ولماذا يحتاجها الناس")}"><div class="counter" id="ipc">0 / 90</div></div>
             <div class="err" id="le"></div>
-            <button class="btn blue" type="submit" ${closed ? "disabled" : ""}>List on the exchange</button>
+            <button class="btn blue" type="submit" ${closed ? "disabled" : ""}>${L("List on the exchange", "أدرجها في البورصة")}</button>
           </form>
-          <div class="section-t"><h3>Preview</h3><span>how others will see it</span></div>
+          <div class="section-t"><h3>${L("Preview", "معاينة")}</h3><span>${L("how others will see it", "كما سيراها الآخرون")}</span></div>
           <article class="card stock preview" id="pv"></article>`;
         const taken = () => new Set(Object.values(D.byId).map(i => i.sym));
         const pv = () => {
           const n = $("#in").value.trim(), p = $("#ip").value.trim();
           $("#inc").textContent = `${$("#in").value.length} / 40`; $("#ipc").textContent = `${$("#ip").value.length} / 90`;
-          $("#pv").innerHTML = `<div class="stock-h"><div style="min-width:0"><span class="tick">${n ? esc(makeSymbol(n, taken())) : "????"}</span> <span class="chip ${me.group}">${me.group}</span><h4>${esc(n) || "Your idea name"}</h4><p>${esc(p) || "Your one-line pitch"}</p></div>
-            <div class="stock-r"><span class="num">10.00</span><span class="delta flat">• +0.0%</span></div></div><div class="stock-meta"><span>by ${esc(me.name)}</span><span>0 backers</span></div>`;
+          $("#pv").innerHTML = `<div class="stock-h"><div style="min-width:0"><span class="tick">${n ? esc(makeSymbol(n, taken())) : "????"}</span> <span class="chip ${me.group}">${gName(me.group)}</span><h4>${esc(n) || L("Your idea name", "اسم فكرتك")}</h4><p>${esc(p) || L("Your one-line pitch", "وصف فكرتك في سطر")}</p></div>
+            <div class="stock-r"><span class="num">10.00</span><span class="delta flat">• +0.0%</span></div></div><div class="stock-meta"><span>${L("by", "بواسطة")} ${esc(me.name)}</span><span>${L("0 backers", "0 داعمين")}</span></div>`;
         };
         $("#in").oninput = pv; $("#ip").oninput = pv; pv();
         $("#lf").onsubmit = async e => {
           e.preventDefault();
           const name = $("#in").value.trim(), pitch = $("#ip").value.trim();
-          if (name.length < 3) return $("#le").textContent = "Give your idea a name (at least 3 characters).";
-          if (pitch.length < 5) return $("#le").textContent = "Add a one-line pitch.";
-          if (D.market.status === "closed") return $("#le").textContent = "The market is closed.";
+          if (name.length < 3) return $("#le").textContent = L("Give your idea a name (at least 3 characters).", "اكتب اسمًا لفكرتك (3 أحرف على الأقل).");
+          if (pitch.length < 5) return $("#le").textContent = L("Add a one-line pitch.", "أضف وصفًا للفكرة في سطر واحد.");
+          if (D.market.status === "closed") return $("#le").textContent = L("The market is closed.", "السوق مغلق.");
           try {
             await be.listIdea({name, pitch, sym: makeSymbol(name, taken()), ownerId: me.id, ownerName: me.name, group: me.group, total: 0, status: CONFIG.approveIdeas ? "pending" : "live"});
             navigator.vibrate?.(60); confetti(0, {x: innerWidth / 2, y: 220});
-            toast(CONFIG.approveIdeas ? "Sent! The desk will approve it shortly." : "Listed! Your idea is now trading.");
-          } catch { $("#le").textContent = "Could not list it. Check your internet and try again."; }
+            toast(CONFIG.approveIdeas ? L("Sent! The desk will approve it shortly.", "تم الإرسال! سيوافق عليها فريق الطاولة قريبًا.") : L("Listed! Your idea is now trading.", "تم الإدراج! فكرتك الآن في التداول."));
+          } catch { $("#le").textContent = L("Could not list it. Check your internet and try again.", "تعذّر الإدراج. تحقّق من الإنترنت وحاول مرة أخرى."); }
         };
       }
     } else {
       body.dataset.tab = "port";
       const h = Object.entries(D.hold[me.id] || {}).filter(([iid]) => D.byId[iid]).map(([iid, x]) => ({i: D.byId[iid], ...x, val: x.shares * D.byId[iid].price}));
       const cols = ["#3B56A8", "#E66926", "#12A36B", "#2A338E", "#8B5CF6", "#14B8C4"];
-      const segs = [{label: "Cash", v: me.balance, c: "#F68922"}, ...h.map((x, n) => ({label: x.i.sym, v: x.val, c: cols[n % cols.length]}))];
+      const segs = [{label: L("Cash", "نقد"), v: me.balance, c: "#F68922"}, ...h.map((x, n) => ({label: x.i.sym, v: x.val, c: cols[n % cols.length]}))];
       const tot = segs.reduce((a, s) => a + s.v, 0) || 1, C = 2 * Math.PI * 40; let off = 0;
       const circles = segs.map(s => { const len = s.v / tot * C; const el = `<circle cx="50" cy="50" r="40" fill="none" stroke="${s.c}" stroke-width="16" stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`; off += len; return el; }).join("");
       const rank = D.investors.findIndex(i => i.id === me.id) + 1;
-      body.innerHTML = `<div class="section-t"><h3>Portfolio</h3><span>rank #${rank} of ${D.investors.length}</span></div>
+      body.innerHTML = `<div class="section-t"><h3>${L("Portfolio", "محفظتي")}</h3><span>${L(`rank #${rank} of ${D.investors.length}`, `الترتيب #${rank} من ${D.investors.length}`)}</span></div>
         <div class="card donut-card"><svg class="donut" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg)" stroke-width="16"/>${circles}</svg>
           <div class="legend">${segs.map(s => `<div><i style="background:${s.c}"></i><span>${esc(s.label)}</span><b class="num">${f0(s.v)}</b></div>`).join("")}</div></div>
-        <div class="list" style="margin-top:.8em">${h.length ? h.map(x => { const pl = x.val - x.cost; return `<div class="card hold"><div style="min-width:0"><strong><span class="tick">${esc(x.i.sym)}</span> ${esc(x.i.name)}</strong><small>${x.shares.toFixed(2)} shares · paid ${f0(x.cost)}</small></div><div class="v">${f0(x.val)}<div class="${dir(pl)}" style="font-size:.85em">${pl >= 0 ? "+" : ""}${f0(pl)}</div></div></div>`; }).join("") :
-          `<div class="card empty">${ICON.s3.replace("viewBox", 'width="56" height="56" viewBox')}<b>No shares yet</b>Go to Market and back an idea you like.</div>`}</div>`;
+        <div class="list" style="margin-top:.8em">${h.length ? h.map(x => { const pl = x.val - x.cost; return `<div class="card hold"><div style="min-width:0"><strong><span class="tick">${esc(x.i.sym)}</span> ${esc(x.i.name)}</strong><small>${L(`${x.shares.toFixed(2)} shares · paid ${f0(x.cost)}`, `${x.shares.toFixed(2)} سهم · دفعت ${f0(x.cost)}`)}</small></div><div class="v">${f0(x.val)}<div class="${dir(pl)}" style="font-size:.85em" dir="ltr">${pl >= 0 ? "+" : ""}${f0(pl)}</div></div></div>`; }).join("") :
+          `<div class="card empty">${ICON.s3.replace("viewBox", 'width="56" height="56" viewBox')}<b>${L("No shares yet", "لا توجد أسهم بعد")}</b>${L("Go to Market and back an idea you like.", "اذهب إلى السوق وادعم فكرة تعجبك.")}</div>`}</div>`;
     }
   }
 
@@ -1497,8 +1540,8 @@ function Phone(be) {
     busy = true; flyCoin(btn); navigator.vibrate?.(30);
     try {
       const t = await be.invest(me, D.byId[ideaId], amt);
-      toast(`You bought ${t.shares.toFixed(2)} shares of ${D.byId[ideaId]?.sym || ""}`);
-    } catch (e) { toast(e.message || "Trade failed. Try again.", true); }
+      toast(L(`You bought ${t.shares.toFixed(2)} shares of ${D.byId[ideaId]?.sym || ""}`, `اشتريت ${t.shares.toFixed(2)} سهمًا من ${D.byId[ideaId]?.sym || ""}`));
+    } catch (e) { toast(LANG === "ar" ? (ERR_AR[e.message] || "فشلت العملية. حاول مرة أخرى.") : (e.message || "Trade failed. Try again."), true); }
     busy = false; render(D.raw);
   }
   be.subscribe(render);
@@ -1642,6 +1685,35 @@ function Report(be) {
   }
   if (h === "trade") Phone(be); else if (h === "admin") Admin(be); else if (h === "report") Report(be); else Screen(be);
   addEventListener("hashchange", () => location.reload());
+})();
+</script>
+
+<!-- PRISM exhibition identity: Desk 1 (Idea Exchange) -->
+<style>
+.prism-bar{position:fixed;left:0;right:0;top:0;height:5px;z-index:200;display:flex;pointer-events:none}
+.prism-bar i{flex:1;opacity:.28}
+.prism-tag{--pc:#F68922;display:inline-flex;align-items:center;gap:.4em;background:var(--pc);color:#fff;border-radius:99px;padding:.28em .75em .28em .5em;font-family:"Figtree","Tajawal",Arial,sans-serif;font-weight:800;font-size:.72rem;line-height:1;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;vertical-align:middle;box-shadow:0 2px 8px color-mix(in srgb,var(--pc) 35%,transparent)}
+.prism-tag svg{width:1.35em!important;height:1.35em!important;flex:none;position:static!important;margin:0!important}
+.prism-tag .pd{font:inherit;color:inherit;opacity:.85;letter-spacing:inherit}
+.title-block .prism-tag{font-size:.82rem;margin-inline-end:.7em;transform:translateY(-.08em)}
+.p-head .prism-tag{font-size:.62rem;padding:.24em .6em .24em .4em;margin-top:.35em}
+.p-head .brand b small{display:block}
+html[lang=ar] .prism-tag{letter-spacing:0}
+@media print{.prism-bar{display:none}}
+</style>
+<script>
+(function () {
+  var bar = document.createElement("div"); bar.className = "prism-bar"; bar.setAttribute("aria-hidden", "true"); bar.innerHTML = '<i style="background:#F68922;flex:2.2;opacity:1"></i><i style="background:#3B56A8;"></i><i style="background:#E5484D;"></i><i style="background:#12A36B;"></i>';
+  document.body.appendChild(bar);
+  var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 13.2L8 12.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><g stroke-width="1.6" stroke-linecap="round"><path d="M14.4 11L23 6.5" stroke="#FFD29E"/><path d="M14.6 12L23 10.8" stroke="#C9D5FF"/><path d="M14.6 13L23 15" stroke="#FFC2C4"/><path d="M14.4 14L23 19.2" stroke="#A9F0CF"/></g><path d="M11.3 5L16 17.5H6.6Z" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function tag() { var s = document.createElement("span"); s.className = "prism-tag"; s.setAttribute("data-prism", ""); s.innerHTML = icon + 'PRISM <span class="pd">· Desk 1</span>'; return s; }
+  function apply() {
+    var t = document.querySelector(".title-block small");
+    if (t && !t.querySelector("[data-prism]")) t.insertBefore(tag(), t.firstChild);
+    document.querySelectorAll(".p-head .brand > b").forEach(function (b) { if (!b.querySelector("[data-prism]")) { var w = document.createElement("small"); w.setAttribute("data-prism-wrap", ""); w.appendChild(tag()); b.appendChild(w); } });
+  }
+  var q = false; new MutationObserver(function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; apply(); }); }).observe(document.body, {childList: true, subtree: true});
+  apply();
 })();
 </script>
 </body>
