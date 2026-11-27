@@ -41,42 +41,44 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .live{display:inline-flex;align-items:center;gap:.4em;font-weight:800;font-size:.85em;color:#3FD69A;letter-spacing:.12em}
 .live i{width:.6em;height:.6em;border-radius:50%;background:#3FD69A;animation:pl 1.4s infinite}
 @keyframes pl{50%{opacity:.25}}
-.sm{display:grid;grid-template-columns:minmax(0,1fr) 28em;gap:1.6em;padding:.6em 2em 1em;min-height:0}
-.stage{position:relative;min-height:0;display:flex;align-items:stretch}
-.prism-col{width:13em;flex:none;position:relative}
-.prism-col svg{position:absolute;inset:0;width:100%;height:100%}
-.beams{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:1em;padding:1em 0}
-.bm{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:.35em}
-.bm .lbl{display:flex;align-items:baseline;gap:.8em;padding-inline-start:.2em}
-.bm .lbl b{font-family:Lexend;font-size:1.9em;letter-spacing:-.02em}
-.bm .lbl .ar{font-size:1.5em;opacity:.85}
-.bm .lbl .rk{margin-inline-start:auto;font-family:Lexend;font-weight:800;font-size:1.1em;padding:.15em .7em;border-radius:99px;background:rgba(255,255,255,.12)}
-.bm.top .lbl .rk{background:var(--c1);color:#fff}
-.bm .track{position:relative;height:3.6em;border-radius:0 99px 99px 0;background:rgba(255,255,255,.06);overflow:visible}
-html[dir=rtl] .bm .track{border-radius:99px 0 0 99px}
-.bm .ray{position:absolute;inset-block:0;inset-inline-start:0;border-radius:0 99px 99px 0;background:linear-gradient(90deg,transparent 0%,var(--c) 30%,var(--c) 100%);box-shadow:0 0 2.4em var(--c),0 0 .6em var(--c);transition:width 1.4s cubic-bezier(.2,.9,.2,1);min-width:.5em}
-.bm .ray::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);animation:shine 3.5s infinite}
-@keyframes shine{from{transform:translateX(-60%)}to{transform:translateX(60%)}}
-.bm .sc{position:absolute;inset-inline-end:.8em;top:50%;transform:translateY(-50%);font-family:Lexend;font-weight:800;font-size:2em;text-shadow:0 2px 10px rgba(0,0,0,.4)}
-.bm .meta{display:flex;gap:1.4em;font-size:.95em;opacity:.8;font-weight:600;padding-inline-start:.2em}
-.bm .meta b{font-family:Lexend}
-.bm.top .crown{position:absolute;inset-inline-start:-1.6em;top:-.2em;font-size:1.6em;animation:bob 2s ease-in-out infinite alternate}
-@keyframes bob{to{transform:translateY(-.25em)}}
-.side{display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:1em;min-height:0}
-.pnl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:1.2em;padding:1em 1.2em}
-.pnl h2{margin:0 0 .6em;font-family:Lexend;font-size:1.15em;display:flex;justify-content:space-between;align-items:baseline;gap:.6em}
-.pnl h2 .ar{font-size:.9em;opacity:.75}
-.cat{display:grid;grid-template-columns:1fr auto;gap:.5em .8em;align-items:center;font-size:.98em}
-.cat .k{font-weight:700;opacity:.85}.cat .k i{font-style:normal;font-family:Tajawal;opacity:.7;margin-inline-start:.4em}
-.chip{display:inline-flex;align-items:center;gap:.4em;padding:.25em .75em;border-radius:99px;font-weight:800;font-size:.9em;color:#fff;background:var(--c);white-space:nowrap}
-.vs{display:grid;grid-template-columns:1fr 1fr;gap:.8em}
-.vs div{background:rgba(255,255,255,.06);border-radius:.9em;padding:.7em .8em}
-.vs small{display:block;font-weight:800;font-size:.75em;letter-spacing:.12em;opacity:.7;margin-bottom:.4em}
-.wall{position:relative;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
-.cm{font-family:var(--body);font-size:1.25em;line-height:1.4;font-weight:600;animation:cmIn .7s cubic-bezier(.2,.9,.2,1)}
-.cm::before{content:"“";font-family:Lexend;color:var(--c1);font-size:1.6em;line-height:0;vertical-align:-.35em;margin-inline-end:.1em}
-.cm small{display:block;margin-top:.6em}
-@keyframes cmIn{from{opacity:0;transform:translateY(12px)}}
+.sm{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:1em;padding:.2em 2.4em 1em;min-height:0}
+.stage{position:relative;min-height:0;display:grid;grid-template-rows:6.5em minmax(0,1fr) auto}
+.fan{position:relative}
+.fan svg.bms{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fan .pr{position:absolute;left:50%;top:-.2em;width:6em;height:5.6em;transform:translateX(-50%)}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6em;padding:1.4em 3em 0;min-height:0}
+.col{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:0}
+.col .tr{position:relative;flex:1;border-radius:1.6em 1.6em .8em .8em;background:linear-gradient(rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1)}
+.col .fill{position:absolute;inset:auto -1px -1px -1px;border-radius:1.4em 1.4em .6em .6em;background:linear-gradient(180deg,var(--c) 0%,color-mix(in srgb,var(--c) 55%,#0B0F33) 100%);box-shadow:0 0 3em color-mix(in srgb,var(--c) 70%,transparent),inset 0 .3em 0 rgba(255,255,255,.35);transition:height 1.4s cubic-bezier(.2,.9,.2,1)}
+.col .fill::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);background-size:100% 220%;animation:rise 3.2s linear infinite;border-radius:inherit}
+@keyframes rise{from{background-position:0 100%}to{background-position:0 -120%}}
+.col .sc{position:absolute;left:0;right:0;top:.35em;text-align:center;font-family:Lexend;font-weight:800;font-size:3.6em;line-height:1;text-shadow:0 .1em .4em rgba(0,0,0,.35);z-index:1}
+.col .sc.out{top:auto;bottom:calc(100% + .2em);color:#fff}
+.col .sc small{display:block;font-family:var(--body);font-size:.26em;font-weight:700;opacity:.8;margin-top:.25em;letter-spacing:.04em}
+.names .rk{display:inline-block;font-family:Lexend;font-weight:800;font-size:.6em;padding:.15em .7em;border-radius:99px;background:rgba(255,255,255,.14);margin-inline-start:.5em;vertical-align:.25em}
+.names .top .rk{background:var(--c1)}
+.col .crown{position:absolute;top:-1.1em;left:50%;font-size:2.2em;transform:translateX(-50%);animation:bob 2s ease-in-out infinite alternate;z-index:2}
+@keyframes bob{to{transform:translate(-50%,-.25em)}}
+.col.top .tr{border-color:color-mix(in srgb,var(--c) 70%,#fff)}
+.names{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6em;padding:.8em 3em 0;text-align:center}
+.names b{display:block;font-family:Lexend;font-size:1.65em;letter-spacing:-.02em;line-height:1.1}
+.names .ar{display:block;font-size:1.35em;opacity:.85;margin-top:.1em}
+.names .mt{display:block;font-size:.9em;opacity:.7;font-weight:600;margin-top:.35em}
+.names i{display:inline-block;width:.7em;height:.7em;border-radius:50%;background:var(--c);margin-inline-end:.4em;vertical-align:.05em;box-shadow:0 0 .8em var(--c)}
+.strip{display:grid;grid-template-columns:1.25fr 1fr 1.25fr;gap:1em}
+.pnl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:1.1em;padding:.75em 1em;min-height:0}
+.pnl h2{margin:0 0 .5em;font-family:Lexend;font-size:.95em;display:flex;justify-content:space-between;align-items:baseline;gap:.6em;opacity:.9}
+.pnl h2 .ar{font-size:.95em;opacity:.75}
+.cat{display:grid;grid-template-columns:1fr 1fr;gap:.35em .6em;font-size:.88em}
+.cat div{display:flex;justify-content:space-between;align-items:center;gap:.4em}
+.cat .k{font-weight:700;opacity:.85;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:.4em;padding:.2em .7em;border-radius:99px;font-weight:800;font-size:.85em;color:#fff;background:var(--c);white-space:nowrap}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:.6em}
+.vs small{display:block;font-weight:800;font-size:.7em;letter-spacing:.1em;opacity:.7;margin-bottom:.35em}
+.wall{display:flex;flex-direction:column}
+.cm{font-size:1.02em;line-height:1.35;font-weight:600;animation:cmIn .7s cubic-bezier(.2,.9,.2,1);display:flex;gap:.6em;align-items:center;justify-content:space-between}
+.cm q{quotes:"“" "”"}
+@keyframes cmIn{from{opacity:0;transform:translateY(10px)}}
 .tape{background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4));padding:.7em 0;overflow:hidden;white-space:nowrap;font-weight:800;font-size:1.05em}
 .tape-in{display:inline-block;animation:tp var(--dur,60s) linear infinite;padding-inline-start:100%}
 .tape-in span{margin:0 2.2em}
@@ -286,30 +288,30 @@ function Screen(be) {
     <header class="sh"><span class="logo"><img src="${LOGO}" alt="UTAS Ibra"></span>
       <h1><span class="spec">PRISM</span> Live <span class="live"><i></i>LIVE</span><small>Which desk shines brightest? · <span class="ar">أي طاولة تتألق أكثر؟</span></small></h1>
       <div class="kp"><div><b id="k1">0</b><span>Ratings<i>تقييمات</i></span></div><div><b id="k2">0</b><span>Visitors<i>زوار</i></span></div><div><b id="k3">0</b><span>Full Spectrum<i>الطيف الكامل</i></span></div></div></header>
-    <main class="sm"><div class="stage"><div class="prism-col" id="pc"></div><div class="beams" id="beams"></div></div>
-      <aside class="side">
+    <main class="sm"><div class="stage"><div class="fan" id="fan"></div><div class="cols" id="cols"></div><div class="names" id="names"></div></div>
+      <div class="strip">
         <section class="pnl"><h2>Best in each category <span class="ar">الأفضل في كل معيار</span></h2><div class="cat" id="cat"></div></section>
-        <section class="pnl"><h2>Students vs Staff <span class="ar">الطلاب والموظفون</span></h2><div class="vs" id="vs"></div></section>
+        <section class="pnl"><h2>Favourites <span class="ar">المفضّلة</span></h2><div class="vs" id="vs"></div></section>
         <section class="pnl wall"><h2>Visitors say <span class="ar">آراء الزوار</span></h2><div id="wall"></div></section>
-      </aside></main>
+      </div></main>
     <div class="tape" aria-hidden="true"><div class="tape-in" id="tape"></div></div></div><div id="fz"></div>`;
-  $("#pc").innerHTML = `<svg viewBox="0 0 200 600" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="pg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#9FB2FF" stop-opacity=".12"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="6"/></filter></defs>
-    <path d="M0 300 L95 300" stroke="#fff" stroke-width="22" opacity=".3" filter="url(#b)"/><path d="M0 300 L95 300" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
-    ${[75, 225, 375, 525].map((y, i) => `<path d="M130 ${290 + i * 7} L200 ${y}" stroke="${CONFIG.desks[i].c}" stroke-width="16" opacity=".45" filter="url(#b)"/><path d="M130 ${290 + i * 7} L200 ${y}" stroke="${CONFIG.desks[i].c}" stroke-width="6" stroke-linecap="round"/>`).join("")}
-    <path d="M115 215 L165 350 L65 350 Z" fill="url(#pg)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg>`;
+  $("#fan").innerHTML = `<svg class="bms" viewBox="0 0 1000 100" preserveAspectRatio="none"><defs><filter id="b" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+    <path d="M500 -10 L500 30" stroke="#fff" stroke-width="5" vector-effect="non-scaling-stroke" opacity=".9"/>
+    ${[0, 1, 2, 3].map(i => { const x = 172 + i * 218.7; return `<path d="M${492 + i * 5} 58 L${x} 100" stroke="${CONFIG.desks[i].c}" stroke-width="14" vector-effect="non-scaling-stroke" opacity=".45" filter="url(#b)"/><path d="M${492 + i * 5} 58 L${x} 100" stroke="${CONFIG.desks[i].c}" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round"/>`; }).join("")}</svg>
+    <svg class="pr" viewBox="0 0 100 94"><defs><linearGradient id="pg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#9FB2FF" stop-opacity=".15"/></linearGradient></defs><path d="M50 8 L90 84 L10 84 Z" fill="url(#pg)" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/></svg>`;
   let wi = 0, D, tapeSig = "";
   const count = (el, v) => { el.textContent = Math.round(v); };
   function render(st) {
     D = tally(st);
     count($("#k1"), D.total); count($("#k2"), D.people); count($("#k3"), D.full);
-    const max = Math.max(...D.desks.map(d => d.score), 1);
-    $("#beams").innerHTML = D.desks.map(d => `<div class="bm${d.rank === 1 ? " top" : ""}" style="--c:${d.c}">
-      <div class="lbl"><b>${esc(d.en)}</b><span class="ar">${esc(d.ar)}</span><span class="rk">${d.rank ? "#" + d.rank : "–"}</span></div>
-      <div class="track">${d.rank === 1 ? `<span class="crown">👑</span>` : ""}<div class="ray" style="width:${d.count ? Math.max(8, d.score) : 0}%"></div><span class="sc">${d.count ? Math.round(d.score) : "–"}</span></div>
-      <div class="meta"><span><b>${d.count}</b> ratings · تقييم</span><span>Students <b>${d.U != null ? Math.round(d.U) : "–"}</b></span><span>Staff <b>${d.S != null ? Math.round(d.S) : "–"}</b></span></div></div>`).join("");
-    $("#cat").innerHTML = CRIT.map(([k, en, ar]) => { const d = D.best[k]; return `<span class="k">${en}<i>${ar}</i></span>${d ? `<span class="chip" style="--c:${d.c}">${esc(d.en)}</span>` : `<span style="opacity:.5">–</span>`}`; }).join("");
+    $("#cols").innerHTML = D.desks.map(d => { const h = d.count ? Math.max(6, d.score) : 0; return `<div class="col${d.rank === 1 ? " top" : ""}" style="--c:${d.c}">
+      <div class="tr"><div class="fill" style="height:${h}%"><div class="sc${h < 30 ? " out" : ""}">${d.count ? Math.round(d.score) : "–"}<small>/ 100</small></div></div></div>
+      ${d.rank === 1 ? `<span class="crown">👑</span>` : ""}</div>`; }).join("");
+    $("#names").innerHTML = D.desks.map(d => `<div class="${d.rank === 1 ? "top" : ""}" style="--c:${d.c}"><b><i></i>${esc(d.en)}<span class="rk">${d.rank ? "#" + d.rank : "–"}</span></b><span class="ar">${esc(d.ar)}</span>
+      <span class="mt">${d.count} ratings · تقييم &nbsp;·&nbsp; Students ${d.U != null ? Math.round(d.U) : "–"} · Staff ${d.S != null ? Math.round(d.S) : "–"}</span></div>`).join("");
+    $("#cat").innerHTML = CRIT.map(([k, en, ar]) => { const d = D.best[k]; return `<div><span class="k">${en} · <span class="ar">${ar}</span></span>${d ? `<span class="chip" style="--c:${d.c}">${esc(d.en)}</span>` : `<span style="opacity:.5">–</span>`}</div>`; }).join("");
     const fv = (lbl, ar, f) => `<div><small>${lbl} · <span class="ar">${ar}</span></small>${f ? `<span class="chip" style="--c:${f.d.c}">${esc(f.d.en)}</span>` : `<span style="opacity:.5">–</span>`}</div>`;
-    $("#vs").innerHTML = fv("STUDENTS' FAVOURITE", "مفضّلة الطلاب", D.favU) + fv("STAFF FAVOURITE", "مفضّلة الموظفين", D.favS);
+    $("#vs").innerHTML = fv("STUDENTS", "الطلاب", D.favU) + fv("STAFF", "الموظفون", D.favS);
     drawWall();
     const sig = D.total + "|" + D.rank.map(d => d.n).join();
     if (sig !== tapeSig) { tapeSig = sig;
@@ -321,9 +323,9 @@ function Screen(be) {
   }
   function drawWall() {
     const C = D.comments; const box = $("#wall");
-    if (!C.length) { box.innerHTML = `<div class="cm" style="opacity:.7">Leave a short comment when you rate a desk.<small class="ar">اترك تعليقًا قصيرًا عند تقييم الطاولة</small></div>`; return; }
+    if (!C.length) { box.innerHTML = `<div class="cm" style="opacity:.7;display:block">Leave a short comment when you rate a desk · <span class="ar">اترك تعليقًا عند التقييم</span></div>`; return; }
     const c = C[wi % C.length], d = DK(c.d);
-    box.innerHTML = `<div class="cm" dir="auto">${esc(c.c)}<small><span class="chip" style="--c:${d.c}">${esc(d.en)}</span></small></div>`;
+    box.innerHTML = `<div class="cm"><q dir="auto">${esc(c.c)}</q><span class="chip" style="--c:${d.c}">${esc(d.en)}</span></div>`;
   }
   setInterval(() => { if (D && D.comments.length > 1) { wi++; drawWall(); } }, 7000);
   let lastFrozen = false;
