@@ -255,10 +255,10 @@ function seedDemo(be) {
 }
 /* scoring: every criterion 1-5; desk score = average of the 4 criteria, shown out of 100.
    Students and staff count 50/50; if only one group has rated a desk, that group's score is used.
-   A team member's rating of their own desk is not counted. */
+   Every rating counts, including desk team members rating their own desk. */
 function tally(st) {
   const R = Object.entries(st.ratings || {}).map(([id, v]) => ({id, ...v})).filter(r => r && r.d >= 1 && r.d <= 4 && r.s);
-  const valid = R.filter(r => Number(r.team) !== r.d);
+  const valid = R;
   const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
   const desks = CONFIG.desks.map(D => {
     const rs = valid.filter(r => r.d === D.n), byG = g => rs.filter(r => r.g === g);
@@ -352,7 +352,7 @@ function confetti() {
 function Phone(be, desk) {
   setLang(store.get("prism-lang") || store.get("ix-lang") || ((navigator.language || "").toLowerCase().startsWith("ar") ? "ar" : "en"));
   let dev = store.get("pr-dev"); if (!dev) { dev = "v" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); store.set("pr-dev", dev); }
-  let me = null; try { me = JSON.parse(store.get("pr-me")); } catch {}
+  let me = null; try { me = JSON.parse(store.get("pr-me")); if (me) me.team = 0; } catch {}
   let D = null, stage = me ? (desk ? "rate" : "pass") : "setup", sel = {}, comment = "", setupG = me?.g || null, setupT = me?.team ?? 0;
   const mine = () => D ? Object.fromEntries(D.R.filter(r => r.dev === dev).map(r => [r.d, r])) : {};
   function head() {
@@ -367,21 +367,15 @@ function Phone(be, desk) {
       box.innerHTML = `<div class="ph">${head()}
         <div class="card"><h2 style="font-family:var(--display);margin:0 0 4px;font-size:24px">${L("Welcome to PRISM", "مرحبًا بك في PRISM")}</h2><p style="margin:0;color:var(--ink-2)">${L("Rate each desk you visit. It takes 20 seconds and it's anonymous.", "قيّم كل طاولة تزورها. يستغرق ذلك 20 ثانية وهو بدون اسم.")}</p>
           <span class="lab">${L("I am…", "أنا…")}</span><div class="seg"><button data-g="student" aria-pressed="${setupG === "student"}">${L("Student", "طالب")}</button><button data-g="staff" aria-pressed="${setupG === "staff"}">${L("Staff", "موظف")}</button></div>
-          <span class="lab">${L("Are you on a desk team?", "هل أنت ضمن فريق إحدى الطاولات؟")}</span>
-          <select id="team"><option value="0">${L("No, I'm a visitor", "لا، أنا زائر")}</option>${CONFIG.desks.map(d => `<option value="${d.n}" ${+setupT === d.n ? "selected" : ""}>${L("Yes, desk", "نعم، الطاولة")} ${d.n}: ${esc(dName(d.n))}</option>`).join("")}</select>
+          
           <div class="err" id="se"></div><button class="btn" id="go">${L("Continue", "متابعة")}</button></div></div>`;
       box.querySelectorAll("[data-g]").forEach(b => b.onclick = () => { setupG = b.dataset.g; box.querySelectorAll("[data-g]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
-      $("#team").onchange = e => setupT = +e.target.value;
-      $("#go").onclick = () => { if (!setupG) return $("#se").textContent = L("Choose Student or Staff.", "اختر: طالب أو موظف."); me = {g: setupG, team: +setupT}; store.set("pr-me", JSON.stringify(me)); stage = desk ? "rate" : "pass"; draw(); };
+      $("#go").onclick = () => { if (!setupG) return $("#se").textContent = L("Choose Student or Staff.", "اختر: طالب أو موظف."); me = {g: setupG, team: 0}; store.set("pr-me", JSON.stringify(me)); stage = desk ? "rate" : "pass"; draw(); };
       return;
     }
     if (stage === "rate" && desk) {
       const Dk = DK(desk), prev = M[desk];
       if (prev && !Object.keys(sel).length) { sel = {...prev.s}; comment = prev.c || ""; }
-      if (me.team === desk) {
-        box.innerHTML = `<div class="ph">${head()}<div class="dh" style="--c:${Dk.c};--d:${Dk.d}"><small>PRISM · ${L("DESK", "الطاولة")} ${desk}</small><h1>${esc(dName(desk))}</h1></div>
-          <div class="note">${L("This is your own desk, so you can't rate it. Visit the other desks and rate them!", "هذه طاولتك، لذا لا يمكنك تقييمها. زر الطاولات الأخرى وقيّمها!")}</div>${passHTML(M)}</div>`; return;
-      }
       const all = CRIT.every(([k]) => sel[k]);
       box.innerHTML = `<div class="ph">${head()}
         <div class="dh" style="--c:${Dk.c};--d:${Dk.d}"><small>PRISM · ${L("DESK", "الطاولة")} ${desk}</small><h1>${esc(dName(desk))}</h1><p>${prev ? L("You rated this desk. You can update it.", "قيّمت هذه الطاولة، ويمكنك تعديل تقييمك.") : L("Rate this desk: 4 quick stars", "قيّم هذه الطاولة: 4 تقييمات سريعة")}</p></div>
@@ -415,8 +409,8 @@ function Phone(be, desk) {
     const n = Object.keys(M).length;
     return `<div class="card"><h3 style="margin:0 0 4px;font-family:var(--display)">${L("My PRISM Pass", "بطاقة PRISM الخاصة بي")}</h3>
       <p style="margin:0 0 12px;color:var(--ink-2);font-size:14px">${n >= 4 ? L("All 4 colours collected!", "جمعت الألوان الأربعة!") : L(`${n} of 4 colours · scan the QR at each desk to rate it`, `${n} من 4 ألوان · امسح رمز QR في كل طاولة لتقييمها`)}</p>
-      <div class="pass">${CONFIG.desks.map(d => { const ok = M[d.n] || (me && me.team === d.n); return `<div class="ps${ok ? " ok" : ""}" style="--c:${d.c}"><span class="o">${ok ? "✓" : ""}</span><b>${esc(dName(d.n))}</b><span>${M[d.n] ? L("Rated", "تم التقييم") : me && me.team === d.n ? L("Your desk", "طاولتك") : L("Scan its QR", "امسح رمزها")}</span></div>`; }).join("")}</div>
-      ${n >= 4 || (n >= 3 && me && me.team) ? `<div class="full"><b>${L("Full Spectrum!", "الطيف الكامل!")}</b><span>${L("Show this screen at the PRISM banner", "اعرض هذه الشاشة عند لوحة PRISM")}</span></div>` : ""}</div>`;
+      <div class="pass">${CONFIG.desks.map(d => { const ok = M[d.n]; return `<div class="ps${ok ? " ok" : ""}" style="--c:${d.c}"><span class="o">${ok ? "✓" : ""}</span><b>${esc(dName(d.n))}</b><span>${M[d.n] ? L("Rated", "تم التقييم") : L("Scan its QR", "امسح رمزها")}</span></div>`; }).join("")}</div>
+      ${n >= 4 ? `<div class="full"><b>${L("Full Spectrum!", "الطيف الكامل!")}</b><span>${L("Show this screen at the PRISM banner", "اعرض هذه الشاشة عند لوحة PRISM")}</span></div>` : ""}</div>`;
   }
   $("#app").addEventListener("click", e => { const b = e.target.closest("[data-lang]"); if (b) { setLang(LANG === "ar" ? "en" : "ar"); draw(); } });
   be.subscribe(st => { D = tally(st); if (!(stage === "rate" && document.activeElement && document.activeElement.id === "cm")) draw(); });
@@ -437,7 +431,7 @@ function Admin(be) {
       <div class="card"><h3>PRISM ratings ${D.frozen ? `<span class="chip" style="--c:#C42B30">CLOSED</span>` : `<span class="chip" style="--c:#12A36B">OPEN</span>`}</h3>
         <table class="tbl"><thead><tr><th>#</th><th>Desk</th><th class="n">Score</th><th class="n">Students</th><th class="n">Staff</th><th class="n">Ratings</th></tr></thead><tbody>
         ${D.rank.map(d => `<tr><td>${d.rank || "–"}</td><td><span class="chip" style="--c:${d.c}">${esc(d.en)}</span></td><td class="n"><b>${d.count ? Math.round(d.score) : "–"}</b></td><td class="n">${d.U != null ? Math.round(d.U) + ` (${d.nU})` : "–"}</td><td class="n">${d.S != null ? Math.round(d.S) + ` (${d.nS})` : "–"}</td><td class="n">${d.count}</td></tr>`).join("")}</tbody></table>
-        <p style="color:var(--ink-2);font-size:14px">${D.total} valid ratings · ${D.people} visitors · ${D.full} Full Spectrum · ${D.R.length - D.valid.length} own-desk ratings ignored</p>
+        <p style="color:var(--ink-2);font-size:14px">${D.total} valid ratings · ${D.people} visitors · ${D.full} Full Spectrum</p>
         <div class="row">${D.frozen ? `<button class="btn" id="unf" style="background:#12A36B">Re-open voting</button>` : `<button class="btn" id="frz" style="background:#C42B30">Close voting &amp; announce Best Desk</button>`}<button class="btn ghost" id="csv">Download CSV</button></div></div>
       <div class="card"><h3>Comments waiting (${D.pending.length})</h3><p style="color:var(--ink-2);font-size:14px;margin:0">Approved comments scroll on the big screen.</p>
         ${D.pending.map(r => `<div class="cq"><p dir="auto">${esc(r.c)}</p><div class="row"><span class="chip" style="--c:${DK(r.d).c}">${esc(DK(r.d).en)}</span><button data-ok="${r.id}" style="background:#E3F7EE;color:#0A7A4E">Approve</button><button data-no="${r.id}" style="background:#FDE7E8;color:#A3262A">Hide</button></div></div>`).join("") || `<p style="color:var(--ink-3)">Nothing waiting.</p>`}</div>
@@ -453,7 +447,7 @@ function Admin(be) {
     $("#csv").onclick = () => {
       const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
       const rows = [["Desk", "Group", "Team member of desk", "Innovation", "Engagement", "Learning", "Presentation", "Comment", "Comment status", "Counted", "Time"],
-        ...D.R.map(r => [DK(r.d).en, r.g, r.team || "", r.s.i, r.s.e, r.s.l, r.s.p, r.c || "", r.cs || "", Number(r.team) === r.d ? "no (own desk)" : "yes", r.ts ? new Date(r.ts).toLocaleString("en-GB") : ""])];
+        ...D.R.map(r => [DK(r.d).en, r.g, r.team || "", r.s.i, r.s.e, r.s.l, r.s.p, r.c || "", r.cs || "", "yes", r.ts ? new Date(r.ts).toLocaleString("en-GB") : ""])];
       const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + rows.map(r => r.map(q).join(",")).join("\n")], {type: "text/csv"})); a.download = "prism-desk-ratings.csv"; document.body.appendChild(a); a.click(); a.remove();
     };
   }
