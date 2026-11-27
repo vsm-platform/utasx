@@ -1700,6 +1700,19 @@ function Report(be) {
 .p-head .brand b small{display:block}
 html[lang=ar] .prism-tag{letter-spacing:0}
 @media print{.prism-bar{display:none}}
+.title-block b span{color:#F68922!important}
+.scan{background:linear-gradient(135deg,#B84A0C 0%,#F68922 100%)!important;box-shadow:0 10px 30px color-mix(in srgb,#F68922 35%,transparent)}
+.scan::before{background:#fff!important;opacity:.14!important}
+.scan::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-120%);animation:prismShine 6s ease-in-out infinite;pointer-events:none}
+@keyframes prismShine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.scan span{color:rgba(255,255,255,.9)!important}
+.scan .pts,.scan .hl{color:#FFF1C9!important;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.scan .qr,.scan canvas,.scan img{position:relative;z-index:1}
+.tape{background:linear-gradient(90deg,#B84A0C 0%,#F68922 50%,#B84A0C 100%)!important;box-shadow:0 8px 24px color-mix(in srgb,#F68922 30%,transparent)}
+.tape-in em{color:#FFF1C9!important}
+.tape-in .up{color:#F2FFF8!important}
+.tape-in .down{color:#FFE7E3!important}
+
 </style>
 <script>
 (function () {

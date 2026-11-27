@@ -6,7 +6,7 @@
 <title>UTAS Crisis Room</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#232C7A">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
 /* Layout: third desk in the UTAS family. Big screen: Decision Board (staff vs students choices per crisis) on the left,
    live "company health" orbs + CEO profiles + latest CEOs on the right. Phone: pick a company, 5 timed crises, dials, result.
@@ -388,6 +388,25 @@ body.has-demo .cert-view{padding-top:calc(62px + env(safe-area-inset-top,0px))}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
+/* ---------- Arabic (phone + certificate) ---------- */
+html[lang=ar]{--display:"Tajawal","Lexend",sans-serif;--body:"Tajawal","Figtree",sans-serif}
+html[lang=ar] body{font-size:17px}
+html[lang=ar] .v-play *{letter-spacing:0!important}
+html[lang=ar] .v-play .dh{text-transform:none;font-size:.7em;white-space:nowrap}
+html[dir=rtl] .rules ul{padding-left:0!important;padding-right:1.1em}
+.lng{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:.32em .85em;font-weight:800;font-size:.85em;color:var(--navy);font-family:"Tajawal",var(--body);cursor:pointer;line-height:1.2}
+.p-head .hr{display:flex;gap:.5em;align-items:center}
+.lang-pick{display:flex;gap:.5em;justify-content:center;margin:.2em 0 .9em}
+.lang-pick button{flex:1;max-width:11em;border:2px solid var(--line);background:#fff;border-radius:14px;padding:.6em .8em;font-weight:800;font-size:1em;color:var(--ink);cursor:pointer}
+.lang-pick button[aria-pressed=true]{border-color:var(--navy);background:var(--navy);color:#fff}
+.lang-pick button:last-child{font-family:"Tajawal",var(--body);font-size:1.08em}
+.sheet[dir=rtl]{font-family:"Tajawal","Figtree",sans-serif}
+.sheet[dir=rtl] *{letter-spacing:0!important}
+.sheet[dir=rtl] .c-k,.sheet[dir=rtl] .c-name,.sheet[dir=rtl] .c-co b,.sheet[dir=rtl] .c-prof b,.sheet[dir=rtl] .c-panel h4{font-family:"Tajawal","Lexend",sans-serif}
+.sheet[dir=rtl] .c-sig{text-align:right}.sheet[dir=rtl] .c-sig.r{text-align:left}
+.sheet[dir=rtl] .c-lead,.sheet[dir=rtl] .c-hs small{text-transform:none}
+.cert-view[dir=rtl] .cv-bar,.cert-view[dir=rtl] .cv-hint{font-family:"Tajawal",var(--body)}
+.ar-sub{font-family:"Tajawal",sans-serif;font-weight:700;letter-spacing:0;text-transform:none}
 </style>
 </head>
 <body>
@@ -534,6 +553,56 @@ const PROFILES = {
 const PKEYS = ["T", "P", "B", "F", "H"];
 const TIMEOUT_FX = {c: -4, r: -8, m: -4, u: -6};
 
+/* ---------------- Arabic text (phone and certificate only; data stores option numbers) ---------------- */
+const SCEN_AR = {
+  air: {name: "طيران الصحراء", sector: "شركة طيران إقليمية", intro: "أنت الرئيس التنفيذي الجديد لطيران الصحراء، شركة طيران إقليمية سريعة النمو تسيّر 40 رحلة يوميًا من مسقط.", crises: [
+    ["تسريب بيانات العملاء", "نشر قراصنة البيانات الشخصية لـ 12,000 مسافر على الإنترنت، والصحفيون يتصلون بالفعل.", [["أعلن اليوم واعتذر", "أعلن اليوم، واعتذر، وقدّم حماية مجانية للهوية", "الصدق يكسب الثقة، لكن خطة الحماية مكلفة."], ["تحقّق بصمت أولًا", "تحقّق بصمت وأعلن بعد أسبوع", "تتسرّب القصة قبل أن تتكلم، ويشعر المسافرون بالخيانة."], ["حمّل مزوّد التقنية المسؤولية", "حمّل مزوّد التقنية المسؤولية علنًا وارفع دعوى ضده", "تستعيد بعض التكاليف، لكن الجمهور يراه تهرّبًا."]]],
+    ["ارتفاع سعر الوقود 40%", "قفزت أسعار النفط عالميًا خلال الليل، وكل رحلة الآن تخسر المال.", [["ارفع أسعار التذاكر 15%", "ارفع أسعار التذاكر 15% فورًا", "النقد محمي، لكن كثيرًا من المسافرين ينتقلون إلى المنافسين."], ["ألغِ الخطوط الضعيفة", "ألغِ 20% من الرحلات على أضعف الخطوط", "تنخفض التكاليف، لكن الطواقم تقلق على وظائفها."], ["تحمّل التكلفة مؤقتًا", "تحمّل التكلفة الإضافية ثلاثة أشهر للحفاظ على الولاء", "يبقى العملاء الأوفياء، لكن الرصيد البنكي يتأثر."]]],
+    ["الطيارون يهددون بالإضراب", "نقابة الطيارين تقول إنها ستضرب صباح الغد بسبب ساعات العمل.", [["تفاوض الليلة", "اجتمع بالنقابة الليلة وتفاوض", "اتفاق قبل شروق الشمس، ويشعر الطيارون بالاحترام."], ["استأجر طيارين متعاقدين", "استأجر طيارين أجانب متعاقدين بدلًا منهم", "تستمر الرحلات، لكن بقية الموظفين غاضبون."], ["ألغِ الرحلات وانتظر", "أجّل المحادثات وألغِ الرحلات المتأثرة", "آلاف المسافرين عالقون في المطار."]]],
+    ["فيديو منتشر على متن الطائرة", "فيديو لأحد أفراد الطاقم يصرخ على مسافر حقق مليوني مشاهدة.", [["اعتذر وأعد التدريب", "أوقف الموظف، واعتذر علنًا، وراجع التدريب", "يقدّر الجمهور الاستجابة السريعة والشفافة."], ["دافع عن طاقمك", "دافع عن طاقمك حتى تتضح كل الحقائق", "يشعر الموظفون بالحماية، لكن وسائل التواصل تنقلب ضدك."], ["سوِّها بشكل خاص", "قدّم للمسافر رحلات مجانية بشكل خاص دون بيان", "المسافر سعيد، لكن الصمت يبدو مريبًا."]]],
+    ["منافس يريد شراء شركتك", "شركة طيران أكبر تعرض شراء طيران الصحراء، لكن بسعر منخفض.", [["ارفض وتوسّع", "ارفض العرض وأطلق خطة توسع جريئة", "المستثمرون قلقون، لكن الفريق متحمس."], ["اقبل العرض", "اقبل العرض لضمان الوظائف والاستقرار", "الشركة آمنة، لكن روحها المستقلة ضاعت."], ["استشر الموظفين والمجلس", "اسأل الموظفين ومجلس الإدارة عن آرائهم قبل القرار", "يشعر الجميع بأنهم جزء من القرار، وتنمو الثقة."]]]]},
+  dates: {name: "شركة تمور عُمان", sector: "مصنع ومصدّر تمور", intro: "تدير شركة تمور عُمان، مصنع تمور عائلي النشأة يصدّر تمورًا فاخرة إلى 12 دولة.", crises: [
+    ["دفعة قد تكون ملوثة", "تُظهر الفحوص احتمال تلوث 5,000 صندوق موجودة بالفعل في المتاجر.", [["اسحب كل شيء الآن", "اسحب الـ 5,000 صندوق الآن وأعلن ذلك", "مكلف، لكن العملاء يمدحون صدقك."], ["افحص عينات أكثر أولًا", "افحص عينات أكثر قبل اتخاذ أي إجراء", "يمرض شخصان أثناء الانتظار، وينتشر الخبر."], ["استبدل الصناديق بصمت", "استبدل الصناديق بصمت في المتاجر الكبيرة فقط", "يكتشف صحفي الأمر، فيتحول إلى فضيحة."]]],
+    ["إغلاق سوقك الرئيسي", "أكبر سوق تصدير لديك يحظر استيراد التمور لستة أشهر.", [["ابحث عن أسواق جديدة بسرعة", "أرسل فرقًا لفتح أسواق جديدة في آسيا وأفريقيا", "مشترون جدد يوقّعون، والفريق يحب المغامرة."], ["خفّض الإنتاج", "خفّض الإنتاج وامنح العمال إجازة غير مدفوعة", "الأرقام تصمد، لكن المعنويات تنهار."], ["أطلق منتجات محلية", "أطلق دبس التمر ووجبات خفيفة للسوق المحلي", "العائلات العُمانية تحب المنتجات الجديدة."]]],
+    ["إفلاس مورّد التغليف", "مورّد التغليف الوحيد لديك أغلق خلال الليل، والطلبات تنتظر.", [["ادفع لمورّد طوارئ", "ادفع سعرًا مرتفعًا لمورّد طوارئ", "تُشحن الطلبات في موعدها، لكن الأرباح تتقلص."], ["انتقل إلى تغليف صديق للبيئة", "انتقل إلى تغليف بسيط صديق للبيئة يُصنع داخليًا", "يعجب العملاء بالمظهر الأخضر. تحوّل ذكي."], ["أوقف الشحنات", "أوقف الشحنات حتى تجد مورّدًا أرخص", "يلغي المشترون طلباتهم ويتجهون إلى المنافسين."]]],
+    ["العمال يعانون من الحر", "يشتكي عمال المصنع من أن حرارة الصيف داخل القاعات لا تُحتمل.", [["ركّب التبريد الآن", "ركّب التبريد الآن حتى لو انخفض الربح هذا العام", "ترتفع الإنتاجية ويشعر العمال بالاهتمام."], ["انقل العمل إلى ورديات أبرد", "انقل العمل إلى ورديات الصباح الباكر والليل", "حل عملي يقدّره العمال."], ["عِد بالحل العام القادم", "عِد بإصلاح المشكلة العام القادم", "يستقيل ثلاثة عمال ذوي خبرة في الأسبوع التالي."]]],
+    ["متجر كبير يريد تمورك", "سلسلة متاجر كبرى تريد بيع تمورك تحت علامتها التجارية.", [["اقبل الصفقة", "اقبل: دخل ثابت، لكن علامتك مخفية", "يتدفق النقد، لكن اسمك يختفي من الرفوف."], ["ارفض وابنِ علامتك", "ارفض واستثمر في علامتك التجارية بدلًا من ذلك", "رهان محفوف بالمخاطر، لكن علامتك تزداد قوة."], ["اقبل نصف الكمية", "اقبل نصف الكمية واحتفظ بعلامتك للباقي", "صفقة متوازنة ترضي الجميع."]]]]},
+  life: {name: "مستشفى الحياة", sector: "مستشفى خاص", intro: "أنت مدير مستشفى الحياة، مستشفى خاص بسعة 200 سرير تثق به العائلات في أنحاء المنطقة.", crises: [
+    ["اكتظاظ قسم الطوارئ", "تفشي فيروس ضاعف زيارات الطوارئ، والمرضى ينتظرون في الممرات.", [["افتح جناحًا إضافيًا", "افتح جناحًا إضافيًا واستدعِ الموظفين خارج المناوبة", "يُعالَج المرضى أسرع، لكن الموظفين منهكون."], ["انقل المرضى المستقرين", "انقل المرضى المستقرين إلى مستشفيات أخرى", "يخف الضغط، لكن بعض العائلات تشتكي."], ["وجّه الجمهور بشفافية", "اطلب من الجمهور الحضور للحالات الطارئة فقط", "الرسائل الواضحة للجمهور تخفف الازدحام."]]],
+    ["تعطّل النظام الإلكتروني", "نظام سجلات المرضى متوقف، وقد يستغرق الإصلاح 24 ساعة.", [["استخدم الورق وأبلغ المرضى", "انتقل إلى السجلات الورقية وأبلغ المرضى بشفافية", "العمل أبطأ، لكن المرضى يقدّرون الصدق."], ["أجّل الزيارات غير العاجلة", "أجّل جميع المواعيد غير العاجلة", "يستطيع الموظفون التأقلم، لكن مئات المرضى منزعجون."], ["ادفع ثلاثة أضعاف لإصلاح سريع", "ادفع لشركة ثلاثة أضعاف لإعادته خلال أربع ساعات", "يعود النظام بسرعة، لكن بثمن مؤلم."]]],
+    ["استقالة 15 ممرضة", "خمس عشرة ممرضة يستقلن في اليوم نفسه بسبب طول المناوبات.", [["ارفع الرواتب وأصلح المناوبات", "ارفع الرواتب وأعد تصميم نظام المناوبات", "تتوقف الاستقالات، ويشعر فريق التمريض بالتقدير."], ["استعن بممرضات من وكالة", "استعن بممرضات مؤقتات من وكالة", "تُسدّ الفجوات، لكن العمل الجماعي يتأثر."], ["اطلب ساعات إضافية", "اطلب من الممرضات الباقيات العمل ساعات إضافية", "مزيد من الممرضات يبحثن عن وظائف أخرى."]]],
+    ["خطأ في الدواء", "جرعة خاطئة أضرّت بمريض، والعائلة تطرح الأسئلة.", [["قل الحقيقة كاملة", "أخبر العائلة بالحقيقة كاملة واعتذر", "العائلة متألمة، لكنها تحترم صدقك."], ["انتظر الاستشارة القانونية", "انتظر الاستشارة القانونية قبل قول أي شيء", "تلجأ العائلة إلى وسائل الإعلام."], ["عالجه داخليًا فقط", "أصلح الإجراء بصمت وأبقِه داخليًا", "يسرّب أحد الموظفين القصة، فتنخفض الثقة."]]],
+    ["عرض من متبرّع", "رجل أعمال يعرض تمويل وحدة جديدة للسرطان، بشرط أن تحمل اسم شركته.", [["اقبل التبرع", "اقبل: يحصل المرضى على وحدة جديدة للسرطان", "تُفتتح وحدة جديدة، ويتساءل البعض عن اسمها التجاري."], ["اعتذر بلباقة", "اعتذر للحفاظ على استقلالية المستشفى", "يُحترم موقفك النزيه، لكن الوحدة تتأخر."], ["استشر المجتمع أولًا", "اقبل فقط بعد استشارة المرضى والمجتمع", "المجتمع يدعم القرار. فوز للجميع."]]]]}
+};
+const DIALS_AR = {c: "النقد", r: "السمعة", m: "معنويات الموظفين", u: "العملاء"};
+const PROFILES_AR = {
+  T: {name: "القائد الشفاف", line: "تقول الحقيقة مبكرًا حتى لو كانت مكلفة. الناس يثقون بك.", tip: "اجمع بين الصدق وخطة واضحة، حتى لا تبدو الشفافية ضعفًا."},
+  P: {name: "نصير الناس", line: "تحمي فريقك وعملاءك أولًا.", tip: "انتبه للنقد: الاهتمام بالناس يحتاج إلى شركة سليمة."},
+  B: {name: "المغامر الجريء", line: "تتحرك بسرعة وتراهن بقوة عندما يتردد الآخرون.", tip: "جرّب الخطوات الجريئة على نطاق صغير قبل المجازفة الكاملة."},
+  F: {name: "حارس الأرباح", line: "تحمي الأرقام وبقاء الشركة.", tip: "التوفير قصير المدى قد يكلّف الثقة على المدى البعيد. وازن بينهما."},
+  H: {name: "الرئيس المتردد", line: "سبقك الوقت أكثر من مرة. في الأزمات، عدم اتخاذ القرار هو قرار أيضًا.", tip: "قرّر بأفضل المعلومات المتاحة لديك، ثم عدّل."}
+};
+const SCEN_EN = Object.fromEntries(SKEYS.map(k => [k, {name: SCEN[k].name, sector: SCEN[k].sector, intro: SCEN[k].intro, crises: SCEN[k].crises.map(c => [c.t, c.s, c.o.map(o => [o[0], o[1], o[4]])])}]));
+const DIALS_EN = Object.fromEntries(DIALS.map(([k, l]) => [k, l]));
+const PROFILES_EN = Object.fromEntries(PKEYS.map(k => [k, {...PROFILES[k]}]));
+let LANG = "en";
+const L = (en, ar) => LANG === "ar" ? ar : en;
+const OUT_AR = {Thriving: "مزدهرة", Survived: "نجت", Collapsed: "انهارت"};
+const outL = o => L(o, OUT_AR[o] || o);
+function setLang(l) {
+  LANG = l === "ar" ? "ar" : "en"; store.set("prism-lang", LANG); store.set("ix-lang", LANG);
+  document.documentElement.lang = LANG; document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
+  const SA = LANG === "ar" ? SCEN_AR : SCEN_EN;
+  SKEYS.forEach(k => {
+    const a = SA[k], S = SCEN[k]; S.name = a.name; S.sector = a.sector; S.intro = a.intro;
+    S.crises.forEach((c, i) => { const ac = Array.isArray(a.crises[i]) ? {t: a.crises[i][0], s: a.crises[i][1], o: a.crises[i][2]} : a.crises[i]; c.t = ac.t; c.s = ac.s; c.o.forEach((o, j) => { o[0] = ac.o[j][0]; o[1] = ac.o[j][1]; o[4] = ac.o[j][2]; }); });
+  });
+  const DA = LANG === "ar" ? DIALS_AR : DIALS_EN; DIALS.forEach(d => d[1] = DA[d[0]]);
+  const PA = LANG === "ar" ? PROFILES_AR : PROFILES_EN; PKEYS.forEach(k => Object.assign(PROFILES[k], PA[k]));
+}
+const langBtn = () => `<button class="lng" type="button" data-lang>${LANG === "ar" ? "English" : "عربي"}</button>`;
+const DEPT_AR = "قسم الاقتصاد وإدارة الأعمال";
+
 
 const sIcon = (k, cls = "") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SCEN[k].icon}</svg>`;
 const dIcon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${DIAL_IC[k]}</svg>`;
@@ -665,33 +734,34 @@ function setTheme(k) { const S = SCEN[k], r = document.documentElement.style; r.
 function showCert(p) {
   if (!p || !SCEN[p.scen]) return;
   document.querySelector(".cert-view")?.remove();
-  const S = SCEN[p.scen], PR = PROFILES[p.profile], day = new Date().toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric"});
+  const ar = LANG === "ar";
+  const S = SCEN[p.scen], PR = PROFILES[p.profile], day = new Date().toLocaleDateString(ar ? "ar-OM-u-nu-latn" : "en-GB", {day: "numeric", month: "long", year: "numeric"});
   const ocol = {Thriving: ["#E2F6EC", "#0A7A4E"], Survived: ["#FFF4DB", "#8A5A00"], Collapsed: ["#FDECEC", "#A3262A"]}[p.outcome];
-  const v = document.createElement("div"); v.className = "cert-view"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "CEO certificate");
-  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">Name on certificate</label><input id="cv-name" maxlength="40" value="${esc(p.name)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">Download PDF</button><button class="btn ghost" id="cv-x">Close</button></div></div>
-    <div class="sheet-wrap"><div class="sheet">
+  const v = document.createElement("div"); v.className = "cert-view"; if (ar) v.dir = "rtl"; v.setAttribute("role", "dialog"); v.setAttribute("aria-label", "CEO certificate");
+  v.innerHTML = `<div class="cv-bar"><div class="field"><label for="cv-name">${L("Name on certificate", "الاسم على الشهادة")}</label><input id="cv-name" maxlength="40" value="${esc(p.name)}"></div><div class="acts"><button class="btn orange" id="cv-pdf">${L("Download PDF", "تحميل PDF")}</button><button class="btn ghost" id="cv-x">${L("Close", "إغلاق")}</button></div></div>
+    <div class="sheet-wrap"><div class="sheet"${ar ? ' dir="rtl" lang="ar"' : ""}>
       <div class="c-frame"></div>${CERT_OR}${CERT_BL}
       <div class="c-in">
-        <div class="c-head"><img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"><div class="c-k">Crisis Room <span>CEO Certificate</span></div></div>
+        <div class="c-head"><img class="c-logo" src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"><div class="c-k">${L("Crisis Room <span>CEO Certificate</span>", "غرفة الأزمات <span>شهادة الرئيس التنفيذي</span>")}</div></div>
         <div class="c-body">
           <div>
-            <div class="c-lead">Presented to</div>
+            <div class="c-lead">${L("Presented to", "تُقدَّم إلى")}</div>
             <div class="c-name" id="cv-nm">${esc(p.name)}</div>
-            <div class="c-lead">for leading the company through five crises</div>
+            <div class="c-lead">${L("for leading the company through five crises", "لقيادته الشركة خلال خمس أزمات")}</div>
             <div class="c-co"><i style="background:${S.color}"><img src="${sIconImg(p.scen)}" alt=""></i><div><b style="color:${S.color}">${S.name}</b><small>${S.sector}</small></div></div>
-            <div class="c-prof"><b>${PR.name}</b><span class="c-out" style="background:${ocol[0]};color:${ocol[1]}">${p.outcome}</span><p>${PR.line}</p></div>
+            <div class="c-prof"><b>${PR.name}</b><span class="c-out" style="background:${ocol[0]};color:${ocol[1]}">${outL(p.outcome)}</span><p>${PR.line}</p></div>
           </div>
-          <div class="c-panel"><h4>Company at the end</h4><div class="c-hs" style="color:${S.color}">${p.health}<small>/ 100 HEALTH</small></div>
+          <div class="c-panel"><h4>${L("Company at the end", "الشركة في النهاية")}</h4><div class="c-hs" style="color:${S.color}">${p.health}<small>${L("/ 100 HEALTH", "/ 100 صحة الشركة")}</small></div>
             <div class="c-bars">${DIALS.map(([k, l]) => `<div><span>${l}</span><span class="tr"><i style="width:${p.dials[k]}%;background:${p.dials[k] >= 60 ? "#12A36B" : p.dials[k] >= 40 ? "#E8A317" : "#E5484D"}"></i></span><span class="v">${p.dials[k]}</span></div>`).join("")}</div></div>
         </div>
-        <div class="c-foot"><div class="c-sig">MBA Postgraduate Team<small>Leadership and Innovation</small></div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${esc(CONFIG.department)}<small>UTAS Ibra</small></div></div>
+        <div class="c-foot"><div class="c-sig">${L("MBA Postgraduate Team<small>Leadership and Innovation</small>", "فريق طلبة الماجستير<small>القيادة والابتكار</small>")}</div><div class="c-mid">${CERT_SEAL}<div class="c-date">${day}</div></div><div class="c-sig r">${ar ? `${DEPT_AR}<small>جامعة التقنية والعلوم التطبيقية – إبراء</small>` : `${esc(CONFIG.department)}<small>UTAS Ibra</small>`}</div></div>
       </div></div></div>
-    <p class="cv-hint">Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.</p>`;
+    <p class="cv-hint">${L("Tap “Download PDF” to save an A4 landscape PDF to your phone (Downloads or Files). Open it from there to share or print.", "اضغط «تحميل PDF» لحفظ الشهادة بحجم A4 على هاتفك (في التنزيلات أو الملفات)، ثم افتحها من هناك للمشاركة أو الطباعة.")}</p>`;
   document.body.appendChild(v);
   v.querySelector("#cv-name").oninput = e => v.querySelector("#cv-nm").textContent = e.target.value.trim() || p.name;
   v.querySelector("#cv-x").onclick = () => v.remove();
   v.querySelector("#cv-pdf").onclick = async e => {
-    const btn = e.currentTarget, label = btn.textContent; btn.disabled = true; btn.textContent = "Preparing…";
+    const btn = e.currentTarget, label = btn.textContent; btn.disabled = true; btn.textContent = L("Preparing…", "جارٍ التجهيز…");
     try {
       if (!window.html2canvas) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
       if (!window.jspdf) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
@@ -703,9 +773,9 @@ function showCert(p) {
       holder.remove();
       const pdf = new window.jspdf.jsPDF({orientation: "landscape", unit: "mm", format: "a4"});
       pdf.addImage(canvas.toDataURL("image/jpeg", .95), "JPEG", 0, 0, 297, 210);
-      const who = (v.querySelector("#cv-nm").textContent || "").trim().replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "ceo";
-      pdf.save(`UTAS-Crisis-Room-CEO-${who}.pdf`); toast("Certificate saved as PDF");
-    } catch (err) { console.warn(err); toast("Could not create the PDF. Check your internet and try again.", true); }
+      const who = (v.querySelector("#cv-nm").textContent || "").trim().replace(/[^A-Za-z0-9\u0600-\u06FF]+/g, "-").replace(/^-|-$/g, "") || "ceo";
+      pdf.save(`UTAS-Crisis-Room-CEO-${who}.pdf`); toast(L("Certificate saved as PDF", "تم حفظ الشهادة بصيغة PDF"));
+    } catch (err) { console.warn(err); toast(L("Could not create the PDF. Check your internet and try again.", "تعذّر إنشاء ملف PDF. تحقّق من الإنترنت وحاول مرة أخرى."), true); }
     btn.disabled = false; btn.textContent = label;
   };
 }
@@ -725,9 +795,9 @@ function Screen(be) {
   <div class="scr">
     <header class="s-head">
       <div class="logo-card"><img src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"></div>
-      <div class="title-block"><b>Crisis <span>Room</span></b><small>${esc(CONFIG.eventLine)}</small></div>
+      <div class="title-block"><b>Crisis <span>Room</span> <span class="ar-sub" style="font-size:.62em;color:var(--ink-2)">· غرفة الأزمات</span></b><small>${esc(CONFIG.eventLine)}</small></div>
       <div class="mid"><span class="status"><i></i>Live</span><div class="bigcount"><b class="num" id="cnt">0</b><span>CEOs so far</span></div></div>
-      <div class="scan"><div><b>Be the CEO for 5 minutes</b><span>Pick a company, face <span class="hl">5 crises</span>,<br>${CONFIG.seconds} seconds per decision.</span></div><div class="qr" id="qr"></div></div>
+      <div class="scan"><div><b>Be the CEO for 5 minutes</b><span>Pick a company, face <span class="hl">5 crises</span>,<br>${CONFIG.seconds} seconds per decision.<br><span class="ar-sub" style="font-size:1.05em">كن الرئيس التنفيذي · English · عربي</span></span></div><div class="qr" id="qr"></div></div>
     </header>
     <main class="s-main">
       <section class="card board"><div class="b-tabs" id="tabs">${SKEYS.map(k => `<button data-k="${k}">${sIcon(k)}${SCEN[k].name}</button>`).join("")}<span class="lg"><span><i style="background:var(--orange)"></i>Staff</span><span><i style="background:var(--blue)"></i>Students</span></span></div>
@@ -833,41 +903,49 @@ function Screen(be) {
    ===================================================================== */
 function Play(be) {
   document.body.classList.add("v-play");
+  setLang(store.get("prism-lang") || store.get("ix-lang") || ((navigator.language || "").toLowerCase().startsWith("ar") ? "ar" : "en"));
   let uid = store.get("cr-uid"); if (!uid) { uid = "u" + rid(); store.set("cr-uid", uid); }
   let D, mine = {}, name = "", group = null, scen = null, qi = 0, answers = [], times = [], dials = null, t0 = 0, tick = null, stage = "join", lastRes = null;
   try { const j = JSON.parse(store.get("cr-me") || "null"); if (j && j.name) { name = j.name; group = j.group; stage = "pick"; } } catch {}
-  $("#app").innerHTML = `<div class="app"><div class="p-head"><div class="brand">${EMBLEM()}<b>Crisis Room<small>UTAS Ibra</small></b></div><span class="status"><i></i>Live</span></div><div id="body"></div></div>`;
+  $("#app").innerHTML = `<div class="app"><div class="p-head" id="phead"></div><div id="body"></div></div>`;
+  const head = () => $("#phead").innerHTML = `<div class="brand">${EMBLEM()}<b>${L("Crisis Room", "غرفة الأزمات")}<small>${L("UTAS Ibra", "UTAS إبراء")}</small></b></div><span class="hr">${stage === "join" || stage === "play" ? "" : langBtn()}<span class="status"><i></i>${L("Live", "مباشر")}</span></span>`;
+  $("#app").addEventListener("click", e => {
+    const bt = e.target.closest("[data-lang]"); if (!bt) return;
+    const nm = $("#jn")?.value; if (nm != null) name = nm.trim();
+    setLang(bt.dataset.lang || (LANG === "ar" ? "en" : "ar")); navigator.vibrate?.(15); draw();
+  });
   function render(st) { D = derive(st); mine = {}; D.plays.filter(p => p.uid === uid).forEach(p => mine[p.scen] = p); if (stage === "pick") draw(); if (stage === "result") updateRoom(); }
   function draw() {
-    const b = $("#body"); clearInterval(tick);
+    const b = $("#body"); clearInterval(tick); head();
     if (stage === "join") {
       setTheme(null);
-      b.innerHTML = `<div class="hero">${SIREN}<h1>Be the <em>CEO</em> for 5 minutes</h1><p>Pick a company, face five crises and decide fast. Every choice moves your company's cash, reputation, staff and customers.</p>
-        <div class="facts"><span>3 companies</span><span>5 crises</span><span>${CONFIG.seconds}s per decision</span><span>CEO certificate</span></div></div>
+      b.innerHTML = `<div class="lang-pick" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="${LANG === "en"}">English</button><button type="button" data-lang="ar" aria-pressed="${LANG === "ar"}">عربي</button></div>
+        <div class="hero">${SIREN}<h1>${L("Be the <em>CEO</em> for 5 minutes", "كن <em>الرئيس التنفيذي</em> لمدة 5 دقائق")}</h1><p>${L("Pick a company, face five crises and decide fast. Every choice moves your company's cash, reputation, staff and customers.", "اختر شركة، وواجه خمس أزمات، وقرّر بسرعة. كل قرار يؤثر في نقد شركتك وسمعتها وموظفيها وعملائها.")}</p>
+        <div class="facts"><span>${L("3 companies", "3 شركات")}</span><span>${L("5 crises", "5 أزمات")}</span><span>${L(`${CONFIG.seconds}s per decision`, `${CONFIG.seconds} ثانية لكل قرار`)}</span><span>${L("CEO certificate", "شهادة الرئيس التنفيذي")}</span></div></div>
         <form class="card form" id="join" novalidate>
-          <div class="field"><label for="jn">Your full name</label><input id="jn" maxlength="32" autocomplete="name" placeholder="e.g. Maryam Al Habsi" value="${esc(name)}"><small style="color:var(--ink-3);font-size:.8em">It appears on your CEO certificate.</small></div>
-          <div class="field"><label>I am…</label><div class="seg"><button type="button" class="staff" data-g="staff" aria-pressed="${group === "staff"}">${I_STAFF}Staff</button><button type="button" class="student" data-g="student" aria-pressed="${group === "student"}">${I_STUD}Student</button></div></div>
-          <div class="err" id="je"></div><button class="btn red" type="submit" style="font-size:1.05em">Enter the Crisis Room</button></form>`;
+          <div class="field"><label for="jn">${L("Your full name", "اسمك الكامل")}</label><input id="jn" maxlength="32" autocomplete="name" placeholder="${L("e.g. Maryam Al Habsi", "مثال: مريم الحبسية")}" value="${esc(name)}"><small style="color:var(--ink-3);font-size:.8em">${L("It appears on your CEO certificate.", "يظهر في شهادة الرئيس التنفيذي.")}</small></div>
+          <div class="field"><label>${L("I am…", "أنا…")}</label><div class="seg"><button type="button" class="staff" data-g="staff" aria-pressed="${group === "staff"}">${I_STAFF}${L("Staff", "موظف")}</button><button type="button" class="student" data-g="student" aria-pressed="${group === "student"}">${I_STUD}${L("Student", "طالب")}</button></div></div>
+          <div class="err" id="je"></div><button class="btn red" type="submit" style="font-size:1.05em">${L("Enter the Crisis Room", "ادخل غرفة الأزمات")}</button></form>`;
       b.querySelectorAll(".seg button").forEach(x => x.onclick = () => { group = x.dataset.g; b.querySelectorAll(".seg button").forEach(y => y.setAttribute("aria-pressed", y === x)); });
       $("#join").onsubmit = e => {
         e.preventDefault(); name = $("#jn").value.trim();
-        if (name.length < 2) return $("#je").textContent = "Type your name (at least 2 letters).";
-        if (!group) return $("#je").textContent = "Choose Staff or Student.";
+        if (name.length < 2) return $("#je").textContent = L("Type your name (at least 2 letters).", "اكتب اسمك (حرفان على الأقل).");
+        if (!group) return $("#je").textContent = L("Choose Staff or Student.", "اختر: موظف أو طالب.");
         unlockAudio(); store.set("cr-me", JSON.stringify({name, group})); stage = "pick"; draw(); scrollTo({top: 0});
       };
     } else if (stage === "pick") {
       setTheme(null);
-      b.innerHTML = `<div class="sect-t"><h3>Choose your company</h3><button class="btn ghost sm" id="chg">Not ${esc(name.split(" ")[0])}?</button></div>
-        <div class="picks">${SKEYS.map(k => { const S = SCEN[k], m = mine[k]; return `<button class="pick" data-k="${k}" style="background:linear-gradient(130deg,${S.color},${S.dark})">${sIcon(k, "wm")}<span class="pic">${sIcon(k)}</span><span><b>${S.name}</b><span>${S.sector}</span></span>${m ? `<span class="done">${m.outcome} · ${m.health}</span>` : ""}</button>`; }).join("")}</div>
-        <p style="text-align:center;color:var(--ink-2);font-size:.9em;margin-top:1em">You can lead each company once. Your results go live on the big screen.</p>`;
+      b.innerHTML = `<div class="sect-t"><h3>${L("Choose your company", "اختر شركتك")}</h3><button class="btn ghost sm" id="chg">${L(`Not ${esc(name.split(" ")[0])}?`, `لست ${esc(name.split(" ")[0])}؟`)}</button></div>
+        <div class="picks">${SKEYS.map(k => { const S = SCEN[k], m = mine[k]; return `<button class="pick" data-k="${k}" style="background:linear-gradient(130deg,${S.color},${S.dark})">${sIcon(k, "wm")}<span class="pic">${sIcon(k)}</span><span><b>${S.name}</b><span>${S.sector}</span></span>${m ? `<span class="done">${outL(m.outcome)} · ${m.health}</span>` : ""}</button>`; }).join("")}</div>
+        <p style="text-align:center;color:var(--ink-2);font-size:.9em;margin-top:1em">${L("You can lead each company once. Your results go live on the big screen.", "يمكنك قيادة كل شركة مرة واحدة. تظهر نتائجك مباشرة على الشاشة الكبيرة.")}</p>`;
       $("#chg").onclick = () => { stage = "join"; draw(); };
       b.querySelectorAll(".pick").forEach(x => x.onclick = () => { scen = x.dataset.k; setTheme(scen); if (mine[scen]) { lastRes = mine[scen]; stage = "result"; } else stage = "intro"; draw(); scrollTo({top: 0}); });
     } else if (stage === "intro") {
       const S = SCEN[scen];
       b.innerHTML = `<div class="intro">${sIcon(scen, "wm")}<div class="k">${S.sector}</div><h1>${S.name}</h1><p>${S.intro}</p></div>
-        <div class="card rules"><ul style="margin:0;padding-left:1.1em"><li><b>5 crises</b> will hit your company, one after another.</li><li>You have <b>${CONFIG.seconds} seconds</b> for each decision. No answer costs you.</li><li>Every choice moves your four dials. Keep them healthy.</li></ul></div>
+        <div class="card rules"><ul style="margin:0;padding-left:1.1em">${L(`<li><b>5 crises</b> will hit your company, one after another.</li><li>You have <b>${CONFIG.seconds} seconds</b> for each decision. No answer costs you.</li><li>Every choice moves your four dials. Keep them healthy.</li>`, `<li>ستواجه شركتك <b>5 أزمات</b>، واحدة تلو الأخرى.</li><li>لديك <b>${CONFIG.seconds} ثانية</b> لكل قرار. عدم الإجابة له ثمن.</li><li>كل قرار يحرّك مؤشراتك الأربعة. حافظ عليها في حالة جيدة.</li>`)}</ul></div>
         <div style="margin-top:.9em">${dialsHTML({c: 50, r: 50, m: 50, u: 50})}</div>
-        <div class="actions"><button class="btn sc" id="go" style="font-size:1.05em">Start as CEO</button><button class="btn ghost" id="bk">Choose another company</button></div>`;
+        <div class="actions"><button class="btn sc" id="go" style="font-size:1.05em">${L("Start as CEO", "ابدأ كرئيس تنفيذي")}</button><button class="btn ghost" id="bk">${L("Choose another company", "اختر شركة أخرى")}</button></div>`;
       $("#go").onclick = () => { qi = 0; answers = []; times = []; dials = {c: 50, r: 50, m: 50, u: 50}; stage = "play"; tone(520, .15); draw(); };
       $("#bk").onclick = () => { stage = "pick"; draw(); };
     } else if (stage === "play") {
@@ -875,7 +953,7 @@ function Play(be) {
       b.innerHTML = `${dialsHTML(dials)}
         <div class="ptop"><div class="step">${S.crises.map((_, i) => `<i class="${i < qi ? "dn" : i === qi ? "on" : ""}"></i>`).join("")}</div>
           <div class="timer" id="tm"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#E3E7F2" stroke-width="4"/><circle id="tmc" cx="20" cy="20" r="17" fill="none" stroke="var(--sc)" stroke-width="4" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="0"/></svg><b id="tmn">${CONFIG.seconds}</b></div></div>
-        <div class="card ccard"><span class="brk"><i></i>Crisis ${qi + 1} of 5</span><h2>${esc(C.t)}</h2><p class="story">${esc(C.s)}</p>
+        <div class="card ccard"><span class="brk"><i></i>${L(`Crisis ${qi + 1} of 5`, `الأزمة ${qi + 1} من 5`)}</span><h2>${esc(C.t)}</h2><p class="story">${esc(C.s)}</p>
           <div class="opts">${order.map((oi, n) => `<button data-o="${oi}"><b>${"ABC"[n]}</b><span>${esc(C.o[oi][1])}</span></button>`).join("")}</div><div id="fx"></div></div>`;
       b.querySelectorAll("[data-o]").forEach(x => x.onclick = () => choose(+x.dataset.o));
       t0 = performance.now(); let lastS = CONFIG.seconds;
@@ -890,19 +968,19 @@ function Play(be) {
       }, 100);
     } else if (stage === "result" && lastRes) {
       const S = SCEN[lastRes.scen], PR = PROFILES[lastRes.profile], bg = {Thriving: "linear-gradient(140deg,#12A36B,#0A7A4E)", Survived: "linear-gradient(140deg,#E8A317,#B57A00)", Collapsed: "linear-gradient(140deg,#E5484D,#A3262A)"}[lastRes.outcome];
-      const head = {Thriving: "Your company is thriving!", Survived: "Your company survived.", Collapsed: "Your company collapsed."}[lastRes.outcome];
-      b.innerHTML = `<div class="res-hero" style="background:${bg}">${sIcon(lastRes.scen, "wm")}<div class="k">${esc(lastRes.name)} · CEO of ${S.name}</div><h1>${head}</h1><div class="hs">Company health ${lastRes.health}/100</div></div>
+      const hd = (LANG === "ar" ? {Thriving: "شركتك مزدهرة!", Survived: "نجت شركتك.", Collapsed: "انهارت شركتك."} : {Thriving: "Your company is thriving!", Survived: "Your company survived.", Collapsed: "Your company collapsed."})[lastRes.outcome];
+      b.innerHTML = `<div class="res-hero" style="background:${bg}">${sIcon(lastRes.scen, "wm")}<div class="k">${esc(lastRes.name)} · ${L(`CEO of ${S.name}`, `الرئيس التنفيذي لـ${S.name}`)}</div><h1>${hd}</h1><div class="hs">${L(`Company health ${lastRes.health}/100`, `صحة الشركة ${lastRes.health}/100`)}</div></div>
         <div style="margin-top:.9em">${dialsHTML(lastRes.dials)}</div>
-        <div class="card sect"><h3>Your CEO profile: ${PR.name}</h3><p>${PR.line}</p><p style="margin-top:.5em"><b style="color:var(--ink)">Tip:</b> ${PR.tip}</p></div>
-        <div class="card sect"><h3>Your decisions vs the room</h3><ul class="recap" id="recap"></ul></div>
-        <div class="actions"><button class="btn orange" id="cert" style="font-size:1.05em">Get my CEO certificate (PDF)</button><button class="btn ghost" id="again">Lead another company</button></div>`;
+        <div class="card sect"><h3>${L("Your CEO profile:", "ملفك كرئيس تنفيذي:")} ${PR.name}</h3><p>${PR.line}</p><p style="margin-top:.5em"><b style="color:var(--ink)">${L("Tip:", "نصيحة:")}</b> ${PR.tip}</p></div>
+        <div class="card sect"><h3>${L("Your decisions vs the room", "قراراتك مقارنة بالحضور")}</h3><ul class="recap" id="recap"></ul></div>
+        <div class="actions"><button class="btn orange" id="cert" style="font-size:1.05em">${L("Get my CEO certificate (PDF)", "احصل على شهادة الرئيس التنفيذي (PDF)")}</button><button class="btn ghost" id="again">${L("Lead another company", "قُد شركة أخرى")}</button></div>`;
       $("#cert").onclick = () => showCert(lastRes);
       $("#again").onclick = () => { stage = "pick"; draw(); scrollTo({top: 0}); };
       updateRoom();
     }
   }
   function dialsHTML(d, deltas) {
-    const SH = {c: "Cash", r: "Trust", m: "Morale", u: "Clients"};
+    const SH = LANG === "ar" ? {c: "النقد", r: "الثقة", m: "المعنويات", u: "العملاء"} : {c: "Cash", r: "Trust", m: "Morale", u: "Clients"};
     return `<div class="dials" id="dials">${DIALS.map(([k, l]) => `<div class="dial" title="${l}"><div class="dh">${dIcon(k)}${SH[k]}</div><div class="dv" id="dv-${k}">${d[k]}</div><div class="dt"><i id="dt-${k}" style="width:${d[k]}%;background:${dialColor(d[k])}"></i></div><span class="dd" id="dd-${k}"></span></div>`).join("")}</div>`;
   }
   function choose(oi) {
@@ -919,7 +997,7 @@ function Play(be) {
     const gains = Object.values(fx).reduce((a, b) => a + b, 0); tone(gains >= 0 ? 880 : 300, .18, .12); navigator.vibrate?.(gains >= 0 ? 30 : [40, 40, 40]);
     const chips = DIALS.filter(([k]) => fx[k]).map(([k, l]) => `<span class="${fx[k] > 0 ? "up" : "dn"}">${l} ${fx[k] > 0 ? "+" : "−"}${Math.abs(fx[k])}</span>`).join("");
     const last = qi === 4;
-    $("#fx").innerHTML = `<div class="fx ${o ? "" : "timeout"}"><p>${o ? esc(o[4]) : "Time ran out. Hesitation costs: the media fills the silence."}</p><div class="fxc">${chips}</div><button class="btn sc" id="nx">${last ? "See my results" : "Next crisis ›"}</button></div>`;
+    $("#fx").innerHTML = `<div class="fx ${o ? "" : "timeout"}"><p>${o ? esc(o[4]) : L("Time ran out. Hesitation costs: the media fills the silence.", "انتهى الوقت. للتردد ثمن: الإعلام يملأ الصمت.")}</p><div class="fxc">${chips}</div><button class="btn sc" id="nx">${last ? L("See my results", "شاهد نتيجتي") : L("Next crisis ›", "الأزمة التالية ←")}</button></div>`;
     $("#nx").onclick = next;
     $("#fx").scrollIntoView({behavior: "smooth", block: "nearest"});
   }
@@ -927,20 +1005,20 @@ function Play(be) {
     if (qi < 4) { qi++; draw(); scrollTo({top: 0}); return; }
     const res = simulate(scen, answers);
     const rec = {uid, name, group, scen, answers, times, ...res};
-    $("#nx").disabled = true; $("#nx").textContent = "Saving…";
+    $("#nx").disabled = true; $("#nx").textContent = L("Saving…", "جارٍ الحفظ…");
     try {
       await be.submit(uid + "_" + scen, rec);
       lastRes = {...rec, id: uid + "_" + scen}; stage = "result"; draw(); scrollTo({top: 0});
       if (res.outcome !== "Collapsed") setTimeout(() => confetti({x: innerWidth / 2, y: 160}), 300); else navigator.vibrate?.([80, 60, 80]);
-    } catch { $("#nx").disabled = false; $("#nx").textContent = "Try again"; toast("Could not save your result. Check your internet.", true); }
+    } catch { $("#nx").disabled = false; $("#nx").textContent = L("Try again", "حاول مرة أخرى"); toast(L("Could not save your result. Check your internet.", "تعذّر حفظ نتيجتك. تحقّق من الإنترنت."), true); }
   }
   function updateRoom() {
     const el = $("#recap"); if (!el || !lastRes || !D) return;
     const S = SCEN[lastRes.scen], A = D.S[lastRes.scen];
     el.innerHTML = S.crises.map((c, i) => {
       const a = lastRes.answers[i], cc = A.crises[i];
-      const label = a >= 0 ? c.o[a][0] : "No decision (time ran out)";
-      const room = a >= 0 && A.n ? `Same as ${A.nS ? Math.round(cc.staff[a]) + "% of staff" : "no staff yet"} · ${A.nU ? Math.round(cc.stud[a]) + "% of students" : "no students yet"}` : "";
+      const label = a >= 0 ? c.o[a][0] : L("No decision (time ran out)", "لا قرار (انتهى الوقت)");
+      const room = a >= 0 && A.n ? (LANG === "ar" ? "اختار مثلك: " + [A.nS ? Math.round(cc.staff[a]) + "% من الموظفين" : "", A.nU ? Math.round(cc.stud[a]) + "% من الطلاب" : ""].filter(Boolean).join(" · ") : `Same as ${A.nS ? Math.round(cc.staff[a]) + "% of staff" : "no staff yet"} · ${A.nU ? Math.round(cc.stud[a]) + "% of students" : "no students yet"}`) : "";
       return `<li><i>${i + 1}</i><div><b>${esc(c.t)}</b><span>${esc(label)}</span>${room ? `<small>${room}</small>` : ""}</div></li>`;
     }).join("");
   }
@@ -1068,6 +1146,19 @@ function Report(be) {
 .p-head .brand b small{display:block}
 html[lang=ar] .prism-tag{letter-spacing:0}
 @media print{.prism-bar{display:none}}
+.title-block b span{color:#E5484D!important}
+.scan{background:linear-gradient(135deg,#9E1F25 0%,#E5484D 100%)!important;box-shadow:0 10px 30px color-mix(in srgb,#E5484D 35%,transparent)}
+.scan::before{background:#fff!important;opacity:.14!important}
+.scan::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-120%);animation:prismShine 6s ease-in-out infinite;pointer-events:none}
+@keyframes prismShine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.scan span{color:rgba(255,255,255,.9)!important}
+.scan .pts,.scan .hl{color:#FFF1C9!important;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.scan .qr,.scan canvas,.scan img{position:relative;z-index:1}
+.tape{background:linear-gradient(90deg,#9E1F25 0%,#E5484D 50%,#9E1F25 100%)!important;box-shadow:0 8px 24px color-mix(in srgb,#E5484D 30%,transparent)}
+.tape-in em{color:#FFF1C9!important}
+.tape-in .up{color:#F2FFF8!important}
+.tape-in .down{color:#FFE7E3!important}
+
 </style>
 <script>
 (function () {
