@@ -1145,6 +1145,10 @@ function Report(be) {
 .p-head .prism-tag{font-size:.62rem;padding:.24em .6em .24em .4em;margin-top:.35em}
 .p-head .brand b small{display:block}
 html[lang=ar] .prism-tag{letter-spacing:0}
+.prism-rate{position:fixed;inset-inline-end:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:150;display:inline-flex;align-items:center;gap:.45em;padding:.7em 1.05em;border-radius:99px;background:#E5484D;color:#fff;font-family:"Figtree","Tajawal",sans-serif;font-weight:800;font-size:14px;text-decoration:none;box-shadow:0 8px 24px color-mix(in srgb,#E5484D 45%,transparent)}
+.prism-rate.up{bottom:calc(86px + env(safe-area-inset-bottom))}
+.prism-rate span{font-family:"Tajawal",sans-serif}
+body.has-rate .app{padding-bottom:72px}
 @media print{.prism-bar{display:none}}
 .title-block b span{color:#E5484D!important}
 .scan{background:linear-gradient(135deg,#9E1F25 0%,#E5484D 100%)!important;box-shadow:0 10px 30px color-mix(in srgb,#E5484D 35%,transparent)}
@@ -1173,6 +1177,9 @@ html[lang=ar] .prism-tag{letter-spacing:0}
   }
   var q = false; new MutationObserver(function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; apply(); }); }).observe(document.body, {childList: true, subtree: true});
   apply();
+  var ph = /^#(trade|quiz|play)$/.test(location.hash);
+  if (ph) { var a = document.createElement("a"); a.className = "prism-rate" + (location.hash === "#trade" ? " up" : ""); a.href = "prism.html#d3";
+    a.innerHTML = '★ Rate this desk · <span>قيّم الطاولة</span>'; document.body.appendChild(a); document.body.classList.add("has-rate"); }
 })();
 </script>
 </body>
