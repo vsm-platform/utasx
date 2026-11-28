@@ -519,6 +519,13 @@ html[dir=rtl] .hold .v{text-align:left}
 .sheet[dir=rtl] .c-lead{text-transform:none}
 .cert-view[dir=rtl] .cv-bar,.cert-view[dir=rtl] .cv-hint{font-family:"Tajawal",var(--body)}
 .ar-sub{display:block;font-family:"Tajawal",sans-serif;font-weight:700;letter-spacing:0;text-transform:none}
+
+.h2ar{font-family:"Tajawal",sans-serif;font-weight:700;font-size:.78em;color:var(--ink-3);letter-spacing:0;text-transform:none;margin-left:.35em}
+.leader .h2ar{color:#9AA5D6}
+.bia{display:block;font-family:"Tajawal",sans-serif;letter-spacing:0;text-transform:none;font-weight:700;color:var(--ink-3);font-size:.85em}
+.duel .side.r .bia{text-align:right}
+.tape .ta{font-family:"Tajawal",sans-serif;letter-spacing:0;direction:rtl;unicode-bidi:isolate}
+.vtabs .ta{font-family:"Tajawal",sans-serif;margin-left:.3em;opacity:.85;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -822,7 +829,7 @@ const ERR_AR = {"The market is closed.": "السوق مغلق.", "Not enough UTA
 const langBtn = () => `<button class="lng" type="button" data-lang>${LANG === "ar" ? "English" : "عربي"}</button>`;
 const DEPT_AR = "قسم الاقتصاد وإدارة الأعمال";
 const aceChip = i => i.rCount ? `<span class="chip ace">ACE ${f1(i.ace)}/3</span>` : "";
-function statusPill(m) { return m.status === "closed" ? `<span class="status closed"><i></i>${L("Market closed", "السوق مغلق")}</span>` : `<span class="status"><i></i>${L("Market open", "السوق مفتوح")}</span>`; }
+function statusPill(m) { const bi = document.body.classList.contains("v-screen"); return m.status === "closed" ? `<span class="status closed"><i></i>${bi ? "Market closed · السوق مغلق" : L("Market closed", "السوق مغلق")}</span>` : `<span class="status"><i></i>${bi ? "Market open · السوق مفتوح" : L("Market open", "السوق مفتوح")}</span>`; }
 const baseURL = () => location.origin + location.pathname + location.search;
 
 let AC = null;
@@ -971,7 +978,7 @@ function Screen(be) {
       <div class="duel-msg" id="dmsg"></div>
     </section>
     <main class="s-main">
-      <section class="card panel"><h2>Top ideas <span class="vtabs" role="tablist"><button data-v="map" class="on" role="tab">Market map</button><button data-v="rank" role="tab">Ranking</button></span><small id="rcount"></small></h2>
+      <section class="card panel"><h2>Top ideas<span class="h2ar">· أفضل الأفكار</span> <span class="vtabs" role="tablist"><button data-v="map" class="on" role="tab">Market map<span class="ta">الخريطة</span></button><button data-v="rank" role="tab">Ranking<span class="ta">الترتيب</span></button></span><small id="rcount"></small></h2>
         <div class="focus" id="focus"></div>
         <div class="mmap" id="mmap"><svg viewBox="0 0 1100 455" role="img" aria-label="Live market map of ideas"><defs>
           <radialGradient id="gS" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC27D"/><stop offset=".55" stop-color="#F68922"/><stop offset="1" stop-color="#E66926"/></radialGradient>
@@ -981,7 +988,7 @@ function Screen(be) {
         <div class="rview" id="rview" hidden><div class="race" id="race"></div><div class="more" id="more"></div></div></section>
       <div class="aside">
         <section class="card panel leader" id="leader"></section>
-        <section class="card panel"><h2>Live trades <small>updates instantly</small></h2><ul class="feed" id="feed"></ul></section>
+        <section class="card panel"><h2>Live trades<span class="h2ar">· التداولات المباشرة</span> <small>updates instantly</small></h2><ul class="feed" id="feed"></ul></section>
       </div>
     </main>
     <div class="tape" aria-hidden="true"><div class="tape-in" id="tape"></div></div>
@@ -1090,7 +1097,7 @@ function Screen(be) {
     $("#mmap").classList.add("focusing");
     const el = $("#focus");
     const html = `<span class="fic" style="background:${b.col}">${esc(i.sym)}</span><div class="ftx"><b>${esc(i.name)} <span class="chip ${i.group}" style="display:inline-flex;vertical-align:middle;font-size:.55em">${esc(i.ownerName)}</span></b><span>${esc(i.pitch)}</span></div>
-      <div class="fst"><b>${f2(i.price)}</b><span class="${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</span><span> · ${i.investors} backers${i.rCount ? ` · ACE ${f1(i.ace)}` : ""}</span></div>`;
+      <div class="fst"><b>${f2(i.price)}</b><span class="${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</span><span> · ${i.investors} backers · ${i.investors} داعمين${i.rCount ? ` · ACE ${f1(i.ace)}` : ""}</span></div>`;
     if (el.dataset.id !== id) { el.dataset.id = id; el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
     el.innerHTML = html;
   }
@@ -1129,15 +1136,15 @@ function Screen(be) {
     const s = D.sT, u = D.uT, tot = s + u, share = tot ? s / tot : .5;
     countTo($("#sv"), s); countTo($("#uv"), u);
     const ns = D.ideas.filter(i => i.group === "staff").length, nu = D.ideas.length - ns;
-    $("#ss").textContent = `points invested · ${ns} idea${ns === 1 ? "" : "s"}`;
-    $("#us").textContent = `points invested · ${nu} idea${nu === 1 ? "" : "s"}`;
+    $("#ss").innerHTML = `points invested · ${ns} idea${ns === 1 ? "" : "s"}<span class="bia">نقاط مستثمرة · ${ns} ${ns === 1 ? "فكرة" : "أفكار"}</span>`;
+    $("#us").innerHTML = `points invested · ${nu} idea${nu === 1 ? "" : "s"}<span class="bia">نقاط مستثمرة · ${nu} ${nu === 1 ? "فكرة" : "أفكار"}</span>`;
     const p = (Math.min(.92, Math.max(.08, share)) * 100).toFixed(1) + "%";
     $("#rope").style.width = p; $(".knot").style.left = p;
-    $("#dmsg").textContent = !tot ? "The first trade decides who pulls ahead" : s === u ? "Dead heat!" : `${s > u ? "Staff" : "Students"} lead by ${f0(Math.abs(s - u))} points`;
+    $("#dmsg").innerHTML = !tot ? `The first trade decides who pulls ahead<span class="bia">أول صفقة تحدد من يتقدم</span>` : s === u ? `Dead heat!<span class="bia">تعادل!</span>` : `${s > u ? "Staff" : "Students"} lead by ${f0(Math.abs(s - u))} points<span class="bia">${s > u ? "الموظفون يتقدمون" : "الطلاب يتقدمون"} بفارق ${f0(Math.abs(s - u))} نقطة</span>`;
   }
   function renderRace() {
     const box = $("#race"), list = D.ideas.slice(0, ROWS), max = Math.max(1, ...list.map(i => i.total));
-    $("#rcount").textContent = D.ideas.length ? `${D.ideas.length} listed` : "";
+    $("#rcount").textContent = D.ideas.length ? `${D.ideas.length} listed · ${D.ideas.length} أفكار مدرجة` : "";
     if (!list.length) { box.innerHTML = `<div class="race-empty"><div>${ICON.s1.replace("viewBox", 'width="70" height="70" viewBox')}<b>No ideas yet</b>Scan the code and list the first one.</div></div>`; box.style.height = "auto"; rows = {}; return; }
     if (box.querySelector(".race-empty")) box.innerHTML = "";
     const keep = new Set(list.map(i => i.id));
@@ -1170,13 +1177,13 @@ function Screen(be) {
   }
   function renderLeader() {
     const el = $("#leader"), L = D.ideas[0];
-    if (!L) { el.innerHTML = `<h2>Leading idea</h2><div style="color:#9AA5D6">The top idea and its price chart will appear here.</div>`; leaderId = null; return; }
+    if (!L) { el.innerHTML = `<h2>Leading idea<span class="h2ar">· الفكرة المتصدرة</span></h2><div style="color:#9AA5D6">The top idea and its price chart will appear here.</div>`; leaderId = null; return; }
     const changed = L.id !== leaderId; leaderId = L.id;
     const {line} = sparkPath(L.series, 300, 90, 6);
     if (changed || !el.querySelector(".lp")) {
-      el.innerHTML = `<h2>Leading idea <small>since listing</small></h2>
+      el.innerHTML = `<h2>Leading idea<span class="h2ar">· الفكرة المتصدرة</span> <small>since listing</small></h2>
         <div class="ln"><strong></strong><span class="tick" style="background:var(--orange)"></span></div><div class="lpitch" style="color:#C2CAEB;font-size:.95em;margin-top:.2em;position:relative"></div>
-        <div class="ln" style="margin-top:.35em"><div class="lp"><span class="num" id="lpv"></span><small>PTS / SHARE</small></div><span class="delta up" id="lpd"></span></div>
+        <div class="ln" style="margin-top:.35em"><div class="lp"><span class="num" id="lpv"></span><small>PTS / SHARE · نقطة للسهم</small></div><span class="delta up" id="lpd"></span></div>
         <svg viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F68922" stop-opacity=".5"/><stop offset="1" stop-color="#F68922" stop-opacity="0"/></linearGradient></defs>
           <g stroke="#3A4699" stroke-width="1"><line x1="0" y1="30" x2="300" y2="30"/><line x1="0" y1="60" x2="300" y2="60"/></g>
           <path id="la" fill="url(#lg)"/><path id="ll" class="draw" fill="none" stroke="#F68922" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
@@ -1201,7 +1208,7 @@ function Screen(be) {
     if (sig === tapeSig && Date.now() - tapeAt < 120000) return;
     tapeSig = sig; tapeAt = Date.now();
     const items = D.ideas.map(i => `<span><em>${esc(i.sym)}</em>${f2(i.price)}<b class="${dir(i.gain)}">${arr(i.gain)} ${pct(i.gain)}</b></span>`);
-    items.push(`<span><em>STAFF</em>${f0(D.sT)} pts</span>`, `<span><em style="color:#9CB0E4">STUDENTS</em>${f0(D.uT)} pts</span>`, `<span><em>HOW</em>Price = 10 × (1 + points invested ÷ 2,000). Buy early, gain more.</span>`);
+    items.push(`<span><em>STAFF</em>${f0(D.sT)} pts</span>`, `<span><em style="color:#9CB0E4">STUDENTS</em>${f0(D.uT)} pts</span>`, `<span><em>HOW</em>Price = 10 × (1 + points invested ÷ 2,000). Buy early, gain more.</span>`, `<span class="ta"><em>كيف</em>كلما زاد الاستثمار في الفكرة ارتفع سعرها. استثمر مبكرًا لتربح أكثر.</span>`);
     let html = items.join(""); while (html.length < 1800) html += html;
     const tp = $("#tape"); tp.innerHTML = html + html; requestAnimationFrame(() => tp.style.setProperty("--dur", Math.max(60, tp.scrollWidth / 2 / 45) + "s"));
   }

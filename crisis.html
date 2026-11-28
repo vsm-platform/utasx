@@ -407,6 +407,16 @@ html[dir=rtl] .rules ul{padding-left:0!important;padding-right:1.1em}
 .sheet[dir=rtl] .c-lead,.sheet[dir=rtl] .c-hs small{text-transform:none}
 .cert-view[dir=rtl] .cv-bar,.cert-view[dir=rtl] .cv-hint{font-family:"Tajawal",var(--body)}
 .ar-sub{font-family:"Tajawal",sans-serif;font-weight:700;letter-spacing:0;text-transform:none}
+
+.bia{display:block;font-family:"Tajawal",sans-serif;direction:rtl;text-align:left;letter-spacing:0;text-transform:none;font-weight:700;color:var(--ink-3);font-size:.86em;line-height:1.25}
+.h2ar{font-family:"Tajawal",sans-serif;font-weight:700;font-size:.78em;color:var(--ink-3);letter-spacing:0;margin-left:.35em}
+.b-tabs button .ta{font-family:"Tajawal",sans-serif;font-weight:700;margin-left:.4em;opacity:.8;letter-spacing:0}
+.banner .bia{color:#fff;opacity:.85;font-weight:500;font-size:.9em}
+.banner b .na{font-family:"Tajawal",sans-serif;font-size:.7em;margin-left:.5em;opacity:.9;letter-spacing:0}
+.opt .ol .bia{font-size:.9em;font-weight:500;margin-top:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmp .lb small{font-family:"Tajawal",sans-serif;font-weight:700;color:var(--ink-3);font-size:.82em;margin-left:.35em;letter-spacing:0}
+.bigcount .bia{text-align:right;font-size:.78em}
+.tape .ta{font-family:"Tajawal",sans-serif;letter-spacing:0;direction:rtl;unicode-bidi:isolate}
 </style>
 </head>
 <body>
@@ -796,16 +806,16 @@ function Screen(be) {
     <header class="s-head">
       <div class="logo-card"><img src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"></div>
       <div class="title-block"><b>Crisis <span>Room</span> <span class="ar-sub" style="font-size:.62em;color:var(--ink-2)">· غرفة الأزمات</span></b><small>${esc(CONFIG.eventLine)}</small></div>
-      <div class="mid"><span class="status"><i></i>Live</span><div class="bigcount"><b class="num" id="cnt">0</b><span>CEOs so far</span></div></div>
+      <div class="mid"><span class="status"><i></i>Live</span><div class="bigcount"><b class="num" id="cnt">0</b><span>CEOs so far</span><span class="bia">رئيسًا تنفيذيًا حتى الآن</span></div></div>
       <div class="scan"><div><b>Be the CEO for 5 minutes</b><span>Pick a company, face <span class="hl">5 crises</span>,<br>${CONFIG.seconds} seconds per decision.<br><span class="ar-sub" style="font-size:1.05em">كن الرئيس التنفيذي · English · عربي</span></span></div><div class="qr" id="qr"></div></div>
     </header>
     <main class="s-main">
-      <section class="card board"><div class="b-tabs" id="tabs">${SKEYS.map(k => `<button data-k="${k}">${sIcon(k)}${SCEN[k].name}</button>`).join("")}<span class="lg"><span><i style="background:var(--orange)"></i>Staff</span><span><i style="background:var(--blue)"></i>Students</span></span></div>
+      <section class="card board"><div class="b-tabs" id="tabs">${SKEYS.map(k => `<button data-k="${k}">${sIcon(k)}${SCEN[k].name}<span class="ta">${SCEN_AR[k].name}</span></button>`).join("")}<span class="lg"><span><i style="background:var(--orange)"></i>Staff · موظفون</span><span><i style="background:var(--blue)"></i>Students · طلاب</span></span></div>
         <div id="banner"></div><div class="crises" id="crises"></div></section>
       <div class="side">
-        <section class="card panel"><h2>Company health <small>average of all CEOs</small></h2><div class="orbs">${SKEYS.map(k => `<div class="orb" id="orb-${k}">${orbSVG(k)}<b style="color:${SCEN[k].color}">${SCEN[k].name}</b><span id="os-${k}">No CEOs yet</span></div>`).join("")}</div></section>
-        <section class="card panel"><h2>Who leads how <small>CEO profiles</small></h2><div class="cmp" id="cmp"></div></section>
-        <section class="card panel"><h2>Latest CEOs <small>live</small></h2><ul class="feed" id="feed"></ul></section>
+        <section class="card panel"><h2>Company health<span class="h2ar">· صحة الشركات</span> <small>average of all CEOs</small></h2><div class="orbs">${SKEYS.map(k => `<div class="orb" id="orb-${k}">${orbSVG(k)}<b style="color:${SCEN[k].color}">${SCEN[k].name}<span class="bia" style="text-align:center;color:${SCEN[k].color}">${SCEN_AR[k].name}</span></b><span id="os-${k}">No CEOs yet</span></div>`).join("")}</div></section>
+        <section class="card panel"><h2>Who leads how<span class="h2ar">· أنماط القيادة</span> <small>CEO profiles</small></h2><div class="cmp" id="cmp"></div></section>
+        <section class="card panel"><h2>Latest CEOs<span class="h2ar">· أحدث الرؤساء</span> <small>live</small></h2><ul class="feed" id="feed"></ul></section>
       </div>
     </main>
     <div class="tape" aria-hidden="true"><div class="tape-in" id="tape"></div></div>
@@ -827,13 +837,13 @@ function Screen(be) {
     $("#tabs").querySelectorAll("button[data-k]").forEach(b => { const on = b.dataset.k === cur; b.classList.toggle("on", on); b.style.background = on ? SCEN[b.dataset.k].color : ""; });
     $(".board").style.setProperty("--sc", S.color); $(".board").style.setProperty("--sc-soft", S.soft);
     const bn = $("#banner");
-    if (anim || !bn.innerHTML) bn.innerHTML = `<div class="banner" style="background:linear-gradient(120deg,${S.color},${S.dark})">${sIcon(cur, "wm")}<div class="bic">${sIcon(cur)}</div><div style="min-width:0"><b>${S.name}</b><span>${S.intro}</span></div><div class="bst"><div><b id="bn-n">0</b><span>CEOs</span></div><div><b id="bn-a">0</b><span>Avg health</span></div><div><b id="bn-s">0%</b><span>Survived</span></div></div></div>`;
+    if (anim || !bn.innerHTML) bn.innerHTML = `<div class="banner" style="background:linear-gradient(120deg,${S.color},${S.dark})">${sIcon(cur, "wm")}<div class="bic">${sIcon(cur)}</div><div style="min-width:0"><b>${S.name}<span class="na">${SCEN_AR[cur].name}</span></b><span>${S.intro}</span><span class="bia">${SCEN_AR[cur].intro}</span></div><div class="bst"><div><b id="bn-n">0</b><span>CEOs</span></div><div><b id="bn-a">0</b><span>Avg health</span></div><div><b id="bn-s">0%</b><span>Survived</span></div></div></div>`;
     $("#bn-n").textContent = A.n; $("#bn-a").textContent = Math.round(A.avg); $("#bn-s").textContent = Math.round(A.surv) + "%";
     const box = $("#crises");
     if (!A.n) { box.innerHTML = `<div class="b-empty"><div><b>No decisions yet for ${S.name}</b>Scan the code, choose ${S.name} and lead it through 5 crises.</div></div>`; return; }
     if (anim || !box.querySelector(".crow")) {
-      box.innerHTML = S.crises.map((c, qi) => `<div class="crow" id="cr-${qi}"><div class="ct"><i style="background:${S.color}">${qi + 1}</i><div style="min-width:0"><b>${esc(c.t)}</b><small style="background:${S.color}" hidden>Most divided</small></div></div>
-        ${c.o.map((o, oi) => `<div class="opt" id="op-${qi}-${oi}"><div class="ol">${esc(o[0])}</div><div class="br"><span class="tr s"><i></i></span><span></span></div><div class="br"><span class="tr u"><i></i></span><span></span></div></div>`).join("")}</div>`).join("");
+      box.innerHTML = S.crises.map((c, qi) => `<div class="crow" id="cr-${qi}"><div class="ct"><i style="background:${S.color}">${qi + 1}</i><div style="min-width:0"><b>${esc(c.t)}</b><span class="bia">${esc(SCEN_AR[cur].crises[qi][0])}</span><small style="background:${S.color}" hidden>Most divided</small></div></div>
+        ${c.o.map((o, oi) => `<div class="opt" id="op-${qi}-${oi}"><div class="ol">${esc(o[0])}<span class="bia">${esc(SCEN_AR[cur].crises[qi][2][oi][0])}</span></div><div class="br"><span class="tr s"><i></i></span><span></span></div><div class="br"><span class="tr u"><i></i></span><span></span></div></div>`).join("")}</div>`).join("");
     }
     A.crises.forEach((c, qi) => {
       $("#cr-" + qi).classList.toggle("div", A.div === qi);
@@ -860,8 +870,8 @@ function Screen(be) {
   }
   function renderCmp() {
     const pc = (o, k) => o.n ? Math.round(o.c[k] / o.n * 100) : 0;
-    $("#cmp").innerHTML = `<span></span><span class="h" style="color:var(--orange-2)">Staff (${D.profS.n})</span><span class="h" style="color:var(--blue)">Students (${D.profU.n})</span>` +
-      PKEYS.map(k => `<span class="lb">${PROFILES[k].name.replace("The ", "")}</span><div class="bar s"><i style="width:${pc(D.profS, k)}%"></i><span>${pc(D.profS, k)}%</span></div><div class="bar u"><i style="width:${pc(D.profU, k)}%"></i><span>${pc(D.profU, k)}%</span></div>`).join("");
+    $("#cmp").innerHTML = `<span></span><span class="h" style="color:var(--orange-2)">Staff (${D.profS.n}) · موظفون</span><span class="h" style="color:var(--blue)">Students (${D.profU.n}) · طلاب</span>` +
+      PKEYS.map(k => `<span class="lb">${PROFILES[k].name.replace("The ", "")}<small>${PROFILES_AR[k].name}</small></span><div class="bar s"><i style="width:${pc(D.profS, k)}%"></i><span>${pc(D.profS, k)}%</span></div><div class="bar u"><i style="width:${pc(D.profU, k)}%"></i><span>${pc(D.profU, k)}%</span></div>`).join("");
   }
   function renderFeed() {
     const ul = $("#feed");
@@ -873,10 +883,10 @@ function Screen(be) {
     const sig = D.n + "|" + D.top.map(p => p.id).join();
     if (sig === tapeSig) return; tapeSig = sig;
     const items = [];
-    D.top.slice(0, 5).forEach((p, i) => items.push(`<span><em>TOP CEO #${i + 1}</em>${esc(p.name)} · ${SCEN[p.scen].name} · ${p.health}/100</span>`));
+    D.top.slice(0, 5).forEach((p, i) => items.push(`<span><em>TOP CEO #${i + 1} · الأفضل</em>${esc(p.name)} · ${SCEN[p.scen].name} · ${p.health}/100</span>`));
     SKEYS.forEach(k => { const A = D.S[k]; if (A.div >= 0) { const c = A.crises[A.div], o = SCEN[k].crises[A.div].o[c.gapOpt][0]; items.push(`<span><em>MOST DIVIDED</em>${SCEN[k].name}, “${esc(SCEN[k].crises[A.div].t)}”: ${Math.round(c.staff[c.gapOpt])}% of staff vs ${Math.round(c.stud[c.gapOpt])}% of students chose “${esc(o)}”</span>`); } });
     if (D.tS && D.tU) items.push(`<span><em>SPEED</em>Staff decide in ${f1(D.tS)}s on average, students in ${f1(D.tU)}s</span>`);
-    items.push(`<span><em>TIP</em>In a crisis, no decision is also a decision.</span>`, `<span><em>TIP</em>Tell the truth early: trust is the hardest thing to rebuild.</span>`);
+    items.push(`<span><em>TIP</em>In a crisis, no decision is also a decision.</span>`, `<span class="ta"><em>نصيحة</em>في الأزمة، عدم اتخاذ القرار هو قرار أيضًا.</span>`, `<span><em>TIP</em>Tell the truth early: trust is the hardest thing to rebuild.</span>`, `<span class="ta"><em>نصيحة</em>قل الحقيقة مبكرًا: الثقة أصعب ما يُعاد بناؤه.</span>`);
     let html = items.join(""); while (html.length < 2400) html += html;
     const tp = $("#tape"); tp.innerHTML = html + html;
     requestAnimationFrame(() => tp.style.setProperty("--dur", Math.max(80, tp.scrollWidth / 2 / 45) + "s"));

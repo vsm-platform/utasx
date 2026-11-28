@@ -352,6 +352,18 @@ html[lang=ar] .v-quiz *{letter-spacing:0!important}
 .sheet[dir=rtl] .c-lead{text-transform:none}
 .cert-view[dir=rtl] .cv-bar,.cert-view[dir=rtl] .cv-hint{font-family:"Tajawal",var(--body)}
 .ar-sub{font-family:"Tajawal",sans-serif;font-weight:700;letter-spacing:0;text-transform:none}
+
+.bi-ar{display:block;font-family:"Tajawal",sans-serif;direction:rtl;letter-spacing:0;text-transform:none;font-weight:700}
+.h2ar{font-family:"Tajawal",sans-serif;font-weight:700;font-size:.78em;color:var(--ink-3);letter-spacing:0;margin-left:.35em}
+.sotd .h2ar{color:#9AA5D6}
+.bigcount .bi-ar{font-size:.78em;color:var(--ink-3);text-align:right;margin-top:.15em}
+.focus .ftx b .fa{font-family:"Tajawal",sans-serif;font-weight:700;font-size:.85em;color:var(--ink-2);margin-left:.5em;letter-spacing:0}
+.focus .ftx .fta{display:block;font-family:"Tajawal",sans-serif;direction:rtl;text-align:left;color:var(--ink-3);font-size:.9em;font-weight:500}
+.sotd .nm .na{font-family:"Tajawal",sans-serif;font-size:.62em;font-weight:700;color:#C2CAEB;margin-left:.45em;letter-spacing:0}
+.sotd .tga{font-family:"Tajawal",sans-serif;color:#9AA5D6;font-size:.92em;margin-top:.15em;direction:rtl;text-align:left}
+.cmp .lb small{font-family:"Tajawal",sans-serif;font-weight:700;color:var(--ink-3);font-size:.82em;letter-spacing:0}
+.schip small{font-family:"Tajawal",sans-serif;font-weight:700;margin-left:.3em;opacity:.92;letter-spacing:0}
+.tape .ta{font-family:"Tajawal",sans-serif;letter-spacing:0;direction:rtl;unicode-bidi:isolate}
 </style>
 </head>
 <body>
@@ -532,6 +544,7 @@ const CHALLENGES = {
   D: ["The team is split 50/50 and time is short. What do you do?", "How do you make sure quiet people are heard in meetings?"],
   A: ["Your team hits its targets but morale is dropping. What do you change?", "You must deliver a project in half the time. Where do you start?"]
 };
+const TIPS_AR = ["القائد العظيم يستمع أكثر مما يتكلم.", "كل أسلوب قوة في الموقف المناسب.", "أفضل القادة يغيّرون أسلوبهم حسب الموقف.", "القيادة مهارة تنمو بالممارسة والتغذية الراجعة.", "الثقة تُبنى في لحظات صغيرة كل يوم.", "الهدف الواضح يجعل العمل الشاق يستحق العناء."];
 const TIPS = ["Great leaders listen more than they speak.", "Every style is a strength in the right situation.", "The best leaders switch styles as the situation changes.", "Leadership is a skill: it grows with practice and feedback.", "Trust is built in small moments, every day.", "A clear purpose makes hard work feel worth it."];
 
 /* ---------------- radar chart (as an image so it also prints in the PDF) ---------------- */
@@ -705,7 +718,7 @@ function showCard(p) {
    ===================================================================== */
 function Screen(be) {
   document.body.classList.add("v-screen");
-  const POS = {T: [160, 128], V: [450, 112], C: [740, 128], S: [160, 392], D: [450, 408], A: [740, 392]};
+  const POS = {T: [160, 120], V: [450, 106], C: [740, 120], S: [160, 400], D: [450, 412], A: [740, 400]};
   const LINKS = [["T", "V"], ["V", "C"], ["S", "D"], ["D", "A"], ["T", "S"], ["C", "A"], ["V", "D"], ["T", "D"], ["C", "D"]];
   const rnd = (a, b) => a + Math.random() * (b - a);
   const parts = Array.from({length: 22}, (_, i) => { const k = ORDER[i % 6]; return `<circle cx="${rnd(20, 880).toFixed(0)}" cy="${rnd(20, 550).toFixed(0)}" r="${rnd(2.5, 6).toFixed(1)}" fill="${STYLES[k].color}" opacity="${rnd(.12, .3).toFixed(2)}" style="--d:${rnd(6, 14).toFixed(1)}s;--dx:${rnd(-40, 40).toFixed(0)}px;--dy:${rnd(-40, 40).toFixed(0)}px"/>`; }).join("");
@@ -717,17 +730,18 @@ function Screen(be) {
       <g id="i-${k}"><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${S.icon}</g></g>
       <text id="pc-${k}" x="${x}" y="${y}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="800" font-size="20" fill="#fff"></text>
       <text id="l1-${k}" x="${x}" y="${y + 90}" text-anchor="middle" font-family="Lexend,Arial,sans-serif" font-weight="700" font-size="21" fill="#1B2559">${S.name}</text>
-      <text id="l2-${k}" x="${x}" y="${y + 113}" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="600" font-size="15.5" fill="#5A6488"></text></g>`; }).join("");
+      <text id="l3-${k}" x="${x}" y="${y + 110}" text-anchor="middle" font-family="Tajawal,Arial,sans-serif" font-weight="700" font-size="17" fill="${S.color}" direction="rtl">${STYLES_AR[k].name}</text>
+      <text id="l2-${k}" x="${x}" y="${y + 130}" text-anchor="middle" font-family="Figtree,Arial,sans-serif" font-weight="600" font-size="14.5" fill="#5A6488"></text></g>`; }).join("");
   $("#app").innerHTML = `
   <div class="scr">
     <header class="s-head">
       <div class="logo-card"><img src="${LOGO_SRC}" alt="University of Technology and Applied Sciences, Ibra"></div>
       <div class="title-block"><b>Leadership <span>Lab</span> <span class="ar-sub" style="font-size:.62em;color:var(--ink-2)">· مختبر القيادة</span></b><small>${esc(CONFIG.eventLine)}</small></div>
-      <div class="mid"><span class="status"><i></i>Live</span><div class="bigcount"><b class="num" id="cnt">0</b><span>leaders discovered</span></div></div>
+      <div class="mid"><span class="status"><i></i>Live</span><div class="bigcount"><b class="num" id="cnt">0</b><span>leaders discovered</span><span class="bi-ar">قائدًا اكتشفوا أسلوبهم</span></div></div>
       <div class="scan"><div><b>What's your leadership style?</b><span>Scan, answer <span class="hl">10 quick questions</span><br>and get your Leadership Card.<br><span class="ar-sub" style="font-size:1.05em">ما هو أسلوبك القيادي؟ · English · عربي</span></span></div><div class="qr" id="qr"></div></div>
     </header>
     <main class="s-main">
-      <section class="card panel"><h2>Leadership Map <small>each dot is a person · tap a bubble to explore</small></h2>
+      <section class="card panel"><h2>Leadership Map<span class="h2ar">· خريطة القيادة</span> <small>each dot is a person · tap a bubble to explore</small></h2>
         <div class="focus" id="focus"></div>
         <div class="map" id="map"><svg viewBox="0 0 900 570" role="img" aria-label="Leadership styles in the room">
           <g class="links">${LINKS.map(([p, q]) => `<line x1="${POS[p][0]}" y1="${POS[p][1]}" x2="${POS[q][0]}" y2="${POS[q][1]}"/>`).join("")}</g>
@@ -735,7 +749,7 @@ function Screen(be) {
       <div class="side">
         <section class="card panel sotd" id="sotd"></section>
         <section class="card panel"><h2>Staff vs Students <span class="ar-sub" style="font-size:.8em;color:var(--ink-3)">· الموظفون والطلاب</span> <small>share of each group</small></h2><div class="cmp" id="cmp"></div></section>
-        <section class="card panel"><h2>Latest leaders <small>live</small></h2><ul class="feed" id="feed"></ul></section>
+        <section class="card panel"><h2>Latest leaders<span class="h2ar">· أحدث القادة</span> <small>live</small></h2><ul class="feed" id="feed"></ul></section>
       </div>
     </main>
     <div class="tape" aria-hidden="true"><div class="tape-in" id="tape"></div></div>
@@ -807,7 +821,7 @@ function Screen(be) {
     document.querySelectorAll(".map .flt").forEach(g => g.classList.toggle("on", g.dataset.k === k));
     $("#map").classList.add("focusing");
     const S = STYLES[k], n = D.all[k], names = D.people.filter(p => p.style === k).slice(0, 3).map(p => p.name.split(" ")[0]);
-    const html = `<span class="fic" style="background:${S.color}">${icon(k)}</span><div class="ftx"><b>${S.name} <small>${S.nick}</small></b><span>${S.tagline}</span></div><div class="fst"><b style="color:${S.color}">${D.n ? Math.round(n / D.n * 100) : 0}%</b><span>${n} ${n === 1 ? "person" : "people"}${names.length ? " · " + esc(names.join(", ")) : ""}</span></div>`;
+    const html = `<span class="fic" style="background:${S.color}">${icon(k)}</span><div class="ftx"><b>${S.name} <small>${S.nick}</small><span class="fa">${STYLES_AR[k].name}</span></b><span>${S.tagline}</span><span class="fta">${STYLES_AR[k].tagline}</span></div><div class="fst"><b style="color:${S.color}">${D.n ? Math.round(n / D.n * 100) : 0}%</b><span>${n} ${n === 1 ? "person" : "people"}${names.length ? " · " + esc(names.join(", ")) : ""}</span></div>`;
     const el = $("#focus");
     if (el.dataset.k !== k) { el.dataset.k = k; el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
     el.innerHTML = html;
@@ -829,8 +843,8 @@ function Screen(be) {
       $("#h-" + k).setAttribute("r", (r + 34).toFixed(2));
       $("#i-" + k).setAttribute("transform", `translate(${(x - s / 2).toFixed(1)},${(y - s / 2 - (n ? r * .18 : 0)).toFixed(1)}) scale(${(s / 24).toFixed(3)})`);
       $("#pc-" + k).setAttribute("y", (y + r * .52).toFixed(1));
-      $("#l1-" + k).setAttribute("y", (y + r + 56).toFixed(1));
-      $("#l2-" + k).setAttribute("y", (y + r + 78).toFixed(1));
+      $("#l1-" + k).setAttribute("y", (y + r + 57).toFixed(1)); $("#l3-" + k).setAttribute("y", (y + r + 79).toFixed(1));
+      $("#l2-" + k).setAttribute("y", (y + r + 99).toFixed(1));
       const list = orbit[k], m = list.length, R = r + 21, dirn = idx % 2 ? -1 : 1;
       list.forEach((o, i) => {
         if (arriving.has(o.id)) { o.el.setAttribute("opacity", 0); return; }
@@ -843,14 +857,14 @@ function Screen(be) {
   })(performance.now());
   function renderSotd() {
     const el = $("#sotd");
-    if (!D.top) { el.innerHTML = `<h2>Style of the day</h2><div style="color:#9AA5D6">The most common style in the room will appear here.</div>`; return; }
+    if (!D.top) { el.innerHTML = `<h2>Style of the day<span class="h2ar">· أسلوب اليوم</span></h2><div style="color:#9AA5D6">The most common style in the room will appear here.</div>`; return; }
     const S = STYLES[D.top], p = Math.round(D.all[D.top] / D.n * 100);
-    el.innerHTML = `<h2>Style of the day <small>most common in the room</small></h2><div class="row"><div class="ic" style="background:${S.color}">${icon(D.top)}</div><div style="min-width:0"><div class="nm">${S.name}</div><div class="tg">${S.tagline}</div></div><div class="pc"><b>${p}%</b><span>of the room</span></div></div>`;
+    el.innerHTML = `<h2>Style of the day<span class="h2ar">· أسلوب اليوم</span> <small>most common in the room</small></h2><div class="row"><div class="ic" style="background:${S.color}">${icon(D.top)}</div><div style="min-width:0"><div class="nm">${S.name}<span class="na">${STYLES_AR[D.top].name}</span></div><div class="tg">${S.tagline}</div><div class="tga">${STYLES_AR[D.top].tagline}</div></div><div class="pc"><b>${p}%</b><span>of the room</span><span class="bi-ar" style="font-size:.8em;color:#9AA5D6;text-align:right">من الحضور</span></div></div>`;
   }
   function renderCmp() {
     const pc = (c, n, k) => n ? Math.round(c[k] / n * 100) : 0;
-    $("#cmp").innerHTML = `<span></span><span class="h" style="color:var(--orange-2)">Staff (${D.nS})</span><span class="h" style="color:var(--blue)">Students (${D.nU})</span>` +
-      ORDER.map(k => `<span class="lb"><i style="background:${STYLES[k].color}"></i>${STYLES[k].name}</span><div class="bar s"><i style="width:${pc(D.staff, D.nS, k)}%"></i><span>${pc(D.staff, D.nS, k)}%</span></div><div class="bar u"><i style="width:${pc(D.stud, D.nU, k)}%"></i><span>${pc(D.stud, D.nU, k)}%</span></div>`).join("");
+    $("#cmp").innerHTML = `<span></span><span class="h" style="color:var(--orange-2)">Staff (${D.nS}) · موظفون</span><span class="h" style="color:var(--blue)">Students (${D.nU}) · طلاب</span>` +
+      ORDER.map(k => `<span class="lb"><i style="background:${STYLES[k].color}"></i>${STYLES[k].name} <small>${STYLES_AR[k].short}</small></span><div class="bar s"><i style="width:${pc(D.staff, D.nS, k)}%"></i><span>${pc(D.staff, D.nS, k)}%</span></div><div class="bar u"><i style="width:${pc(D.stud, D.nU, k)}%"></i><span>${pc(D.stud, D.nU, k)}%</span></div>`).join("");
   }
   function renderFeed(prevSeen) {
     const list = D.people.slice(0, 6);
@@ -860,11 +874,11 @@ function Screen(be) {
   function renderTape() {
     const sig = D.n + D.top;
     if (sig === tapeSig) return; tapeSig = sig;
-    const items = TIPS.map(t => `<span><em>TIP</em>${t}</span>`);
+    const items = TIPS.flatMap((t, i) => [`<span><em>TIP</em>${t}</span>`, `<span class="ta"><em>نصيحة</em>${TIPS_AR[i]}</span>`]);
     if (D.n) {
       const sTop = D.nS ? [...ORDER].sort((a, b) => D.staff[b] - D.staff[a])[0] : null, uTop = D.nU ? [...ORDER].sort((a, b) => D.stud[b] - D.stud[a])[0] : null;
-      if (sTop) items.splice(1, 0, `<span><em>STAFF</em>Most common style among staff: ${STYLES[sTop].name}</span>`);
-      if (uTop) items.splice(3, 0, `<span><em>STUDENTS</em>Most common style among students: ${STYLES[uTop].name}</span>`);
+      if (sTop) items.splice(1, 0, `<span><em>STAFF</em>Most common style among staff: ${STYLES[sTop].name}</span>`, `<span class="ta"><em>الموظفون</em>الأسلوب الأكثر شيوعًا: ${STYLES_AR[sTop].name}</span>`);
+      if (uTop) items.splice(4, 0, `<span><em>STUDENTS</em>Most common style among students: ${STYLES[uTop].name}</span>`, `<span class="ta"><em>الطلاب</em>الأسلوب الأكثر شيوعًا: ${STYLES_AR[uTop].name}</span>`);
       items.splice(5, 0, `<span><em>ROOM</em>${D.n} leaders discovered so far</span>`);
     }
     let html = items.join(""); while (html.length < 2400) html += html;
@@ -881,7 +895,7 @@ function Screen(be) {
     unlockAudio(); chime();
     $("#spot").innerHTML = `<div class="spot"><div class="spot-brand"><img src="${LOGO_SRC}" alt="UTAS Ibra"></div><div class="spot-in"><div>
       <span class="lbl">Leader in the spotlight</span><h1>${esc(p.name)}</h1>
-      <div class="stl"><i style="background:${S.color}">${icon(p.style)}</i><span style="color:${S.color === "#3B56A8" ? "#9CB0FF" : S.color}">${S.name}</span><span style="font-size:.55em;color:#B9C2E6;font-weight:600">${S.nick} · ${p.pct[p.style]}% match</span></div>
+      <div class="stl"><i style="background:${S.color}">${icon(p.style)}</i><span style="color:${S.color === "#3B56A8" ? "#9CB0FF" : S.color}">${S.name}</span><span style="font-size:.55em;color:#B9C2E6;font-weight:600">${S.nick} · ${p.pct[p.style]}% match · <span style="font-family:Tajawal">${STYLES_AR[p.style].name}</span></span></div>
       <p>${S.tagline}</p><div class="str">${S.strengths.map(x => `<span>${x}</span>`).join("")}</div></div>
       <div class="rad"><img src="${radarSrc(p.pct, S.color)}" alt=""></div></div></div>`;
     clearTimeout(spotT); spotT = setTimeout(() => $("#spot").innerHTML = "", CONFIG.spotlightSeconds * 1000);
